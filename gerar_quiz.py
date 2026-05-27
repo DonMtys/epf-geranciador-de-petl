@@ -1,0 +1,427 @@
+import json
+
+QUESTIONS = [
+  # ---- PROVIMENTO / POSSE / EXERCÍCIO ----
+  {"cat":"Provimento","q":"Quais são as formas de provimento de cargo público na LC 840?","opts":["Nomeação, reversão, aproveitamento, reintegração e recondução","Nomeação, promoção, reversão e reintegração","Nomeação, concurso, posse e exercício","Nomeação, remoção, redistribuição e reversão"],"a":0,"art":"Art. 8º","tip":"NRARR: Nomeação / Reversão / Aproveitamento / Reintegração / Recondução"},
+  {"cat":"Provimento","q":"A posse deve ocorrer em até quantos dias após a publicação do ato de nomeação?","opts":["15 dias","30 dias","60 dias","5 dias úteis"],"a":1,"art":"Art. 17, §1º","tip":"Posse = 30 dias. Exercício = 5 dias úteis da posse."},
+  {"cat":"Provimento","q":"Após a posse, em quantos dias úteis o servidor deve entrar em exercício?","opts":["3 dias úteis","5 dias úteis","10 dias úteis","30 dias"],"a":1,"art":"Art. 19, §2º","tip":"Exercício = 5 dias úteis. Se não entrar, é exonerado."},
+  {"cat":"Provimento","q":"O estágio probatório tem duração de:","opts":["2 anos","3 anos","4 anos","5 anos"],"a":1,"art":"Art. 22","tip":"Estágio probatório e estabilidade = 3 anos."},
+  {"cat":"Provimento","q":"O servidor adquire estabilidade ao completar:","opts":["2 anos de efetivo exercício","3 anos de efetivo exercício após aprovação no estágio probatório","5 anos de efetivo exercício","3 anos contados da posse"],"a":1,"art":"Art. 32","tip":"Estabilidade = 3 anos + aprovação no estágio probatório."},
+  {"cat":"Provimento","q":"A reversão voluntária exige que tenham decorrido menos de quantos anos da aposentadoria?","opts":["2 anos","3 anos","5 anos","10 anos"],"a":2,"art":"Art. 34, III, b","tip":"Reversão voluntária: menos de 5 anos da aposentadoria + haja cargo vago."},
+  {"cat":"Provimento","q":"Após ser comunicado da reversão, o servidor tem quantos dias úteis para retornar ao exercício?","opts":["5 dias úteis","10 dias úteis","15 dias úteis","30 dias"],"a":2,"art":"Art. 34, §1º","tip":"Reversão: 15 dias úteis para retornar."},
+  {"cat":"Provimento","q":"Após ser comunicado da reintegração, o servidor tem quantos dias úteis para retornar?","opts":["1 dia útil","3 dias úteis","5 dias úteis","15 dias úteis"],"a":2,"art":"Art. 36, §3º","tip":"Reintegração: 5 dias úteis. Recondução: até o dia seguinte."},
+  {"cat":"Provimento","q":"Na recondução, o servidor deve retornar ao exercício do cargo até:","opts":["5 dias úteis","O dia seguinte ao da ciência do ato","15 dias","30 dias"],"a":1,"art":"Art. 37, §2º","tip":"Recondução = dia seguinte. Reintegração = 5 dias úteis."},
+  {"cat":"Provimento","q":"O servidor em disponibilidade tem quantos dias para retornar quando houver aproveitamento?","opts":["5 dias úteis","15 dias","30 dias","60 dias"],"a":2,"art":"Art. 40, §1º","tip":"Disponibilidade/aproveitamento: 30 dias para retornar."},
+  # ---- JORNADA / REMUNERAÇÃO ----
+  {"cat":"Jornada","q":"Salvo disposição em contrário, o servidor efetivo fica sujeito a regime de trabalho de:","opts":["20 horas semanais","30 horas semanais","40 horas semanais","44 horas semanais"],"a":1,"art":"Art. 57","tip":"Efetivo = 30h. Cargo comissão/função confiança = 40h."},
+  {"cat":"Jornada","q":"O servidor ocupante de cargo em comissão tem regime de trabalho de:","opts":["30 horas semanais","35 horas semanais","40 horas semanais","44 horas semanais"],"a":2,"art":"Art. 58","tip":"Cargo comissão = 40h com integral dedicação."},
+  {"cat":"Jornada","q":"O serviço extraordinário pode ampliar a jornada em até:","opts":["1 hora","2 horas","4 horas","6 horas"],"a":1,"art":"Art. 60","tip":"Extraordinário = até +2h por dia."},
+  {"cat":"Jornada","q":"O serviço extraordinário é remunerado com acréscimo de:","opts":["25%","50%","100%","75%"],"a":1,"art":"Art. 84","tip":"Extraordinário = +50%. Noturno = +25%."},
+  {"cat":"Jornada","q":"O serviço noturno (22h às 5h) é remunerado com acréscimo de:","opts":["25%","50%","75%","100%"],"a":0,"art":"Art. 85","tip":"Noturno = +25%. Adicional noturno incide sobre o serviço extraordinário também."},
+  {"cat":"Jornada","q":"Sem faltas injustificadas no ano anterior, o servidor faz jus ao abono de ponto de:","opts":["3 dias","5 dias","7 dias","10 dias"],"a":1,"art":"Art. 151","tip":"Abono de ponto = 5 dias (sem falta injustificada no ano)."},
+  # ---- FÉRIAS ----
+  {"cat":"Férias","q":"O servidor faz jus a quantos dias de férias a cada 12 meses de exercício?","opts":["20 dias","25 dias","30 dias","45 dias"],"a":2,"art":"Art. 125","tip":"Férias = 30 dias a cada 12 meses."},
+  {"cat":"Férias","q":"As férias podem ser acumuladas por até:","opts":["1 período","2 períodos","3 períodos","4 períodos"],"a":1,"art":"Art. 125, §4º","tip":"Acumulação de férias: até 2 períodos por necessidade de serviço."},
+  {"cat":"Férias","q":"Mediante requerimento, as férias podem ser parceladas em até:","opts":["2 períodos, nenhum inferior a 15 dias","3 períodos, nenhum inferior a 10 dias","4 períodos, nenhum inferior a 7 dias","5 períodos, nenhum inferior a 5 dias"],"a":1,"art":"Art. 125, §5º","tip":"Parcelamento: até 3 períodos, mínimo 10 dias cada."},
+  # ---- AUSÊNCIAS E FALTAS ----
+  {"cat":"Faltas","q":"Configura abandono de cargo a ausência injustificada por mais de:","opts":["15 dias consecutivos","30 dias consecutivos","45 dias consecutivos","60 dias consecutivos"],"a":1,"art":"Art. 64, I","tip":"Abandono = +30 dias CONSECUTIVOS. Inassiduidade = +60 dias INTERPOLADOS em 12 meses."},
+  {"cat":"Faltas","q":"Configura inassiduidade habitual a ausência injustificada por mais de:","opts":["30 dias interpolados em 12 meses","45 dias interpolados em 12 meses","60 dias interpolados em 12 meses","90 dias interpolados em 12 meses"],"a":2,"art":"Art. 64, II","tip":"Inassiduidade = +60 dias interpolados em 12 meses."},
+  {"cat":"Faltas","q":"O servidor pode ausentar-se por 1 dia para:","opts":["Casamento","Falecimento de filho","Doação de sangue","Alistamento eleitoral"],"a":2,"art":"Art. 62, I","tip":"1 dia: doação de sangue ou exame preventivo de câncer (uma vez/ano). 2 dias: alistamento eleitoral. 8 dias: casamento ou falecimento de familiar."},
+  {"cat":"Faltas","q":"O servidor pode ausentar-se por até 2 dias para:","opts":["Casamento","Doação de sangue","Alistar-se como eleitor ou requerer transferência eleitoral","Falecimento de irmão"],"a":2,"art":"Art. 62, II","tip":"2 dias: alistamento/transferência eleitoral. 8 dias: casamento ou luto."},
+  {"cat":"Faltas","q":"Por casamento ou falecimento de familiar próximo, o servidor pode ausentar-se por:","opts":["3 dias consecutivos","5 dias úteis","8 dias consecutivos","10 dias corridos"],"a":2,"art":"Art. 62, III","tip":"8 dias CONSECUTIVOS, incluído o dia da ocorrência. Vale para casamento e falecimento de cônjuge, pai, mãe, filho, irmão, etc."},
+  # ---- LICENÇAS ----
+  {"cat":"Licenças","q":"A licença por motivo de doença em pessoa da família pode ser concedida com remuneração por período máximo de:","opts":["30 dias por período, máx 90 dias/ano","30 dias por período, máx 180 dias/ano","60 dias por período, máx 180 dias/ano","15 dias por período, máx 90 dias/ano"],"a":1,"art":"Art. 134, §3º","tip":"Doença familiar: 30 dias por período, máx 180 dias/ano. Acima = sem remuneração."},
+  {"cat":"Licenças","q":"A licença para acompanhar cônjuge deslocado tem prazo de até:","opts":["1 ano","2 anos","3 anos","5 anos"],"a":3,"art":"Art. 133, §1º","tip":"Acompanhar cônjuge: até 5 anos, sem remuneração."},
+  {"cat":"Licenças","q":"A licença para tratar de interesses particulares pode ser concedida por até:","opts":["1 ano","2 anos","3 anos consecutivos","5 anos"],"a":2,"art":"Art. 144","tip":"Interesses particulares: até 3 anos (prorrogável por mais 3 = 1 vez só). Sem remuneração."},
+  {"cat":"Licenças","q":"Na licença para interesses particulares, o servidor pode exercer outro cargo público?","opts":["Sim, qualquer cargo","Sim, desde que seja cumulável com o cargo de origem","Não pode exercer cargo ou emprego público inacumulável","Não pode exercer nenhum cargo público"],"a":2,"art":"Art. 144, §2º","tip":"Pode cargo ACUMULÁVEL. Não pode cargo INACUMULÁVEL. Pegadinha clássica da Quadrix!"},
+  {"cat":"Licenças","q":"A licença-servidor (antiga licença-prêmio) é devida ao servidor após:","opts":["3 anos de efetivo exercício","5 anos de efetivo exercício (quinquênio)","10 anos de efetivo exercício","7 anos de efetivo exercício"],"a":1,"art":"Art. 139","tip":"Licença-servidor: 3 meses a cada QUINQUÊNIO (5 anos). Com remuneração, inclusive cargo comissão."},
+  {"cat":"Licenças","q":"A licença-servidor dura:","opts":["1 mês","2 meses","3 meses","6 meses"],"a":2,"art":"Art. 139","tip":"Licença-servidor = 3 meses a cada 5 anos de efetivo exercício."},
+  {"cat":"Licenças","q":"A licença para atividade política no período entre o registro da candidatura e 10 dias após a eleição é:","opts":["Sem remuneração","Com remuneração","Com metade da remuneração","Depende do cargo disputado"],"a":1,"art":"Art. 137, I e II / §1º","tip":"Do registro ATÉ 10 dias após eleição = COM remuneração. Da convenção ATÉ véspera do registro = SEM remuneração."},
+  {"cat":"Licenças","q":"A licença-maternidade para servidora gestante de cargo efetivo tem duração de:","opts":["120 dias","150 dias","180 dias","240 dias"],"a":2,"art":"Art. 149-A","tip":"Licença-maternidade = 180 dias (a partir do parto). Pode ser antecipada em até 28 dias."},
+  {"cat":"Licenças","q":"A licença-paternidade tem duração de:","opts":["5 dias","7 dias consecutivos","10 dias úteis","15 dias"],"a":1,"art":"Art. 150","tip":"Paternidade = 7 dias CONSECUTIVOS, incluído o dia da ocorrência."},
+  {"cat":"Licenças","q":"A servidora gestante comissionada (sem vínculo efetivo) não pode ser exonerada de ofício sem justa causa desde a confirmação da gravidez até:","opts":["O nascimento","2 meses após o parto","5 meses após o parto","12 meses após o parto"],"a":2,"art":"Art. 53","tip":"Gestante comissionada: proteção até 5 MESES após o parto. Exoneração só com justa causa ou mediante indenização."},
+  # ---- DIREITO DE PETIÇÃO / PRESCRIÇÃO ----
+  {"cat":"Petição","q":"O prazo para interpor pedido de reconsideração ou recurso é de:","opts":["15 dias","30 dias","60 dias","120 dias"],"a":1,"art":"Art. 172","tip":"Recurso e pedido de reconsideração = 30 dias."},
+  {"cat":"Petição","q":"O direito de requerer prescreve em 5 anos quanto:","opts":["A todos os casos","Aos atos de demissão e interesse patrimonial","Aos recursos e pedidos de reconsideração","Às certidões e informações"],"a":1,"art":"Art. 175, I e II","tip":"5 anos: demissão, cassação de aposentadoria e interesse patrimonial. 120 dias: demais casos."},
+  {"cat":"Petição","q":"Nos demais casos (não relacionados a demissão), o direito de requerer prescreve em:","opts":["30 dias","60 dias","90 dias","120 dias"],"a":3,"art":"Art. 175, III","tip":"120 dias para demais casos. 5 anos para demissão/interesse patrimonial."},
+  # ---- REGIME DISCIPLINAR ----
+  {"cat":"Disciplinar","q":"As infrações disciplinares classificam-se em:","opts":["Leves e graves","Leves, médias e graves","Leves, moderadas e graves","Brandas, médias e severas"],"a":1,"art":"Art. 188","tip":"3 categorias: leves / médias (grupo I e II) / graves (grupo I e II)."},
+  {"cat":"Disciplinar","q":"A suspensão por infração disciplinar média do grupo I não pode ser superior a:","opts":["15 dias","30 dias","60 dias","90 dias"],"a":1,"art":"Art. 200, §1º, I","tip":"Média Grupo I: até 30 dias. Média Grupo II: até 90 dias."},
+  {"cat":"Disciplinar","q":"A suspensão por infração disciplinar média do grupo II não pode ser superior a:","opts":["30 dias","60 dias","90 dias","120 dias"],"a":2,"art":"Art. 200, §1º, II","tip":"Média Grupo I: até 30 dias. Média Grupo II: até 90 dias."},
+  {"cat":"Disciplinar","q":"O registro da advertência é cancelado após quantos anos de efetivo exercício sem nova infração?","opts":["1 ano","3 anos","5 anos","7 anos"],"a":1,"art":"Art. 201","tip":"Advertência: cancelado em 3 anos. Suspensão: cancelado em 5 anos."},
+  {"cat":"Disciplinar","q":"O registro da suspensão é cancelado após quantos anos de efetivo exercício sem nova infração?","opts":["2 anos","3 anos","5 anos","7 anos"],"a":2,"art":"Art. 201","tip":"Advertência: 3 anos. Suspensão: 5 anos."},
+  {"cat":"Disciplinar","q":"A ação disciplinar para demissão prescreve em:","opts":["2 anos","3 anos","5 anos","10 anos"],"a":2,"art":"Art. 208, I","tip":"Prescrição disciplinar: demissão/destituição/cassação = 5 anos; suspensão = 2 anos; advertência = 1 ano."},
+  {"cat":"Disciplinar","q":"A ação disciplinar para suspensão prescreve em:","opts":["1 ano","2 anos","3 anos","5 anos"],"a":1,"art":"Art. 208, II","tip":"Suspensão = 2 anos. Advertência = 1 ano. Demissão = 5 anos."},
+  {"cat":"Disciplinar","q":"A ação disciplinar para advertência prescreve em:","opts":["6 meses","1 ano","2 anos","3 anos"],"a":1,"art":"Art. 208, III","tip":"Advertência = 1 ano. Suspensão = 2 anos. Demissão = 5 anos."},
+  {"cat":"Disciplinar","q":"O prazo para conclusão da sindicância é de até:","opts":["15 dias, prorrogável por 15","30 dias, prorrogável por igual período","45 dias, prorrogável por 30","60 dias, prorrogável por igual período"],"a":1,"art":"Art. 214, §2º","tip":"Sindicância: 30 + 30 dias. Processo disciplinar: 60 + 60 dias."},
+  {"cat":"Disciplinar","q":"O prazo para conclusão do processo disciplinar é de até:","opts":["30 dias, prorrogável por 30","45 dias, prorrogável por 45","60 dias, prorrogável por igual período","90 dias, prorrogável por 30"],"a":2,"art":"Art. 217, §1º","tip":"Processo disciplinar: 60 + 60 dias. Sindicância: 30 + 30 dias."},
+  {"cat":"Disciplinar","q":"O afastamento preventivo durante processo disciplinar pode ser determinado por até:","opts":["30 dias, prorrogável por 30","60 dias, prorrogável por igual período","90 dias","30 dias improrrogáveis"],"a":1,"art":"Art. 222","tip":"Afastamento preventivo: 60 dias + 60 dias (prorrogável 1 vez), SEM prejuízo de remuneração."},
+  {"cat":"Disciplinar","q":"O prazo para defesa escrita no processo disciplinar é de:","opts":["5 dias","10 dias (ou 20 dias se houver mais de um acusado)","15 dias","30 dias"],"a":1,"art":"Art. 250","tip":"Defesa escrita: 10 dias (1 acusado) / 20 dias (2+ acusados). Pode ser prorrogado pelo dobro."},
+  {"cat":"Disciplinar","q":"O julgamento do processo disciplinar deve ser proferido em até:","opts":["10 dias","20 dias do recebimento dos autos","30 dias","60 dias"],"a":1,"art":"Art. 256","tip":"Julgamento: 20 dias do recebimento dos autos."},
+  # ---- ACUMULAÇÃO ----
+  {"cat":"Acumulação","q":"É permitida a acumulação remunerada de cargos públicos nos seguintes casos, EXCETO:","opts":["Dois cargos de professor","Um cargo de professor com outro técnico ou científico","Dois cargos de médico","Dois cargos administrativos com compatibilidade de horários"],"a":3,"art":"Art. 46","tip":"Acumulação permitida: 2 professores / professor + técnico-científico / 2 profissionais de saúde (profissão regulamentada). Dois cargos administrativos NÃO é permitido."},
+  {"cat":"Acumulação","q":"Verificada acumulação ilegal, o servidor tem quantos dias para apresentar opção?","opts":["5 dias","10 dias","15 dias","30 dias"],"a":1,"art":"Art. 48","tip":"Opção na acumulação ilegal: prazo IMPRORROGÁVEL de 10 dias da ciência."},
+  # ---- PEGADINHAS CLÁSSICAS ----
+  {"cat":"Pegadinhas","q":"Durante a licença-servidor (antiga licença-prêmio), a retribuição do cargo em comissão eventualmente exercido:","opts":["Não é paga pois é licença","É paga proporcionalmente","É incluída na remuneração da licença","Depende do tempo no cargo em comissão"],"a":2,"art":"Art. 139","tip":"PEGADINHA CLÁSSICA: a licença-servidor é SEM PREJUÍZO DA REMUNERAÇÃO, inclusive da retribuição do cargo em comissão que eventualmente exerça."},
+  {"cat":"Pegadinhas","q":"O servidor em estágio probatório pode ser cedido para outro órgão para ocupar:","opts":["Qualquer cargo em comissão","Cargo de natureza especial ou equivalente nível hierárquico","Qualquer função de confiança","Não pode ser cedido durante o estágio"],"a":1,"art":"Art. 26, II","tip":"Em estágio probatório pode: exercer CC/FC no próprio órgão (art.26,I) ou ser cedido para cargo de natureza especial ou equivalente (art.26,II)."},
+  {"cat":"Pegadinhas","q":"Ao servidor em estágio probatório é VEDADO:","opts":["Exercer cargo em comissão no próprio órgão","Ser cedido para cargo de natureza especial","Licença não remunerada (exceto militar ou mandato eletivo)","Ter o estágio suspenso por licença médica de familiar"],"a":2,"art":"Art. 25","tip":"VEDADO ao servidor em estágio probatório: licença não remunerada ou afastamento sem remuneração. Exceções: serviço militar e mandato eletivo."},
+  {"cat":"Pegadinhas","q":"A remuneração mínima da disponibilidade não pode ser inferior a:","opts":["1/5 do que percebia","1/4 do que percebia","1/3 do que percebia","1/2 do que percebia"],"a":2,"art":"Art. 38, parágrafo único","tip":"Disponibilidade: remuneração proporcional ao tempo de serviço, nunca inferior a 1/3 do que percebia."},
+  {"cat":"Pegadinhas","q":"Sobre o abono de ponto, é correto afirmar que:","opts":["É de 10 dias por ano","Só vale para servidores com mais de 5 anos de serviço","O servidor precisa ter estado em efetivo exercício de 1º de janeiro a 31 de dezembro do ano aquisitivo","Pode ser acumulado com o exercício de cargo em comissão"],"a":2,"art":"Art. 151, §1º","tip":"Abono de ponto (5 dias): exige efetivo exercício de 01/01 a 31/12 do ano aquisitivo, sem falta injustificada."},
+  {"cat":"Pegadinhas","q":"O prazo do abono de ponto extingue-se em:","opts":["30 de junho do ano seguinte ao aquisitivo","31 de dezembro do mesmo ano aquisitivo","31 de dezembro do ano seguinte ao aquisitivo","2 anos após o ano aquisitivo"],"a":2,"art":"Art. 151, §2º","tip":"Abono de ponto: prazo extingue-se em 31/12 do ANO SEGUINTE ao aquisitivo."},
+]
+
+CSS = """
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+:root{--bg:#0d1117;--card:#161b22;--card2:#1c2433;--border:#30363d;--blue:#3b82f6;--cyan:#06b6d4;--green:#34d399;--red:#f87171;--yellow:#fbbf24;--orange:#fb923c;--text:#e6edf3;--muted:#7d8590}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;
+  background-image:radial-gradient(ellipse at 10% 0%,rgba(59,130,246,.07),transparent 50%),radial-gradient(ellipse at 90% 100%,rgba(6,182,212,.05),transparent 50%)}
+header{background:rgba(22,27,34,.95);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;backdrop-filter:blur(8px)}
+.brand{display:flex;align-items:center;gap:10px}
+.logo{width:36px;height:36px;border-radius:9px;background:linear-gradient(135deg,var(--blue),var(--cyan));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;font-family:'JetBrains Mono',monospace;color:#fff;box-shadow:0 0 14px rgba(59,130,246,.35)}
+.brand h1{font-size:15px;font-weight:700}
+.brand h1 span{color:var(--cyan);font-family:'JetBrains Mono',monospace}
+.score-bar{display:flex;gap:16px;font-size:13px;font-family:'JetBrains Mono',monospace}
+.score-bar .s{display:flex;align-items:center;gap:5px}
+.score-bar .s b{font-size:16px;font-weight:700}
+#app{max-width:780px;margin:0 auto;padding:28px 20px}
+.screen{display:none}
+.screen.active{display:block;animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+/* HOME */
+.home-hero{text-align:center;padding:40px 20px}
+.home-hero h2{font-size:28px;font-weight:800;margin-bottom:10px;background:linear-gradient(135deg,var(--blue),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.home-hero p{color:var(--muted);font-size:14px;margin-bottom:32px;line-height:1.6}
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-bottom:28px}
+.cat-btn{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-align:left;cursor:pointer;transition:all .2s;color:var(--text)}
+.cat-btn:hover{border-color:var(--blue);background:rgba(59,130,246,.08);transform:translateY(-1px)}
+.cat-btn.sel{border-color:var(--cyan);background:rgba(6,182,212,.1);box-shadow:0 0 0 2px rgba(6,182,212,.2)}
+.cat-btn .ct{font-size:11px;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px}
+.cat-btn .cn{font-size:13px;font-weight:600}
+.start-btn{display:block;width:100%;padding:14px;border-radius:10px;border:none;cursor:pointer;font-size:15px;font-weight:700;background:linear-gradient(135deg,var(--blue),#2563eb);color:#fff;box-shadow:0 4px 16px rgba(59,130,246,.35);transition:all .2s;font-family:'Inter',sans-serif}
+.start-btn:hover{transform:translateY(-2px);box-shadow:0 6px 22px rgba(59,130,246,.45)}
+/* QUIZ */
+.progress-wrap{margin-bottom:20px}
+.progress-info{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:6px;font-family:'JetBrains Mono',monospace}
+.progress-track{background:rgba(255,255,255,.06);border-radius:6px;height:6px;overflow:hidden}
+.progress-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--blue),var(--cyan));transition:width .4s ease}
+.timer-bar{background:rgba(255,255,255,.06);border-radius:6px;height:4px;overflow:hidden;margin-bottom:20px}
+.timer-fill{height:100%;border-radius:6px;background:var(--yellow);transition:width 1s linear}
+.timer-fill.danger{background:var(--red)}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:16px}
+.q-meta{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.q-cat{background:rgba(6,182,212,.12);color:var(--cyan);border:1px solid rgba(6,182,212,.25);border-radius:20px;padding:3px 12px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.q-num{font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace}
+.q-text{font-size:16px;font-weight:600;line-height:1.5;color:var(--text)}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:13px 16px;cursor:pointer;transition:all .2s;display:flex;align-items:flex-start;gap:12px;text-align:left;font-family:'Inter',sans-serif;color:var(--text);font-size:14px}
+.opt-letter{width:24px;height:24px;border-radius:6px;background:rgba(255,255,255,.07);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;font-family:'JetBrains Mono',monospace;color:var(--muted)}
+.opt:hover:not(:disabled){border-color:var(--blue);background:rgba(59,130,246,.08);transform:translateX(3px)}
+.opt:hover:not(:disabled) .opt-letter{border-color:var(--blue);color:var(--blue)}
+.opt.correct{border-color:var(--green);background:rgba(52,211,153,.1)}
+.opt.correct .opt-letter{background:rgba(52,211,153,.2);border-color:var(--green);color:var(--green)}
+.opt.wrong{border-color:var(--red);background:rgba(248,113,113,.1)}
+.opt.wrong .opt-letter{background:rgba(248,113,113,.2);border-color:var(--red);color:var(--red)}
+.opt:disabled{cursor:default;transform:none}
+.feedback{background:var(--card2);border-radius:12px;padding:16px;margin-top:14px;display:none}
+.feedback.show{display:block;animation:fadeIn .2s ease}
+.feedback .fb-head{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-weight:700}
+.feedback .art-badge{background:rgba(59,130,246,.15);color:var(--blue);border:1px solid rgba(59,130,246,.25);border-radius:6px;padding:2px 8px;font-size:11px;font-family:'JetBrains Mono',monospace}
+.feedback .tip{font-size:13px;color:var(--muted);line-height:1.5}
+.next-btn{margin-top:16px;width:100%;padding:13px;border-radius:10px;border:none;cursor:pointer;font-size:14px;font-weight:600;background:rgba(59,130,246,.15);color:var(--blue);border:1px solid rgba(59,130,246,.3);transition:all .2s;font-family:'Inter',sans-serif}
+.next-btn:hover{background:rgba(59,130,246,.25);transform:translateY(-1px)}
+/* RESULT */
+.result-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:36px;text-align:center;margin-bottom:20px}
+.result-pct{font-size:64px;font-weight:800;font-family:'JetBrains Mono',monospace;line-height:1}
+.result-msg{font-size:16px;margin-top:8px;color:var(--muted)}
+.result-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:24px}
+.rstat{background:var(--card2);border-radius:10px;padding:16px;border:1px solid var(--border)}
+.rstat .rv{font-size:22px;font-weight:700;font-family:'JetBrains Mono',monospace}
+.rstat .rl{font-size:11px;color:var(--muted);margin-top:4px;text-transform:uppercase;letter-spacing:.5px}
+.result-btns{display:flex;gap:10px;margin-top:20px}
+.btn-retry{flex:1;padding:13px;border-radius:10px;border:none;cursor:pointer;font-size:14px;font-weight:600;background:linear-gradient(135deg,var(--blue),#2563eb);color:#fff;font-family:'Inter',sans-serif;transition:all .2s}
+.btn-retry:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(59,130,246,.35)}
+.btn-home{flex:1;padding:13px;border-radius:10px;cursor:pointer;font-size:14px;font-weight:600;background:transparent;color:var(--muted);border:1px solid var(--border);font-family:'Inter',sans-serif;transition:all .2s}
+.btn-home:hover{border-color:var(--cyan);color:var(--cyan)}
+.missed-list{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px}
+.missed-list h3{font-size:14px;font-weight:700;margin-bottom:14px;color:var(--red)}
+.missed-item{padding:12px 0;border-bottom:1px solid var(--border2,#21262d);font-size:13px}
+.missed-item:last-child{border-bottom:none}
+.missed-item .mq{color:var(--text);margin-bottom:4px;font-weight:500}
+.missed-item .ma{color:var(--green);font-size:12px}.missed-item .mart{color:var(--cyan);font-size:11px;font-family:'JetBrains Mono',monospace;margin-top:2px}
+"""
+
+JS = r"""
+const ALL_Q = __QUESTIONS__;
+let state = {questions:[],idx:0,score:0,missed:[],started:false,timer:null,timeLeft:30,cats:[]};
+
+function allCats(){return[...new Set(ALL_Q.map(q=>q.cat))]}
+
+function init(){
+  const cats=allCats();
+  let html='';
+  const counts={};
+  ALL_Q.forEach(q=>{counts[q.cat]=(counts[q.cat]||0)+1});
+  cats.forEach(c=>{
+    html+=`<button class="cat-btn sel" onclick="toggleCat('${c}',this)" data-cat="${c}">
+      <div class="ct">Categoria</div>
+      <div class="cn">${c}</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:3px">${counts[c]} questoes</div>
+    </button>`;
+  });
+  document.getElementById('cat-grid').innerHTML=html;
+  document.getElementById('q-total').textContent=ALL_Q.length;
+  showScreen('home');
+}
+
+function toggleCat(cat,btn){
+  btn.classList.toggle('sel');
+}
+
+function getSelCats(){
+  return [...document.querySelectorAll('.cat-btn.sel')].map(b=>b.dataset.cat);
+}
+
+function startQuiz(mode){
+  const cats=getSelCats();
+  if(cats.length===0){alert('Selecione ao menos uma categoria!');return;}
+  let pool=ALL_Q.filter(q=>cats.includes(q.cat));
+  if(mode==='random') pool=pool.sort(()=>Math.random()-.5);
+  state={questions:pool,idx:0,score:0,missed:[],timer:null,timeLeft:30,cats};
+  renderQuestion();
+  showScreen('quiz');
+}
+
+function renderQuestion(){
+  const q=state.questions[state.idx];
+  const total=state.questions.length;
+  const pct=Math.round((state.idx/total)*100);
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('prog-text').textContent=`${state.idx+1} / ${total}`;
+  document.getElementById('score-live').textContent=state.score;
+
+  let optsHtml='';
+  const letters=['A','B','C','D'];
+  q.opts.forEach((o,i)=>{
+    optsHtml+=`<button class="opt" id="opt-${i}" onclick="selectOpt(${i})">
+      <span class="opt-letter">${letters[i]}</span>
+      <span>${o}</span>
+    </button>`;
+  });
+
+  document.getElementById('q-cat').textContent=q.cat;
+  document.getElementById('q-num').textContent=`Q${state.idx+1}`;
+  document.getElementById('q-text').textContent=q.q;
+  document.getElementById('opts-wrap').innerHTML=optsHtml;
+  document.getElementById('feedback').className='feedback';
+  document.getElementById('next-btn').style.display='none';
+
+  startTimer();
+}
+
+function startTimer(){
+  clearInterval(state.timer);
+  state.timeLeft=30;
+  const fill=document.getElementById('timer-fill');
+  fill.style.width='100%';
+  fill.className='timer-fill';
+  state.timer=setInterval(()=>{
+    state.timeLeft--;
+    const pct=(state.timeLeft/30)*100;
+    fill.style.width=pct+'%';
+    if(state.timeLeft<=10) fill.className='timer-fill danger';
+    if(state.timeLeft<=0){clearInterval(state.timer);timeUp();}
+  },1000);
+}
+
+function timeUp(){
+  document.querySelectorAll('.opt').forEach(b=>b.disabled=true);
+  const q=state.questions[state.idx];
+  document.getElementById(`opt-${q.a}`).classList.add('correct');
+  state.missed.push(q);
+  showFeedback(false,q);
+}
+
+function selectOpt(i){
+  clearInterval(state.timer);
+  const q=state.questions[state.idx];
+  document.querySelectorAll('.opt').forEach(b=>b.disabled=true);
+  const correct=i===q.a;
+  if(correct){
+    state.score++;
+    document.getElementById(`opt-${i}`).classList.add('correct');
+  } else {
+    document.getElementById(`opt-${i}`).classList.add('wrong');
+    document.getElementById(`opt-${q.a}`).classList.add('correct');
+    state.missed.push(q);
+  }
+  showFeedback(correct,q);
+}
+
+function showFeedback(correct,q){
+  const fb=document.getElementById('feedback');
+  fb.className='feedback show';
+  fb.innerHTML=`<div class="fb-head">
+    <span style="color:${correct?'var(--green)':'var(--red)';font-size:16px}">${correct?'Correto!':'Incorreto'}</span>
+    <span class="art-badge">${q.art}</span>
+  </div>
+  <div class="tip">${q.tip||''}</div>`;
+  document.getElementById('next-btn').style.display='block';
+}
+
+function nextQ(){
+  state.idx++;
+  if(state.idx>=state.questions.length) showResult();
+  else renderQuestion();
+}
+
+function showResult(){
+  const total=state.questions.length;
+  const pct=Math.round(100*state.score/total);
+  let color=pct>=85?'var(--green)':pct>=70?'var(--yellow)':'var(--red)';
+  let msg=pct>=85?'Excelente! Nivel concurso.':pct>=70?'Bom! Continua revisando os erros.':'Precisa reforcar. Revise os pontos fracos.';
+
+  document.getElementById('result-pct').textContent=pct+'%';
+  document.getElementById('result-pct').style.color=color;
+  document.getElementById('result-msg').textContent=msg;
+  document.getElementById('r-correct').textContent=state.score;
+  document.getElementById('r-wrong').textContent=total-state.score;
+  document.getElementById('r-total').textContent=total;
+
+  let missedHtml='';
+  state.missed.forEach(q=>{
+    missedHtml+=`<div class="missed-item">
+      <div class="mq">${q.q}</div>
+      <div class="ma">Resposta: ${q.opts[q.a]}</div>
+      <div class="mart">${q.art}</div>
+    </div>`;
+  });
+  document.getElementById('missed-wrap').innerHTML=missedHtml||'<div style="color:var(--green);font-size:13px">Nenhum erro! Perfeito.</div>';
+
+  showScreen('result');
+}
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+}
+
+function retryMissed(){
+  if(state.missed.length===0){alert('Nenhum erro para refazer!');return;}
+  const pool=[...state.missed].sort(()=>Math.random()-.5);
+  state={...state,questions:pool,idx:0,score:0,missed:[]};
+  renderQuestion();
+  showScreen('quiz');
+}
+
+function goHome(){clearInterval(state.timer);init();}
+
+window.onload=init;
+"""
+
+JS = JS.replace("'var(--green)':'var(--yellow)':'var(--red)';font-size:16px",
+                "'var(--green)':'var(--yellow)':'var(--red)',fontSize:'16px'")
+
+# Fix the ternary in JS (python string issue)
+JS = JS.replace(
+    "let color=pct>=85?'var(--green)':pct>=70?'var(--yellow)':'var(--red)';",
+    "let color=pct>=85?'var(--green)':(pct>=70?'var(--yellow)':'var(--red)');"
+)
+JS = JS.replace(
+    'font-size:${correct?\'var(--green)\'',
+    'font-size:16px;color:${correct?\'var(--green)\''
+)
+
+# Fix the broken fb innerHTML
+JS_FIXED = JS.replace(
+    """fb.innerHTML=`<div class="fb-head">
+    <span style="color:${correct?'var(--green)':'var(--red)';font-size:16px}">${correct?'Correto!':'Incorreto'}</span>""",
+    """fb.innerHTML=`<div class="fb-head">
+    <span style="color:${correct?'var(--green)':'var(--red)'};font-size:16px">${correct?'Correto!':'Incorreto'}</span>"""
+)
+
+q_json = json.dumps(QUESTIONS, ensure_ascii=False)
+JS_FINAL = JS_FIXED.replace("__QUESTIONS__", q_json)
+
+HTML = f"""<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Quiz LC 840 — SEDES 2026</title>
+<style>{CSS}</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="logo">LC</div>
+    <h1>Quiz <span>LC 840</span></h1>
+  </div>
+  <div class="score-bar">
+    <div class="s"><span>Acertos:</span><b id="score-live">0</b></div>
+  </div>
+</header>
+<div id="app">
+  <!-- HOME -->
+  <div id="screen-home" class="screen active">
+    <div class="home-hero">
+      <h2>Quiz LC 840/2011</h2>
+      <p>Memorize os prazos, situacoes e pegadinhas da Lei Complementar 840<br>que mais caem na Quadrix. Selecione as categorias e treine.</p>
+      <p style="font-size:12px;color:var(--cyan);font-family:'JetBrains Mono',monospace"><b id="q-total"></b> questoes no total</p>
+    </div>
+    <div id="cat-grid" class="cat-grid"></div>
+    <div style="display:flex;gap:10px;margin-bottom:10px">
+      <button class="start-btn" onclick="startQuiz('seq')" style="flex:1">Iniciar em Ordem</button>
+      <button class="start-btn" onclick="startQuiz('random')" style="flex:1;background:linear-gradient(135deg,var(--cyan),#0891b2)">Aleatorio</button>
+    </div>
+  </div>
+  <!-- QUIZ -->
+  <div id="screen-quiz" class="screen">
+    <div class="progress-wrap">
+      <div class="progress-info">
+        <span id="prog-text">1 / 0</span>
+        <span>LC 840/2011</span>
+      </div>
+      <div class="progress-track"><div id="prog-fill" class="progress-fill" style="width:0%"></div></div>
+    </div>
+    <div class="timer-bar"><div id="timer-fill" class="timer-fill" style="width:100%"></div></div>
+    <div class="q-card">
+      <div class="q-meta">
+        <span class="q-cat" id="q-cat"></span>
+        <span class="q-num" id="q-num"></span>
+      </div>
+      <div class="q-text" id="q-text"></div>
+    </div>
+    <div id="opts-wrap" class="opts"></div>
+    <div id="feedback" class="feedback"></div>
+    <button id="next-btn" class="next-btn" onclick="nextQ()" style="display:none">Proxima Questao &rarr;</button>
+  </div>
+  <!-- RESULT -->
+  <div id="screen-result" class="screen">
+    <div class="result-card">
+      <div id="result-pct" class="result-pct"></div>
+      <div id="result-msg" class="result-msg"></div>
+      <div class="result-stats">
+        <div class="rstat"><div class="rv" style="color:var(--green)" id="r-correct"></div><div class="rl">Corretas</div></div>
+        <div class="rstat"><div class="rv" style="color:var(--red)" id="r-wrong"></div><div class="rl">Erradas</div></div>
+        <div class="rstat"><div class="rv" id="r-total"></div><div class="rl">Total</div></div>
+      </div>
+    </div>
+    <div class="result-btns">
+      <button class="btn-retry" onclick="retryMissed()">Refazer Erradas</button>
+      <button class="btn-home" onclick="goHome()">Menu Principal</button>
+    </div>
+    <div class="missed-list" style="margin-top:16px">
+      <h3>Questoes que errou:</h3>
+      <div id="missed-wrap"></div>
+    </div>
+  </div>
+</div>
+<script>{JS_FINAL}</script>
+</body>
+</html>"""
+
+with open("quiz_lc840.html", "w", encoding="utf-8") as f:
+    f.write(HTML)
+
+print(f"Criado! quiz_lc840.html — {len(QUESTIONS)} questoes, {len(HTML)//1024}KB")

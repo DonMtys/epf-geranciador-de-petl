@@ -1,0 +1,282 @@
+"""Gera prazos_lc840.html — Jogo dos Prazos da LC 840/2011"""
+
+PRAZOS = [
+    # PROVIMENTO / POSSE / EXERCÍCIO
+    {"cat":"Posse/Exercício","q":"A posse deve ocorrer em até quantos dias após a publicação do ato de nomeação?","opts":["15 dias","30 dias","60 dias","5 dias úteis"],"a":1,"art":"Art. 17, §1º","tip":"Posse = 30 dias. Se não tomar posse, o ato de nomeação é tornado sem efeito."},
+    {"cat":"Posse/Exercício","q":"Após a posse, o servidor tem quantos dias úteis para entrar em exercício?","opts":["3 dias úteis","5 dias úteis","10 dias úteis","15 dias úteis"],"a":1,"art":"Art. 19, §2º","tip":"Exercício = 5 dias úteis da posse. Se não entrar, é exonerado."},
+    {"cat":"Posse/Exercício","q":"O estágio probatório tem duração de quantos anos?","opts":["1 ano","2 anos","3 anos","5 anos"],"a":2,"art":"Art. 22","tip":"Estágio probatório = 3 anos. Mesmo prazo da estabilidade."},
+    {"cat":"Posse/Exercício","q":"A estabilidade é adquirida após quantos anos de efetivo exercício?","opts":["2 anos","3 anos","4 anos","5 anos"],"a":1,"art":"Art. 32","tip":"Estabilidade = 3 anos + aprovação no estágio probatório."},
+    {"cat":"Posse/Exercício","q":"O concurso público tem validade de até quantos anos?","opts":["1 ano","2 anos","3 anos","4 anos"],"a":1,"art":"Art. 12","tip":"Validade: até 2 anos, prorrogável 1 vez por igual período."},
+    {"cat":"Posse/Exercício","q":"Quantos por cento das vagas devem ser reservadas para PCD em concurso público?","opts":["5%","10%","15%","20%"],"a":3,"art":"Art. 13","tip":"20% das vagas para PCD, desprezada a parte decimal."},
+    {"cat":"Posse/Exercício","q":"Pelo menos quantos por cento dos cargos em comissão devem ser providos por servidor de carreira?","opts":["20%","50%","70%","80%"],"a":2,"art":"Art. 10, §1º","tip":"70% dos CC por servidor de carreira. Pegadinha: a lei anterior dizia 20%."},
+    # REVERSÃO / REINTEGRAÇÃO / RECONDUÇÃO / DISPONIBILIDADE
+    {"cat":"Reversão/Reintegração","q":"A reversão voluntária exige que tenham decorrido menos de quantos anos da aposentadoria?","opts":["2 anos","3 anos","5 anos","10 anos"],"a":2,"art":"Art. 34, III, b","tip":"Reversão voluntária: menos de 5 anos da aposentadoria + cargo vago."},
+    {"cat":"Reversão/Reintegração","q":"Comunicada a reversão, o servidor tem quantos dias úteis para retornar ao exercício?","opts":["5 dias úteis","10 dias úteis","15 dias úteis","30 dias"],"a":2,"art":"Art. 34, §1º","tip":"Reversão = 15 dias úteis para retornar. Não confundir com reintegração (5 dias úteis)."},
+    {"cat":"Reversão/Reintegração","q":"Comunicada a reintegração, o servidor tem quantos dias úteis para retornar?","opts":["1 dia útil","3 dias úteis","5 dias úteis","15 dias úteis"],"a":2,"art":"Art. 36, §3º","tip":"Reintegração = 5 dias úteis. Reversão = 15 dias úteis. Recondução = dia seguinte."},
+    {"cat":"Reversão/Reintegração","q":"Na recondução, o servidor deve retornar até quando?","opts":["5 dias úteis","O dia seguinte à ciência do ato","15 dias","30 dias"],"a":1,"art":"Art. 37, §2º","tip":"Recondução = dia seguinte. Reintegração = 5 dias úteis. Reversão = 15 dias úteis."},
+    {"cat":"Reversão/Reintegração","q":"No aproveitamento (disponibilidade), o servidor tem quantos dias para retornar?","opts":["5 dias úteis","15 dias","30 dias","60 dias"],"a":2,"art":"Art. 40, §1º","tip":"Aproveitamento/disponibilidade = 30 dias para retornar."},
+    {"cat":"Reversão/Reintegração","q":"A remuneração do servidor em disponibilidade não pode ser inferior a quanto?","opts":["1/5 do que percebia","1/4 do que percebia","1/3 do que percebia","1/2 do que percebia"],"a":2,"art":"Art. 38, parágrafo único","tip":"Disponibilidade: proporcional ao tempo de serviço, nunca inferior a 1/3."},
+    # JORNADA DE TRABALHO
+    {"cat":"Jornada","q":"Qual é o regime de trabalho padrão do servidor efetivo?","opts":["20 horas semanais","30 horas semanais","36 horas semanais","40 horas semanais"],"a":1,"art":"Art. 57","tip":"Efetivo = 30h. Cargo em comissão/função confiança = 40h."},
+    {"cat":"Jornada","q":"O servidor ocupante de cargo em comissão tem jornada de quantas horas semanais?","opts":["30 horas","35 horas","40 horas","44 horas"],"a":2,"art":"Art. 58","tip":"CC = 40h com integral dedicação ao serviço."},
+    {"cat":"Jornada","q":"O serviço extraordinário pode ampliar a jornada em até quantas horas por dia?","opts":["1 hora","2 horas","4 horas","6 horas"],"a":1,"art":"Art. 60","tip":"Extraordinário = até +2h/dia. Em situações excepcionais e temporárias."},
+    {"cat":"Jornada","q":"O adicional por serviço extraordinário é de quanto por cento?","opts":["25%","50%","75%","100%"],"a":1,"art":"Art. 84","tip":"Extraordinário = +50% sobre a hora normal. Noturno = +25%."},
+    {"cat":"Jornada","q":"O adicional noturno (22h–5h) é de quanto por cento?","opts":["25%","50%","75%","100%"],"a":0,"art":"Art. 85","tip":"Noturno = +25%. A hora noturna tem 52 min e 30 s (menor que a normal)."},
+    {"cat":"Jornada","q":"O abono de ponto (sem faltas injustificadas no ano) é de quantos dias?","opts":["3 dias","5 dias","7 dias","10 dias"],"a":1,"art":"Art. 151","tip":"Abono de ponto = 5 dias. O prazo extingue-se em 31/12 do ano seguinte ao aquisitivo."},
+    {"cat":"Jornada","q":"O prazo do abono de ponto extingue-se em que data?","opts":["30/06 do ano seguinte","31/12 do mesmo ano aquisitivo","31/12 do ano seguinte ao aquisitivo","2 anos após o aquisitivo"],"a":2,"art":"Art. 151, §2º","tip":"Abono de ponto: prazo extingue em 31/12 do ANO SEGUINTE ao aquisitivo."},
+    # FÉRIAS
+    {"cat":"Férias","q":"A cada quantos meses de exercício o servidor faz jus a 30 dias de férias?","opts":["6 meses","8 meses","10 meses","12 meses"],"a":3,"art":"Art. 125","tip":"Férias = 30 dias a cada 12 meses de efetivo exercício."},
+    {"cat":"Férias","q":"As férias podem ser acumuladas por até quantos períodos?","opts":["1 período","2 períodos","3 períodos","4 períodos"],"a":1,"art":"Art. 125, §4º","tip":"Acumulação: até 2 períodos, por necessidade do serviço."},
+    {"cat":"Férias","q":"As férias podem ser parceladas em até quantos períodos?","opts":["2 períodos","3 períodos","4 períodos","5 períodos"],"a":1,"art":"Art. 125, §5º","tip":"Parcelamento: até 3 períodos, nenhum inferior a 10 dias."},
+    {"cat":"Férias","q":"No parcelamento de férias, nenhum período pode ser inferior a quantos dias?","opts":["5 dias","7 dias","10 dias","15 dias"],"a":2,"art":"Art. 125, §5º","tip":"Mínimo de 10 dias por período no parcelamento (máx 3 parcelas)."},
+    # FALTAS / AUSÊNCIAS
+    {"cat":"Faltas","q":"Configura abandono de cargo a ausência injustificada por mais de quantos dias consecutivos?","opts":["15 dias","30 dias","45 dias","60 dias"],"a":1,"art":"Art. 64, I","tip":"Abandono = +30 dias CONSECUTIVOS. Inassiduidade = +60 dias interpolados em 12 meses."},
+    {"cat":"Faltas","q":"Configura inassiduidade habitual a ausência injustificada por mais de quantos dias interpolados em 12 meses?","opts":["30 dias","45 dias","60 dias","90 dias"],"a":2,"art":"Art. 64, II","tip":"Inassiduidade = +60 dias INTERPOLADOS em 12 meses. Abandono = +30 dias consecutivos."},
+    {"cat":"Faltas","q":"O servidor pode ausentar-se por 1 dia para qual finalidade?","opts":["Casamento","Falecimento de cônjuge","Doação de sangue","Alistamento eleitoral"],"a":2,"art":"Art. 62, I","tip":"1 dia: doação de sangue ou exame preventivo de câncer (1x/ano)."},
+    {"cat":"Faltas","q":"O servidor pode ausentar-se por até 2 dias para qual finalidade?","opts":["Casamento","Luto de pai/mãe","Alistamento eleitoral","Doação de medula"],"a":2,"art":"Art. 62, II","tip":"2 dias: alistamento ou transferência eleitoral."},
+    {"cat":"Faltas","q":"Por casamento ou falecimento de familiar próximo, o servidor pode ausentar-se por quantos dias?","opts":["3 dias","5 dias úteis","8 dias consecutivos","10 dias corridos"],"a":2,"art":"Art. 62, III","tip":"8 dias CONSECUTIVOS, incluído o dia da ocorrência."},
+    # LICENÇAS
+    {"cat":"Licenças","q":"A licença por doença em pessoa da família tem duração máxima por período de:","opts":["15 dias","30 dias","60 dias","90 dias"],"a":1,"art":"Art. 134, §3º","tip":"30 dias por período, com remuneração. Máximo de 180 dias por ano."},
+    {"cat":"Licenças","q":"A licença por doença em pessoa da família pode ser concedida com remuneração por no máximo quantos dias por ano?","opts":["90 dias","120 dias","180 dias","365 dias"],"a":2,"art":"Art. 134, §3º","tip":"Máximo 180 dias/ano com remuneração. Acima disso = sem remuneração."},
+    {"cat":"Licenças","q":"A licença para acompanhar cônjuge deslocado pode durar até quantos anos?","opts":["1 ano","2 anos","3 anos","5 anos"],"a":3,"art":"Art. 133, §1º","tip":"Acompanhar cônjuge: até 5 anos, sem remuneração."},
+    {"cat":"Licenças","q":"A licença para tratar de interesses particulares pode durar até quantos anos?","opts":["1 ano","2 anos","3 anos","5 anos"],"a":2,"art":"Art. 144","tip":"Interesses particulares: até 3 anos (prorrogável por mais 3 anos, 1 única vez)."},
+    {"cat":"Licenças","q":"A licença-servidor (antiga licença-prêmio) é devida a cada quantos anos?","opts":["3 anos","4 anos","5 anos","10 anos"],"a":2,"art":"Art. 139","tip":"Licença-servidor = 3 meses a cada QUINQUÊNIO (5 anos) de efetivo exercício."},
+    {"cat":"Licenças","q":"A licença-servidor tem duração de quantos meses?","opts":["1 mês","2 meses","3 meses","6 meses"],"a":2,"art":"Art. 139","tip":"Licença-servidor = 3 meses a cada 5 anos. Com remuneração integral."},
+    {"cat":"Licenças","q":"A licença-maternidade para servidora efetiva tem duração de:","opts":["120 dias","150 dias","180 dias","240 dias"],"a":2,"art":"Art. 149-A","tip":"Licença-maternidade = 180 dias, a contar do parto. Pode ser antecipada em até 28 dias."},
+    {"cat":"Licenças","q":"A licença-paternidade tem duração de quantos dias?","opts":["5 dias","7 dias consecutivos","10 dias úteis","15 dias"],"a":1,"art":"Art. 150","tip":"Paternidade = 7 dias CONSECUTIVOS, incluído o dia do nascimento."},
+    {"cat":"Licenças","q":"A servidora gestante comissionada não pode ser exonerada de ofício até quando?","opts":["O nascimento","2 meses após o parto","5 meses após o parto","12 meses após o parto"],"a":2,"art":"Art. 53","tip":"Gestante comissionada: proteção até 5 MESES após o parto."},
+    {"cat":"Licenças","q":"A licença para atividade política (do registro da candidatura até 10 dias após a eleição) é concedida:","opts":["Sem remuneração","Com remuneração","Com 50% de remuneração","A critério do chefe"],"a":1,"art":"Art. 137, §1º","tip":"Do registro ATÉ 10 dias após eleição = COM remuneração. Da convenção ATÉ véspera do registro = SEM remuneração."},
+    # PETIÇÃO / PRESCRIÇÃO
+    {"cat":"Petição","q":"O prazo para interpor recurso ou pedido de reconsideração é de:","opts":["15 dias","30 dias","60 dias","120 dias"],"a":1,"art":"Art. 172","tip":"Recurso e pedido de reconsideração = 30 dias."},
+    {"cat":"Petição","q":"O direito de requerer prescreve em 5 anos nos casos de:","opts":["Demais casos em geral","Demissão e interesse patrimonial","Recursos administrativos","Certidões e informações"],"a":1,"art":"Art. 175, I e II","tip":"5 anos: demissão, cassação de aposentadoria e interesse patrimonial. 120 dias: demais casos."},
+    {"cat":"Petição","q":"Nos demais casos (não relacionados a demissão), o direito de requerer prescreve em:","opts":["30 dias","60 dias","90 dias","120 dias"],"a":3,"art":"Art. 175, III","tip":"120 dias para demais casos. 5 anos para demissão/interesse patrimonial."},
+    # PROCESSO DISCIPLINAR
+    {"cat":"Disciplinar","q":"A suspensão por infração média do Grupo I não pode ultrapassar:","opts":["15 dias","30 dias","60 dias","90 dias"],"a":1,"art":"Art. 200, §1º, I","tip":"Média Grupo I: até 30 dias. Média Grupo II: até 90 dias."},
+    {"cat":"Disciplinar","q":"A suspensão por infração média do Grupo II não pode ultrapassar:","opts":["30 dias","60 dias","90 dias","120 dias"],"a":2,"art":"Art. 200, §1º, II","tip":"Média Grupo I: até 30 dias. Média Grupo II: até 90 dias."},
+    {"cat":"Disciplinar","q":"O registro da advertência é cancelado após quantos anos sem nova infração?","opts":["1 ano","2 anos","3 anos","5 anos"],"a":2,"art":"Art. 201","tip":"Advertência: cancelado em 3 anos. Suspensão: cancelado em 5 anos."},
+    {"cat":"Disciplinar","q":"O registro da suspensão é cancelado após quantos anos sem nova infração?","opts":["2 anos","3 anos","5 anos","7 anos"],"a":2,"art":"Art. 201","tip":"Suspensão: 5 anos. Advertência: 3 anos."},
+    {"cat":"Disciplinar","q":"A ação disciplinar para demissão/destituição prescreve em:","opts":["2 anos","3 anos","5 anos","10 anos"],"a":2,"art":"Art. 208, I","tip":"Demissão/destituição/cassação = 5 anos. Suspensão = 2 anos. Advertência = 1 ano."},
+    {"cat":"Disciplinar","q":"A ação disciplinar para suspensão prescreve em:","opts":["1 ano","2 anos","3 anos","5 anos"],"a":1,"art":"Art. 208, II","tip":"Suspensão = 2 anos. Advertência = 1 ano. Demissão = 5 anos."},
+    {"cat":"Disciplinar","q":"A ação disciplinar para advertência prescreve em:","opts":["6 meses","1 ano","2 anos","3 anos"],"a":1,"art":"Art. 208, III","tip":"Advertência = 1 ano. Suspensão = 2 anos. Demissão = 5 anos."},
+    {"cat":"Disciplinar","q":"O prazo para conclusão da sindicância é de:","opts":["15 dias prorrogável por 15","30 dias prorrogável por igual período","45 dias prorrogável por 30","60 dias prorrogável por igual período"],"a":1,"art":"Art. 214, §2º","tip":"Sindicância: 30 + 30 dias. Processo disciplinar: 60 + 60 dias."},
+    {"cat":"Disciplinar","q":"O prazo para conclusão do processo disciplinar é de:","opts":["30 + 30 dias","45 + 45 dias","60 + 60 dias","90 + 30 dias"],"a":2,"art":"Art. 217, §1º","tip":"PAD: 60 + 60 dias. Sindicância: 30 + 30 dias."},
+    {"cat":"Disciplinar","q":"O afastamento preventivo durante processo disciplinar pode durar:","opts":["30 dias improrrogáveis","30 + 30 dias","60 + 60 dias","90 dias improrrogáveis"],"a":2,"art":"Art. 222","tip":"Afastamento preventivo: 60 + 60 dias, sem prejuízo de remuneração."},
+    {"cat":"Disciplinar","q":"O prazo para defesa escrita no PAD com 1 acusado é de:","opts":["5 dias","10 dias","15 dias","20 dias"],"a":1,"art":"Art. 250","tip":"Defesa escrita: 10 dias (1 acusado) / 20 dias (2+ acusados). Prorrogável pelo dobro."},
+    {"cat":"Disciplinar","q":"O prazo para defesa escrita no PAD com 2 ou mais acusados é de:","opts":["10 dias","15 dias","20 dias","30 dias"],"a":2,"art":"Art. 250","tip":"2+ acusados = 20 dias. 1 acusado = 10 dias. Prorrogável pelo dobro."},
+    {"cat":"Disciplinar","q":"O julgamento do processo disciplinar deve ser proferido em até:","opts":["10 dias","20 dias do recebimento dos autos","30 dias","60 dias"],"a":1,"art":"Art. 256","tip":"Julgamento: 20 dias do recebimento dos autos pela autoridade julgadora."},
+    {"cat":"Disciplinar","q":"Na acumulação ilegal de cargos, o prazo para apresentar opção é de:","opts":["5 dias","10 dias improrrogáveis","15 dias","30 dias"],"a":1,"art":"Art. 48","tip":"Opção na acumulação ilegal: 10 dias IMPRORROGÁVEIS da ciência da notificação."},
+]
+
+CATS = sorted(set(q["cat"] for q in PRAZOS))
+
+CSS = """
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #0d1117; color: #e6edf3; font-family: 'Segoe UI', sans-serif; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+h1 { font-size: 1.4rem; color: #58a6ff; margin-bottom: 4px; }
+.sub { color: #8b949e; font-size: .85rem; margin-bottom: 16px; }
+.controls { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; justify-content: center; }
+.controls label { background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 6px 12px; font-size: .8rem; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+.controls label:hover { border-color: #58a6ff; }
+.controls input[type=checkbox] { accent-color: #58a6ff; }
+.btn-start { background: #238636; color: #fff; border: none; border-radius: 8px; padding: 10px 28px; font-size: 1rem; cursor: pointer; margin-bottom: 16px; }
+.btn-start:hover { background: #2ea043; }
+#game { display: none; width: 100%; max-width: 640px; }
+.score-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: .9rem; color: #8b949e; }
+.score-bar span { color: #e6edf3; }
+#num-badge { background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 4px 10px; font-size: .8rem; }
+.timer-wrap { height: 6px; background: #21262d; border-radius: 3px; margin-bottom: 16px; }
+#timer-bar { height: 6px; border-radius: 3px; background: #3fb950; transition: width .5s linear, background .5s; }
+.card { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 22px; margin-bottom: 16px; }
+.cat-tag { font-size: .75rem; color: #8b949e; margin-bottom: 8px; text-transform: uppercase; letter-spacing: .5px; }
+.question { font-size: 1.05rem; line-height: 1.5; }
+.opts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+.opt { background: #0d1117; border: 2px solid #30363d; border-radius: 8px; padding: 14px; text-align: center; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: .15s; }
+.opt:hover:not(:disabled) { border-color: #58a6ff; color: #58a6ff; }
+.opt.correct { border-color: #3fb950; background: rgba(63,185,80,.15); color: #3fb950; }
+.opt.wrong { border-color: #f85149; background: rgba(248,81,73,.15); color: #f85149; }
+.opt:disabled { cursor: default; }
+.feedback { margin-top: 14px; padding: 12px 16px; border-radius: 8px; font-size: .9rem; line-height: 1.5; display: none; }
+.feedback.show { display: block; }
+.feedback.ok { background: rgba(63,185,80,.1); border: 1px solid #3fb950; color: #3fb950; }
+.feedback.nok { background: rgba(248,81,73,.1); border: 1px solid #f85149; color: #f85149; }
+.art-ref { font-size: .8rem; opacity: .8; margin-bottom: 4px; }
+.btn-next { display: none; width: 100%; padding: 12px; background: #1f6feb; border: none; border-radius: 8px; color: #fff; font-size: 1rem; cursor: pointer; margin-top: 10px; }
+.btn-next:hover { background: #388bfd; }
+.btn-next.show { display: block; }
+#result { display: none; text-align: center; padding: 30px; }
+#result h2 { font-size: 1.8rem; margin-bottom: 8px; }
+.score-big { font-size: 3rem; font-weight: 700; color: #58a6ff; margin: 12px 0; }
+.score-label { color: #8b949e; margin-bottom: 20px; }
+.btn-retry { background: #238636; color: #fff; border: none; border-radius: 8px; padding: 12px 28px; font-size: 1rem; cursor: pointer; margin: 6px; }
+.btn-retry:hover { background: #2ea043; }
+"""
+
+JS = r"""
+const PRAZOS = __PRAZOS__;
+let deck=[], idx=0, score=0, total=0, timer=null, secs=15;
+
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+function getSelected(){
+  return [...document.querySelectorAll('.controls input:checked')].map(i=>i.value);
+}
+
+function startGame(){
+  const sel=getSelected();
+  deck=shuffle(PRAZOS.filter(q=>sel.includes(q.cat)));
+  if(!deck.length){alert('Selecione ao menos uma categoria!');return;}
+  idx=0;score=0;total=deck.length;
+  document.getElementById('setup').style.display='none';
+  document.getElementById('game').style.display='block';
+  document.getElementById('result').style.display='none';
+  nextQ();
+}
+
+function nextQ(){
+  if(idx>=deck.length){showResult();return;}
+  const q=deck[idx];
+  document.getElementById('num-badge').textContent=`${idx+1} / ${total}`;
+  document.querySelector('.cat-tag').textContent=q.cat;
+  document.querySelector('.question').textContent=q.q;
+  const optsDiv=document.querySelector('.opts');
+  optsDiv.innerHTML='';
+  q.opts.forEach((o,i)=>{
+    const b=document.createElement('button');
+    b.className='opt'; b.textContent=o;
+    b.onclick=()=>answer(i,q);
+    optsDiv.appendChild(b);
+  });
+  document.querySelector('.feedback').className='feedback';
+  document.querySelector('.btn-next').className='btn-next';
+  startTimer();
+}
+
+function startTimer(){
+  clearInterval(timer);
+  secs=15;
+  const bar=document.getElementById('timer-bar');
+  bar.style.width='100%'; bar.style.background='#3fb950';
+  timer=setInterval(()=>{
+    secs--;
+    const pct=secs/15*100;
+    bar.style.width=pct+'%';
+    if(pct<40) bar.style.background='#d29922';
+    if(pct<20) bar.style.background='#f85149';
+    if(secs<=0){clearInterval(timer);timeout();}
+  },1000);
+}
+
+function timeout(){
+  const q=deck[idx];
+  const btns=document.querySelectorAll('.opt');
+  btns.forEach(b=>b.disabled=true);
+  btns[q.a].classList.add('correct');
+  showFeedback(false, q);
+}
+
+function answer(i,q){
+  clearInterval(timer);
+  const btns=document.querySelectorAll('.opt');
+  btns.forEach(b=>b.disabled=true);
+  const ok=(i===q.a);
+  btns[i].classList.add(ok?'correct':'wrong');
+  if(!ok) btns[q.a].classList.add('correct');
+  if(ok) score++;
+  showFeedback(ok, q);
+}
+
+function showFeedback(ok, q){
+  const fb=document.querySelector('.feedback');
+  fb.innerHTML=`<div class="art-ref">${q.art}</div><div>${q.tip}</div>`;
+  fb.className='feedback show '+(ok?'ok':'nok');
+  document.querySelector('.btn-next').className='btn-next show';
+  document.getElementById('score-val').textContent=score;
+}
+
+function nextQuestion(){
+  idx++;
+  nextQ();
+}
+
+function showResult(){
+  document.getElementById('game').style.display='none';
+  const res=document.getElementById('result');
+  res.style.display='block';
+  const pct=Math.round(score/total*100);
+  res.querySelector('h2').textContent= pct>=80?'Excelente! 🎯': pct>=60?'Bom trabalho! 💪':'Continue praticando! 📚';
+  res.querySelector('.score-big').textContent=`${score}/${total}`;
+  res.querySelector('.score-label').textContent=`${pct}% de acerto`;
+}
+
+function retryAll(){
+  document.getElementById('result').style.display='none';
+  document.getElementById('setup').style.display='block';
+}
+"""
+
+def build_html():
+    import json
+    cats_checkboxes = "\n".join(
+        f'<label><input type="checkbox" value="{c}" checked> {c}</label>'
+        for c in CATS
+    )
+    prazos_json = json.dumps(PRAZOS, ensure_ascii=False)
+    js = JS.replace("__PRAZOS__", prazos_json)
+
+    html = f"""<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jogo dos Prazos — LC 840/2011</title>
+<style>{CSS}</style>
+</head>
+<body>
+<h1>⏱️ Jogo dos Prazos</h1>
+<p class="sub">LC 840/2011 — {len(PRAZOS)} cenários • Timer 15s</p>
+
+<div id="setup">
+  <p style="color:#8b949e;font-size:.85rem;margin-bottom:10px;text-align:center">Selecione as categorias:</p>
+  <div class="controls">
+    {cats_checkboxes}
+  </div>
+  <div style="text-align:center">
+    <button class="btn-start" onclick="startGame()">▶ Iniciar</button>
+  </div>
+</div>
+
+<div id="game">
+  <div class="score-bar">
+    <span>Acertos: <span id="score-val" style="color:#3fb950">0</span></span>
+    <span id="num-badge">1 / {len(PRAZOS)}</span>
+  </div>
+  <div class="timer-wrap"><div id="timer-bar" style="width:100%"></div></div>
+  <div class="card">
+    <div class="cat-tag"></div>
+    <div class="question"></div>
+    <div class="opts"></div>
+    <div class="feedback"></div>
+    <button class="btn-next" onclick="nextQuestion()">Próximo →</button>
+  </div>
+</div>
+
+<div id="result">
+  <h2></h2>
+  <div class="score-big"></div>
+  <div class="score-label"></div>
+  <br>
+  <button class="btn-retry" onclick="retryAll()">↩ Jogar novamente</button>
+</div>
+
+<script>{js}</script>
+</body>
+</html>"""
+    return html
+
+html = build_html()
+path = r"c:\Users\hacke\OneDrive - unb.br\estudo\prazos_lc840.html"
+with open(path, "w", encoding="utf-8") as f:
+    f.write(html)
+
+total_q = len(PRAZOS)
+print(f"Criado! prazos_lc840.html — {total_q} cenários, {len(html)//1024}KB")

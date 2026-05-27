@@ -1,0 +1,265 @@
+"""Gera complete_lc840.html — Complete a Frase: digita a resposta"""
+
+FRASES = [
+    # PROVIMENTO / POSSE
+    {"cat":"Provimento","q":"A posse deve ocorrer em até ___ dias após a publicação do ato de nomeação.","a":["30"],"art":"Art. 17, §1º","tip":"Posse = 30 dias. Se não tomar posse, o ato é tornado sem efeito."},
+    {"cat":"Provimento","q":"Após a posse, o servidor tem ___ dias úteis para entrar em exercício.","a":["5"],"art":"Art. 19, §2º","tip":"5 dias úteis. Se não entrar em exercício, é exonerado."},
+    {"cat":"Provimento","q":"O estágio probatório tem duração de ___ anos de efetivo exercício.","a":["3","três"],"art":"Art. 22","tip":"3 anos. Mesmo prazo da estabilidade."},
+    {"cat":"Provimento","q":"O concurso público tem validade de até ___ anos, prorrogável por igual período.","a":["2","dois"],"art":"Art. 12","tip":"2 anos, prorrogável 1 vez. Máximo total: 4 anos."},
+    {"cat":"Provimento","q":"São reservadas ___% das vagas para candidatos com deficiência em concurso público.","a":["20"],"art":"Art. 13","tip":"20% das vagas para PCD, desprezada a parte decimal."},
+    {"cat":"Provimento","q":"Pelo menos ___% dos cargos em comissão devem ser ocupados por servidores de carreira.","a":["70"],"art":"Art. 10, §1º","tip":"70% dos CC devem ser servidores de carreira do PGDF."},
+    # RETORNO AO CARGO
+    {"cat":"Retorno","q":"Na reversão, o servidor tem ___ dias úteis para retornar ao exercício após a comunicação.","a":["15"],"art":"Art. 34, §1º","tip":"Reversão = 15 dias úteis. Não confundir com reintegração (5 dias úteis)."},
+    {"cat":"Retorno","q":"Na reintegração, o servidor tem ___ dias úteis para retornar ao exercício.","a":["5"],"art":"Art. 36, §3º","tip":"Reintegração = 5 dias úteis."},
+    {"cat":"Retorno","q":"No aproveitamento (disponibilidade), o servidor tem ___ dias para retornar ao exercício.","a":["30","trinta"],"art":"Art. 40, §1º","tip":"Aproveitamento = 30 dias."},
+    {"cat":"Retorno","q":"A remuneração na disponibilidade nunca pode ser inferior a 1/___ do que o servidor percebia.","a":["3","três"],"art":"Art. 38, §único","tip":"Mínimo 1/3 da remuneração anterior."},
+    {"cat":"Retorno","q":"A reversão voluntária exige que tenham decorrido menos de ___ anos da aposentadoria.","a":["5","cinco"],"art":"Art. 34, III, b","tip":"Menos de 5 anos + cargo vago."},
+    # JORNADA
+    {"cat":"Jornada","q":"A jornada do servidor efetivo é de ___ horas semanais.","a":["30","trinta"],"art":"Art. 57","tip":"Efetivo = 30h. CC/FC = 40h."},
+    {"cat":"Jornada","q":"A jornada do cargo em comissão é de ___ horas semanais.","a":["40","quarenta"],"art":"Art. 58","tip":"CC = 40h com integral dedicação."},
+    {"cat":"Jornada","q":"O serviço extraordinário é limitado a ___ horas por dia.","a":["2","duas"],"art":"Art. 60","tip":"Limite de 2h extras por dia, em situações excepcionais e temporárias."},
+    {"cat":"Jornada","q":"O adicional por serviço extraordinário é de ___% sobre a hora normal.","a":["50"],"art":"Art. 84","tip":"Hora extra = 50%."},
+    {"cat":"Jornada","q":"O adicional noturno (22h às 5h) é de ___% sobre a hora normal.","a":["25"],"art":"Art. 85","tip":"Noturno = 25%. A hora noturna = 52min30s."},
+    {"cat":"Jornada","q":"O abono de ponto corresponde a ___ dias por ano, para quem não faltou injustificadamente.","a":["5","cinco"],"art":"Art. 151","tip":"5 dias por ano."},
+    {"cat":"Jornada","q":"O prazo para usar o abono de ponto extingue-se em 31/12 do ano ___ ao aquisitivo.","a":["seguinte","subsequente"],"art":"Art. 151, §2º","tip":"31/12 do ANO SEGUINTE ao aquisitivo."},
+    # FÉRIAS
+    {"cat":"Férias","q":"As férias têm duração de ___ dias a cada 12 meses de efetivo exercício.","a":["30","trinta"],"art":"Art. 125","tip":"30 dias por 12 meses de exercício."},
+    {"cat":"Férias","q":"As férias podem ser acumuladas em até ___ períodos, por necessidade do serviço.","a":["2","dois"],"art":"Art. 125, §4º","tip":"Máximo 2 períodos acumulados."},
+    {"cat":"Férias","q":"As férias podem ser parceladas em até ___ etapas.","a":["3","três"],"art":"Art. 125, §5º","tip":"Até 3 etapas, mínimo 10 dias cada."},
+    {"cat":"Férias","q":"No parcelamento das férias, nenhuma etapa pode ser inferior a ___ dias.","a":["10","dez"],"art":"Art. 125, §5º","tip":"Mínimo 10 dias por etapa."},
+    # FALTAS
+    {"cat":"Faltas","q":"Configura abandono de cargo a ausência injustificada por mais de ___ dias consecutivos.","a":["30","trinta"],"art":"Art. 64, I","tip":"Abandono = +30 dias CONSECUTIVOS. Punição: demissão."},
+    {"cat":"Faltas","q":"Configura inassiduidade habitual a ausência injustificada por mais de ___ dias interpolados em 12 meses.","a":["60","sessenta"],"art":"Art. 64, II","tip":"Inassiduidade = +60 dias INTERPOLADOS em 12 meses."},
+    {"cat":"Faltas","q":"Casamento ou falecimento de familiar garante ___ dias consecutivos de ausência justificada.","a":["8","oito"],"art":"Art. 62, III","tip":"8 dias CONSECUTIVOS, incluído o dia do evento."},
+    {"cat":"Faltas","q":"Alistamento ou transferência eleitoral garante ___ dias de ausência justificada.","a":["2","dois"],"art":"Art. 62, II","tip":"2 dias para alistamento ou transferência eleitoral."},
+    {"cat":"Faltas","q":"Doação de sangue garante ___ dia de ausência justificada por ano.","a":["1","um"],"art":"Art. 62, I","tip":"1 dia por ano para doação de sangue."},
+    # LICENÇAS
+    {"cat":"Licenças","q":"A licença-maternidade para servidora efetiva tem duração de ___ dias.","a":["180"],"art":"Art. 149-A","tip":"180 dias, antecipável em até 28 dias."},
+    {"cat":"Licenças","q":"A licença-paternidade tem duração de ___ dias consecutivos.","a":["7","sete"],"art":"Art. 150","tip":"7 dias CONSECUTIVOS incluindo o dia do nascimento."},
+    {"cat":"Licenças","q":"A licença por doença em familiar pode ser concedida com remuneração por até ___ dias por ano.","a":["180"],"art":"Art. 134, §3º","tip":"Máximo 180 dias/ano com remuneração. Acima disso: sem remuneração."},
+    {"cat":"Licenças","q":"A licença por doença em familiar tem duração de ___ dias por período.","a":["30","trinta"],"art":"Art. 134, §3º","tip":"30 dias por período."},
+    {"cat":"Licenças","q":"A licença para acompanhar cônjuge deslocado pode durar até ___ anos, sem remuneração.","a":["5","cinco"],"art":"Art. 133, §1º","tip":"Até 5 anos, sem remuneração."},
+    {"cat":"Licenças","q":"A licença para tratar de interesses particulares pode durar até ___ anos, sem remuneração.","a":["3","três"],"art":"Art. 144","tip":"3 anos, prorrogável por mais 3 anos."},
+    {"cat":"Licenças","q":"A licença-servidor é devida a cada ___ anos (quinquênio) de efetivo exercício.","a":["5","cinco"],"art":"Art. 139","tip":"3 meses a cada 5 anos."},
+    {"cat":"Licenças","q":"A licença-servidor tem duração de ___ meses.","a":["3","três"],"art":"Art. 139","tip":"3 meses a cada quinquênio."},
+    {"cat":"Licenças","q":"A gestante comissionada não pode ser exonerada de ofício até ___ meses após o parto.","a":["5","cinco"],"art":"Art. 53","tip":"5 meses após o parto."},
+    # ACUMULAÇÃO
+    {"cat":"Acumulação","q":"O prazo para apresentar opção na acumulação ilegal é de ___ dias improrrogáveis.","a":["10","dez"],"art":"Art. 48","tip":"10 dias IMPRORROGÁVEIS da ciência da notificação."},
+    # PETIÇÃO
+    {"cat":"Petição","q":"O prazo para interpor recurso ou pedido de reconsideração é de ___ dias.","a":["30","trinta"],"art":"Art. 172","tip":"30 dias da publicação ou ciência do ato."},
+    {"cat":"Petição","q":"O direito de requerer prescreve em ___ anos nos casos de demissão e interesse patrimonial.","a":["5","cinco"],"art":"Art. 175, I e II","tip":"5 anos para demissão, cassação e interesse patrimonial."},
+    {"cat":"Petição","q":"Nos demais casos, o direito de requerer prescreve em ___ dias.","a":["120"],"art":"Art. 175, III","tip":"120 dias para os demais casos."},
+    # PROCESSO DISCIPLINAR
+    {"cat":"Disciplinar","q":"O registro da advertência é cancelado após ___ anos sem nova infração.","a":["3","três"],"art":"Art. 201","tip":"Advertência: 3 anos. Suspensão: 5 anos."},
+    {"cat":"Disciplinar","q":"O registro da suspensão é cancelado após ___ anos sem nova infração.","a":["5","cinco"],"art":"Art. 201","tip":"Suspensão: 5 anos. Advertência: 3 anos."},
+    {"cat":"Disciplinar","q":"A prescrição disciplinar para demissão é de ___ anos.","a":["5","cinco"],"art":"Art. 208, I","tip":"Demissão = 5 anos."},
+    {"cat":"Disciplinar","q":"A prescrição disciplinar para suspensão é de ___ anos.","a":["2","dois"],"art":"Art. 208, II","tip":"Suspensão = 2 anos."},
+    {"cat":"Disciplinar","q":"A prescrição disciplinar para advertência é de ___ ano.","a":["1","um"],"art":"Art. 208, III","tip":"Advertência = 1 ano."},
+    {"cat":"Disciplinar","q":"O prazo da sindicância é de ___ dias, prorrogável por igual período.","a":["30","trinta"],"art":"Art. 214, §2º","tip":"30 + 30 dias."},
+    {"cat":"Disciplinar","q":"O prazo do PAD é de ___ dias, prorrogável por igual período.","a":["60","sessenta"],"art":"Art. 217, §1º","tip":"60 + 60 dias."},
+    {"cat":"Disciplinar","q":"O afastamento preventivo dura até ___ dias, prorrogável por igual período.","a":["60","sessenta"],"art":"Art. 222","tip":"60 + 60 dias, sem prejuízo de remuneração."},
+    {"cat":"Disciplinar","q":"O prazo para defesa escrita no PAD com 1 acusado é de ___ dias.","a":["10","dez"],"art":"Art. 250","tip":"1 acusado: 10 dias. 2+ acusados: 20 dias."},
+    {"cat":"Disciplinar","q":"O prazo para defesa escrita no PAD com 2 ou mais acusados é de ___ dias.","a":["20","vinte"],"art":"Art. 250","tip":"2+ acusados: 20 dias."},
+    {"cat":"Disciplinar","q":"O prazo para julgamento do PAD é de ___ dias do recebimento dos autos.","a":["20","vinte"],"art":"Art. 256","tip":"20 dias do recebimento dos autos pela autoridade julgadora."},
+    # REMUNERAÇÃO
+    {"cat":"Remuneração","q":"O adicional de insalubridade no grau mínimo é de ___%.","a":["10","dez"],"art":"Art. 88","tip":"Mínimo: 10%, Médio: 20%, Máximo: 40%."},
+    {"cat":"Remuneração","q":"O adicional de insalubridade no grau médio é de ___%.","a":["20","vinte"],"art":"Art. 88","tip":"Mínimo: 10%, Médio: 20%, Máximo: 40%."},
+    {"cat":"Remuneração","q":"O adicional de insalubridade no grau máximo é de ___%.","a":["40","quarenta"],"art":"Art. 88","tip":"Mínimo: 10%, Médio: 20%, Máximo: 40%."},
+    {"cat":"Remuneração","q":"O adicional de periculosidade é de ___% sobre o vencimento básico.","a":["30","trinta"],"art":"Art. 89","tip":"Periculosidade = 30%."},
+    {"cat":"Remuneração","q":"A hora noturna tem duração de ___ minutos e 30 segundos.","a":["52"],"art":"Art. 85, §2º","tip":"Hora noturna = 52min30s."},
+]
+
+CATS = sorted(set(f["cat"] for f in FRASES))
+
+CSS = """
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #0d1117; color: #e6edf3; font-family: 'Segoe UI', sans-serif; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+h1 { font-size: 1.4rem; color: #a371f7; margin-bottom: 4px; }
+.sub { color: #8b949e; font-size: .85rem; margin-bottom: 16px; text-align: center; }
+.controls { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; justify-content: center; }
+.controls label { background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 5px 10px; font-size: .78rem; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+.controls label:hover { border-color: #a371f7; }
+.controls input[type=checkbox] { accent-color: #a371f7; }
+.btn-start { background: #6e40c9; color: #fff; border: none; border-radius: 8px; padding: 10px 28px; font-size: 1rem; cursor: pointer; }
+.btn-start:hover { background: #a371f7; }
+#game { display: none; width: 100%; max-width: 640px; }
+.score-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: .88rem; color: #8b949e; }
+#num-badge { background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 4px 10px; font-size: .8rem; }
+.timer-wrap { height: 5px; background: #21262d; border-radius: 3px; margin-bottom: 14px; overflow: hidden; }
+#timer-bar { height: 5px; border-radius: 3px; background: #a371f7; transition: width 1s linear, background .5s; }
+.card { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 24px 22px; margin-bottom: 12px; }
+.cat-tag { font-size: .72rem; color: #8b949e; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 12px; }
+.question-blank { font-size: 1.05rem; line-height: 1.8; }
+.blank { display: inline-block; min-width: 80px; border-bottom: 2px solid #a371f7; padding: 0 6px; text-align: center; color: #a371f7; font-weight: 700; }
+.input-row { display: flex; gap: 10px; margin-top: 18px; align-items: center; }
+#resposta { flex: 1; background: #0d1117; border: 2px solid #30363d; border-radius: 8px; padding: 12px 14px; color: #e6edf3; font-size: 1rem; outline: none; transition: border-color .15s; }
+#resposta:focus { border-color: #a371f7; }
+#resposta.ok { border-color: #3fb950; }
+#resposta.nok { border-color: #f85149; }
+.btn-conf { background: #6e40c9; color: #fff; border: none; border-radius: 8px; padding: 12px 20px; font-size: .95rem; cursor: pointer; white-space: nowrap; }
+.btn-conf:hover { background: #a371f7; }
+.feedback { margin-top: 12px; padding: 12px 14px; border-radius: 8px; font-size: .88rem; line-height: 1.5; display: none; }
+.feedback.show { display: block; }
+.feedback.ok { background: rgba(63,185,80,.1); border: 1px solid #3fb950; color: #3fb950; }
+.feedback.nok { background: rgba(248,81,73,.1); border: 1px solid #f85149; color: #f85149; }
+.art-ref { font-size: .78rem; opacity: .8; margin-bottom: 3px; }
+.btn-next { display: none; width: 100%; padding: 11px; background: #1f6feb; border: none; border-radius: 8px; color: #fff; font-size: .95rem; cursor: pointer; margin-top: 10px; }
+.btn-next.show { display: block; }
+#result { display: none; text-align: center; padding: 30px; max-width: 640px; width: 100%; }
+#result h2 { font-size: 1.6rem; margin-bottom: 8px; }
+.score-big { font-size: 3rem; font-weight: 700; color: #a371f7; margin: 10px 0; }
+.score-label { color: #8b949e; margin-bottom: 20px; }
+.btn-retry { background: #6e40c9; color: #fff; border: none; border-radius: 8px; padding: 12px 28px; font-size: .95rem; cursor: pointer; }
+.btn-retry:hover { background: #a371f7; }
+"""
+
+JS = r"""
+const FRASES = __FRASES__;
+let deck=[], idx=0, acertos=0, total=0, timer=null, secs=30, respondido=false;
+
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function getSelected(){return [...document.querySelectorAll('.controls input:checked')].map(i=>i.value);}
+function norm(s){return s.trim().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');}
+
+function startGame(){
+  const sel=getSelected();
+  deck=shuffle(FRASES.filter(f=>sel.includes(f.cat)));
+  if(!deck.length){alert('Selecione ao menos uma categoria!');return;}
+  idx=0;acertos=0;total=deck.length;respondido=false;
+  document.getElementById('setup').style.display='none';
+  document.getElementById('game').style.display='block';
+  document.getElementById('result').style.display='none';
+  nextQ();
+}
+
+function nextQ(){
+  if(idx>=deck.length){showResult();return;}
+  respondido=false;
+  const f=deck[idx];
+  document.getElementById('num-badge').textContent=`${idx+1} / ${total}`;
+  document.getElementById('score-val').textContent=acertos;
+  document.querySelector('.cat-tag').textContent=f.cat;
+  // Highlight ___ in the question
+  document.querySelector('.question-blank').innerHTML=
+    f.q.replace('___','<span class="blank">___</span>');
+  const inp=document.getElementById('resposta');
+  inp.value=''; inp.className=''; inp.disabled=false;
+  inp.focus();
+  document.querySelector('.feedback').className='feedback';
+  document.querySelector('.btn-next').className='btn-next';
+  startTimer(f);
+}
+
+function startTimer(f){
+  clearInterval(timer); secs=30;
+  const bar=document.getElementById('timer-bar');
+  bar.style.transition='none'; bar.style.width='100%'; bar.style.background='#a371f7';
+  setTimeout(()=>{ bar.style.transition='width 1s linear, background .5s'; bar.style.width='0%'; },30);
+  timer=setInterval(()=>{
+    secs--;
+    const pct=secs/30*100;
+    if(pct<40) bar.style.background='#d29922';
+    if(pct<20) bar.style.background='#f85149';
+    if(secs<=0){clearInterval(timer);confirmar(true);}
+  },1000);
+}
+
+function confirmar(timeout){
+  if(respondido) return;
+  respondido=true;
+  clearInterval(timer);
+  const f=deck[idx];
+  const inp=document.getElementById('resposta');
+  inp.disabled=true;
+  const val=norm(inp.value);
+  const ok=!timeout && f.a.some(a=>norm(a)===val);
+  if(ok){ acertos++; inp.className='ok'; } else { inp.className='nok'; }
+  const fb=document.querySelector('.feedback');
+  const respostaCorreta=f.a[0];
+  fb.innerHTML=ok
+    ? `<div class="art-ref">${f.art}</div><div>${f.tip}</div>`
+    : `<div class="art-ref">${f.art}</div><div><strong>Resposta: ${respostaCorreta}</strong> — ${f.tip}</div>`;
+  fb.className='feedback show '+(ok?'ok':'nok');
+  document.querySelector('.btn-next').className='btn-next show';
+  document.getElementById('score-val').textContent=acertos;
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('resposta').addEventListener('keydown',e=>{
+    if(e.key==='Enter') confirmar(false);
+  });
+});
+
+function nextQuestion(){idx++;nextQ();}
+
+function showResult(){
+  document.getElementById('game').style.display='none';
+  const res=document.getElementById('result');
+  res.style.display='block';
+  const pct=Math.round(acertos/total*100);
+  res.querySelector('h2').textContent=pct>=80?'Memória ativa! 🧠':pct>=60?'Bom trabalho! 💪':'Continue praticando! 📚';
+  res.querySelector('.score-big').textContent=`${acertos}/${total}`;
+  res.querySelector('.score-label').textContent=`${pct}% corretas`;
+}
+
+function retryAll(){
+  document.getElementById('result').style.display='none';
+  document.getElementById('setup').style.display='block';
+}
+"""
+
+def build_html():
+    import json
+    cats_checkboxes = "\n    ".join(
+        f'<label><input type="checkbox" value="{c}" checked> {c}</label>'
+        for c in CATS
+    )
+    js = JS.replace("__FRASES__", json.dumps(FRASES, ensure_ascii=False))
+    return f"""<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Complete a Frase — LC 840/2011</title>
+<style>{CSS}</style>
+</head>
+<body>
+<h1>✏️ Complete a Frase</h1>
+<p class="sub">LC 840/2011 — {len(FRASES)} frases • Digite o número ou palavra que falta • Enter para confirmar</p>
+<div id="setup" style="width:100%;max-width:640px">
+  <p style="color:#8b949e;font-size:.82rem;margin-bottom:8px;text-align:center">Categorias:</p>
+  <div class="controls">{cats_checkboxes}</div>
+  <div style="text-align:center"><button class="btn-start" onclick="startGame()">✏️ Iniciar</button></div>
+</div>
+<div id="game">
+  <div class="score-bar">
+    <span>Acertos: <span id="score-val" style="color:#a371f7">0</span></span>
+    <span id="num-badge">1/{len(FRASES)}</span>
+  </div>
+  <div class="timer-wrap"><div id="timer-bar" style="width:100%"></div></div>
+  <div class="card">
+    <div class="cat-tag"></div>
+    <div class="question-blank"></div>
+    <div class="input-row">
+      <input type="text" id="resposta" placeholder="Digite aqui..." autocomplete="off" autocorrect="off" spellcheck="false">
+      <button class="btn-conf" onclick="confirmar(false)">Confirmar</button>
+    </div>
+    <div class="feedback"></div>
+    <button class="btn-next" onclick="nextQuestion()">Próximo →</button>
+  </div>
+</div>
+<div id="result">
+  <h2></h2>
+  <div class="score-big"></div>
+  <div class="score-label"></div>
+  <br>
+  <button class="btn-retry" onclick="retryAll()">↩ Jogar novamente</button>
+</div>
+<script>{js}</script>
+</body>
+</html>"""
+
+html = build_html()
+with open(r"c:\Users\hacke\OneDrive - unb.br\estudo\complete_lc840.html","w",encoding="utf-8") as f:
+    f.write(html)
+print(f"Criado! complete_lc840.html — {len(FRASES)} frases, {len(html)//1024}KB")

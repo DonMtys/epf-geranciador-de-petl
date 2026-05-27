@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jogos LC 840/2011</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #0d1117; color: #e6edf3; font-family: 'Segoe UI', sans-serif; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 32px 20px; }
+h1 { font-size: 1.8rem; color: #58a6ff; margin-bottom: 6px; text-align: center; }
+.sub { color: #8b949e; font-size: .9rem; margin-bottom: 36px; text-align: center; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; width: 100%; max-width: 900px; }
+.card { background: #161b22; border: 1px solid #30363d; border-radius: 14px; padding: 24px 22px; cursor: pointer; text-decoration: none; color: inherit; transition: border-color .2s, transform .15s, box-shadow .2s; display: flex; flex-direction: column; gap: 10px; }
+.card:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,.4); }
+.card-icon { font-size: 2.4rem; }
+.card-title { font-size: 1.15rem; font-weight: 700; color: var(--accent); }
+.card-desc { font-size: .85rem; color: #8b949e; line-height: 1.5; }
+.card-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+.tag { font-size: .72rem; padding: 3px 9px; border-radius: 10px; border: 1px solid; }
+.card-1 { --accent: #58a6ff; }
+.card-1 .tag { border-color: #58a6ff; color: #58a6ff; background: rgba(88,166,255,.1); }
+.card-2 { --accent: #d29922; }
+.card-2 .tag { border-color: #d29922; color: #d29922; background: rgba(210,153,34,.1); }
+.card-3 { --accent: #a371f7; }
+.card-3 .tag { border-color: #a371f7; color: #a371f7; background: rgba(163,113,247,.1); }
+.card-4 { --accent: #3fb950; }
+.card-4 .tag { border-color: #3fb950; color: #3fb950; background: rgba(63,185,80,.1); }
+.card-5 { --accent: #f78166; }
+.card-5 .tag { border-color: #f78166; color: #f78166; background: rgba(247,129,102,.1); }
+.card-6 { --accent: #f85149; }
+.card-6 .tag { border-color: #f85149; color: #f85149; background: rgba(248,81,73,.1); }
+.card-7 { --accent: #d29922; }
+.card-7 .tag { border-color: #d29922; color: #d29922; background: rgba(210,153,34,.1); }
+.card-8 { --accent: #a371f7; }
+.card-8 .tag { border-color: #a371f7; color: #a371f7; background: rgba(163,113,247,.1); }
+.badge-new { background: #238636; color: #fff; font-size: .65rem; padding: 2px 7px; border-radius: 8px; font-weight: 700; vertical-align: middle; margin-left: 6px; }
+.footer { margin-top: 40px; color: #484f58; font-size: .8rem; text-align: center; }
+</style>
+</head>
+<body>
+
+<h1>🎮 Jogos LC 840/2011</h1>
+<p class="sub">Selecione o modo de estudo. Todos os jogos salvam progresso na sessão.</p>
+
+<div class="grid">
+
+  <a href="quiz_lc840.html" class="card card-1">
+    <div class="card-icon">🧩</div>
+    <div class="card-title">Quiz LC 840</div>
+    <div class="card-desc">58 questões hand-crafted sobre prazos, situações e pegadinhas. Timer de 30 segundos por questão. Filtro por categoria.</div>
+    <div class="card-meta">
+      <span class="tag">58 questões</span>
+      <span class="tag">Timer 30s</span>
+      <span class="tag">9 categorias</span>
+    </div>
+  </a>
+
+  <a href="prazos_lc840.html" class="card card-2">
+    <div class="card-icon">⏱️</div>
+    <div class="card-title">Jogo dos Prazos</div>
+    <div class="card-desc">Foco total em números: dias, percentuais, anos. Timer de 15 segundos — pressão máxima para fixar os prazos que mais caem.</div>
+    <div class="card-meta">
+      <span class="tag">56 cenários</span>
+      <span class="tag">Timer 15s</span>
+      <span class="tag">8 categorias</span>
+    </div>
+  </a>
+
+  <a href="flashcards_lc840.html" class="card card-3">
+    <div class="card-icon">🃏</div>
+    <div class="card-title">Flashcards</div>
+    <div class="card-desc">Vire o card para revelar a resposta e avalie se sabia. No final, opção de revisar só os cards que errou. Ótimo para revisão rápida.</div>
+    <div class="card-meta">
+      <span class="tag">63 cards</span>
+      <span class="tag">Sem timer</span>
+      <span class="tag">Auto-avaliação</span>
+    </div>
+  </a>
+
+  <a href="quiz_real_lc840.html" class="card card-4">
+    <div class="card-icon">📋</div>
+    <div class="card-title">Quiz Questões Reais</div>
+    <div class="card-desc">193 questões reais de provas anteriores: QUADRIX, CEBRASPE, IADES, IBFC e FCC. Filtro por banca. O mais próximo da prova de verdade.</div>
+    <div class="card-meta">
+      <span class="tag">193 questões</span>
+      <span class="tag">Timer 30s</span>
+      <span class="tag">5 bancas</span>
+    </div>
+  </a>
+
+  <a href="memoria_lc840.html" class="card card-5">
+    <div class="card-icon">🧠</div>
+    <div class="card-title">Jogo da Memória</div>
+    <div class="card-desc">Encontre os pares: conceito ↔ valor. Cronômetro e contagem de jogadas. Escolha a dificuldade de 6 a 20 pares na mesma rodada.</div>
+    <div class="card-meta">
+      <span class="tag">61 pares</span>
+      <span class="tag">4 dificuldades</span>
+      <span class="tag">Cronometrado</span>
+    </div>
+  </a>
+
+  <a href="speed_lc840.html" class="card card-6">
+    <div class="card-icon">⚡</div>
+    <div class="card-title">Speed Round <span class="badge-new">NOVO</span></div>
+    <div class="card-desc">Certo ou Errado em 5 segundos, sem parar. Use as teclas C e E. No final, veja todos os erros com explicação de uma vez.</div>
+    <div class="card-meta">
+      <span class="tag">64 questões</span>
+      <span class="tag">Timer 5s</span>
+      <span class="tag">Teclas C/E</span>
+    </div>
+  </a>
+
+  <a href="survival_lc840.html" class="card card-7">
+    <div class="card-icon">💀</div>
+    <div class="card-title">Modo Sobrevivência <span class="badge-new">NOVO</span></div>
+    <div class="card-desc">3 vidas e timer de 20s. Responda sem parar até perder as 3 vidas. Recorde salvo no navegador. Quantas questões você aguenta?</div>
+    <div class="card-meta">
+      <span class="tag">46 questões</span>
+      <span class="tag">3 vidas</span>
+      <span class="tag">Recorde salvo</span>
+    </div>
+  </a>
+
+  <a href="complete_lc840.html" class="card card-8">
+    <div class="card-icon">✏️</div>
+    <div class="card-title">Complete a Frase <span class="badge-new">NOVO</span></div>
+    <div class="card-desc">"A posse deve ocorrer em até ___ dias." Digite o número ou palavra. Ativa a memória ativa, não só o reconhecimento.</div>
+    <div class="card-meta">
+      <span class="tag">56 frases</span>
+      <span class="tag">Timer 30s</span>
+      <span class="tag">Digitação</span>
+    </div>
+  </a>
+
+</div>
+
+<div class="footer">LC 840/2011 — Estatuto dos Servidores Públicos Civis do Distrito Federal</div>
+
+</body>
+</html>

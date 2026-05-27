@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SEDES 2026 - Estudo</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+:root{
+  --blue:#3b82f6;--blue-glow:rgba(59,130,246,.35);
+  --cyan:#06b6d4;--cyan-glow:rgba(6,182,212,.3);
+  --red:#f87171;--red-glow:rgba(248,113,113,.3);
+  --yellow:#fbbf24;--yellow-glow:rgba(251,191,36,.3);
+  --orange:#fb923c;--orange-glow:rgba(251,146,60,.3);
+  --green:#34d399;--green-glow:rgba(52,211,153,.3);
+  --bg:#0d1117;--bg2:#0a0e14;
+  --card:#161b22;--card2:#1c2433;
+  --text:#e6edf3;--text2:#c9d1d9;--muted:#7d8590;
+  --border:#30363d;--border2:#21262d;
+  --radius:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Inter',system-ui,sans-serif;
+  background:var(--bg);color:var(--text);font-size:14px;
+  background-image:radial-gradient(ellipse at 20% 0%,rgba(59,130,246,.07) 0%,transparent 50%),radial-gradient(ellipse at 80% 100%,rgba(6,182,212,.05) 0%,transparent 50%);
+  min-height:100vh;
+}
+header{
+  background:linear-gradient(135deg,#0d1117 0%,#161b22 100%);
+  border-bottom:1px solid var(--border);
+  padding:0 24px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;
+  position:sticky;top:0;z-index:100;backdrop-filter:blur(12px);
+}
+.header-brand{display:flex;align-items:center;gap:10px;padding:14px 0}
+.header-logo{
+  width:32px;height:32px;border-radius:8px;
+  background:linear-gradient(135deg,var(--blue),var(--cyan));
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:800;color:#fff;font-family:'JetBrains Mono',monospace;
+  box-shadow:0 0 12px var(--blue-glow);
+}
+header h1{
+  font-size:15px;font-weight:700;color:var(--text);letter-spacing:-.3px;
+}
+header h1 span{color:var(--cyan);font-family:'JetBrains Mono',monospace}
+nav{display:flex;gap:2px;flex-wrap:wrap;padding:10px 0}
+nav button{
+  background:transparent;border:none;color:var(--muted);
+  padding:6px 14px;border-radius:8px;cursor:pointer;
+  font-size:13px;font-weight:500;transition:all .2s;letter-spacing:-.1px;
+  font-family:'Inter',sans-serif;
+}
+nav button:hover{background:rgba(255,255,255,.06);color:var(--text)}
+nav button.active{
+  background:rgba(59,130,246,.15);color:var(--blue);
+  box-shadow:inset 0 0 0 1px rgba(59,130,246,.3);
+}
+main{padding:24px;max-width:1120px;margin:0 auto}
+section{display:none}
+section.active{display:block;animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.card{
+  background:var(--card);border-radius:var(--radius);padding:20px;
+  border:1px solid var(--border);margin-bottom:16px;
+  transition:border-color .2s;
+}
+.card:hover{border-color:rgba(59,130,246,.2)}
+.stat-card{
+  background:var(--card);border-radius:var(--radius);padding:20px 20px 16px;
+  border:1px solid var(--border);position:relative;overflow:hidden;
+  transition:all .2s;cursor:default;
+}
+.stat-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:var(--accent,var(--blue));opacity:.7;
+}
+.stat-card:hover{border-color:var(--accent,var(--blue));transform:translateY(-1px);box-shadow:0 4px 20px rgba(0,0,0,.3)}
+.stat-card.accent-red{--accent:var(--red)}
+.stat-card.accent-yellow{--accent:var(--yellow)}
+.stat-card.accent-orange{--accent:var(--orange)}
+.stat-card.accent-green{--accent:var(--green)}
+.card-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-bottom:8px}
+.card-value{font-size:32px;font-weight:700;font-family:'JetBrains Mono',monospace;line-height:1}
+.card-sub{font-size:11px;color:var(--muted);margin-top:6px;font-family:'JetBrains Mono',monospace}
+.grid-4{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:20px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:600px){.grid-2{grid-template-columns:1fr}}
+.red{color:var(--red)}.yellow{color:var(--yellow)}.green{color:var(--green)}.orange{color:var(--orange)}.blue{color:var(--blue)}.cyan{color:var(--cyan)}
+.badge{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;
+  letter-spacing:.3px;text-transform:uppercase;
+}
+.badge::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.8}
+.badge-red{background:rgba(248,113,113,.12);color:var(--red);border:1px solid rgba(248,113,113,.25)}
+.badge-yellow{background:rgba(251,191,36,.12);color:var(--yellow);border:1px solid rgba(251,191,36,.25)}
+.badge-orange{background:rgba(251,146,60,.12);color:var(--orange);border:1px solid rgba(251,146,60,.25)}
+.badge-green{background:rgba(52,211,153,.12);color:var(--green);border:1px solid rgba(52,211,153,.25)}
+.badge-gray{background:rgba(125,133,144,.12);color:var(--muted);border:1px solid rgba(125,133,144,.2)}
+.badge-blue{background:rgba(59,130,246,.12);color:var(--blue);border:1px solid rgba(59,130,246,.25)}
+.badge-cyan{background:rgba(6,182,212,.12);color:var(--cyan);border:1px solid rgba(6,182,212,.25)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead{background:rgba(255,255,255,.02)}
+th{
+  text-align:left;padding:10px 12px;
+  border-bottom:1px solid var(--border);
+  color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.8px;font-weight:600;
+}
+td{padding:10px 12px;border-bottom:1px solid var(--border2);vertical-align:middle;color:var(--text2)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
+.btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:8px 16px;border-radius:8px;border:none;
+  cursor:pointer;font-size:13px;font-weight:500;
+  transition:all .2s;font-family:'Inter',sans-serif;
+  letter-spacing:-.1px;
+}
+.btn-primary{
+  background:linear-gradient(135deg,var(--blue),#2563eb);color:#fff;
+  box-shadow:0 2px 10px var(--blue-glow);
+}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 4px 16px var(--blue-glow)}
+.btn-green{
+  background:rgba(52,211,153,.15);color:var(--green);
+  border:1px solid rgba(52,211,153,.3);
+  padding:5px 12px;font-size:12px;
+}
+.btn-green:hover{background:rgba(52,211,153,.25);box-shadow:0 0 8px var(--green-glow)}
+.btn-ghost{
+  background:rgba(255,255,255,.05);color:var(--muted);
+  border:1px solid var(--border);padding:5px 12px;font-size:12px;
+}
+.btn-ghost:hover{background:rgba(255,255,255,.08);color:var(--text)}
+.btn-danger{
+  background:rgba(248,113,113,.1);color:var(--red);
+  border:1px solid rgba(248,113,113,.2);
+  padding:5px 10px;font-size:12px;
+}
+.btn-danger:hover{background:rgba(248,113,113,.2)}
+form label{display:block;font-size:12px;font-weight:600;margin-bottom:5px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.field{margin-bottom:16px}
+input,select,textarea{
+  width:100%;padding:9px 12px;
+  border:1px solid var(--border);border-radius:8px;
+  font-size:13px;color:var(--text);background:var(--bg2);
+  font-family:'Inter',sans-serif;transition:all .2s;
+}
+input:focus,select:focus,textarea:focus{
+  outline:none;border-color:var(--blue);
+  box-shadow:0 0 0 3px var(--blue-glow);background:var(--card);
+}
+select option{background:var(--card2);color:var(--text)}
+textarea{resize:vertical;min-height:72px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:500px){.form-row{grid-template-columns:1fr}}
+.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+@media(max-width:500px){.form-row-3{grid-template-columns:1fr}}
+.section-title{
+  font-size:16px;font-weight:700;margin-bottom:18px;color:var(--text);
+  display:flex;align-items:center;gap:8px;
+}
+.section-title::before{
+  content:'';display:block;width:3px;height:18px;
+  background:linear-gradient(180deg,var(--blue),var(--cyan));
+  border-radius:2px;
+}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.filters select{width:auto;min-width:150px}
+.warn-box{
+  background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.2);
+  border-radius:8px;padding:12px 16px;font-size:13px;color:var(--yellow);margin-bottom:14px;
+}
+.stat-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.stat-bar-label{
+  width:220px;font-size:12px;flex-shrink:0;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text2);
+}
+.stat-bar-track{flex:1;background:rgba(255,255,255,.06);border-radius:6px;height:8px;overflow:hidden}
+.stat-bar-fill{height:100%;border-radius:6px;position:relative}
+.stat-bar-fill::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.0) 0%,rgba(255,255,255,.15) 100%)}
+.stat-bar-pct{width:45px;font-size:12px;font-weight:700;text-align:right;flex-shrink:0;font-family:'JetBrains Mono',monospace}
+.today-rev-list{display:flex;flex-direction:column;gap:8px}
+.rev-item{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 14px;border-radius:10px;
+  background:rgba(255,255,255,.03);border:1px solid var(--border2);
+  transition:all .2s;
+}
+.rev-item:hover{background:rgba(255,255,255,.05);border-color:var(--border)}
+.rev-info{flex:1;min-width:0}
+.rev-topico{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)}
+.rev-meta{font-size:11px;color:var(--muted);margin-top:2px;font-family:'JetBrains Mono',monospace}
+.empty{
+  text-align:center;padding:40px 20px;color:var(--muted);font-size:13px;
+  border:1px dashed var(--border2);border-radius:10px;
+}
+.date-card{
+  background:linear-gradient(135deg,rgba(59,130,246,.08),rgba(6,182,212,.05));
+  border:1px solid rgba(59,130,246,.2);border-radius:var(--radius);
+  padding:18px 20px;margin-bottom:20px;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;
+}
+.date-card .date-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-bottom:4px}
+.date-card .date-val{font-size:18px;font-weight:700;text-transform:capitalize;color:var(--text)}
+.date-card .meta-right{display:flex;gap:16px;font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace}
+.meta-right span b{color:var(--cyan)}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-brand">
+    <div class="header-logo">S</div>
+    <h1>SEDES <span>2026</span></h1>
+  </div>
+  <nav>
+    <button class="active" onclick="showTab('dashboard',this)">Painel</button>
+    <button onclick="showTab('registro',this)">Registrar</button>
+    <button onclick="showTab('revisoes',this)">Revisoes</button>
+    <button onclick="showTab('erros',this)">Erros</button>
+    <button onclick="showTab('stats',this)">Estatisticas</button>
+  </nav>
+</header>
+<main>
+  <section id="dashboard" class="active"><div id="dash-content"></div></section>
+  <section id="registro"><div id="reg-content"></div></section>
+  <section id="revisoes"><div id="rev-content"></div></section>
+  <section id="erros"><div id="err-content"></div></section>
+  <section id="stats"><div id="stats-content"></div></section>
+</main>
+<script>
+
+const INITIAL_DATA = {"topicos_cf":[{"id":"cf_1","seq":1,"bloco":"1.1 Princípios Fundamentais","topico":"Fundamentos da República (soberania, cidadania, dignidade, valores sociais, pluralismo)","artigo":"Art. 1º, I a V e § único","prioridade":"🔥 Alta","status":"Conteúdo em evolução","confianca":3,"data_inicio":"2026-05-20","revisoes":{"d1":"2026-05-21","d3":"2026-05-23","d7":"2026-05-27","d15":"2026-06-04","d30":"2026-06-19"},"revisoes_feitas":[],"questoes":15,"acertos":12,"erros":3,"observacao":"Pontos fracos: confusão entre fundamentos da República, objetivos fundamentais e princ?pios das relações internacionais; diferenciar autonomia dos entes federativos e soberania da República; união indissolúvel e ausência de direito de secessão; art. 4? com integração da América Latina; intervenção x não intervenção; funções típicas e atípicas dos Poderes, especialmente Legislativo em função administrativa como licitação; garantia do desenvolvimento nacional ? objetivo do art. 3?.","materia":"Direito Constitucional"},{"id":"cf_2","seq":2,"bloco":"1.1 Princípios Fundamentais","topico":"Separação dos Poderes (Legislativo, Executivo, Judiciário)","artigo":"Art. 2º","prioridade":"🔥 Alta","status":"Conteúdo em evolução","confianca":4,"data_inicio":"2026-05-20","revisoes":{"d1":"2026-05-21","d3":"2026-05-23","d7":"2026-05-27","d15":"2026-06-04","d30":"2026-06-19"},"revisoes_feitas":[],"questoes":15,"acertos":11,"erros":4,"observacao":"Pontos fracos: confusão entre fundamentos da República, objetivos fundamentais e princ?pios das relações internacionais; diferenciar autonomia dos entes federativos e soberania da República; união indissolúvel e ausência de direito de secessão; art. 4? com integração da América Latina; intervenção x não intervenção; funções típicas e atípicas dos Poderes, especialmente Legislativo em função administrativa como licitação; garantia do desenvolvimento nacional ? objetivo do art. 3?.","materia":"Direito Constitucional"},{"id":"cf_3","seq":3,"bloco":"1.1 Princípios Fundamentais","topico":"Objetivos fundamentais da República","artigo":"Art. 3º, I a IV","prioridade":"🔥 Alta","status":"Conteúdo em evolução","confianca":2,"data_inicio":"2026-05-20","revisoes":{"d1":"2026-05-21","d3":"2026-05-23","d7":"2026-05-27","d15":"2026-06-04","d30":"2026-06-19"},"revisoes_feitas":[],"questoes":15,"acertos":12,"erros":3,"observacao":"Pontos fracos: confusão entre fundamentos da República, objetivos fundamentais e princ?pios das relações internacionais; diferenciar autonomia dos entes federativos e soberania da República; união indissolúvel e ausência de direito de secessão; art. 4? com integração da América Latina; intervenção x não intervenção; funções típicas e atípicas dos Poderes, especialmente Legislativo em função administrativa como licitação; garantia do desenvolvimento nacional ? objetivo do art. 3?.","materia":"Direito Constitucional"},{"id":"cf_4","seq":4,"bloco":"1.1 Princípios Fundamentais","topico":"Princípios das relações internacionais","artigo":"Art. 4º, I a X e § único","prioridade":"⚡ Média","status":"Conteúdo em evolução","confianca":4,"data_inicio":"2026-05-20","revisoes":{"d1":"2026-05-21","d3":"2026-05-23","d7":"2026-05-27","d15":"2026-06-04","d30":"2026-06-19"},"revisoes_feitas":[],"questoes":15,"acertos":11,"erros":4,"observacao":"Pontos fracos: confusão entre fundamentos da República, objetivos fundamentais e princ?pios das relações internacionais; diferenciar autonomia dos entes federativos e soberania da República; união indissolúvel e ausência de direito de secessão; art. 4? com integração da América Latina; intervenção x não intervenção; funções típicas e atípicas dos Poderes, especialmente Legislativo em função administrativa como licitação; garantia do desenvolvimento nacional ? objetivo do art. 3?.","materia":"Direito Constitucional"},{"id":"cf_5","seq":5,"bloco":"1.2 Direitos Individuais e Coletivos","topico":"Igualdade perante a lei; vida, liberdade, igualdade, segurança e propriedade.","artigo":"Art. 5º, caput","prioridade":"Alta","status":"Estudando","confianca":3,"data_inicio":"2026-05-16","revisoes":{"d1":"2026-05-17","d3":"2026-05-19","d7":"2026-05-23","d15":"2026-05-31","d30":"2026-06-15"},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"Conteúdo visto na teoria, mas sem bloco específico de questões corrigidas aqui.","materia":"Direito Constitucional"},{"id":"cf_6","seq":6,"bloco":"1.2 Direitos Individuais e Coletivos","topico":"Igualdade entre homens e mulheres; legalidade; vedação à tortura; liberdade de manifestação do pensamento; direito de resposta.","artigo":"Art. 5º, I ao V","prioridade":"Alta","status":"Revisão de erros realizada - reforçar","confianca":5,"data_inicio":"2026-05-16","revisoes":{"d1":"2026-05-17","d3":"2026-05-19","d7":"2026-05-23","d15":"2026-05-31","d30":"2026-06-15"},"revisoes_feitas":[],"questoes":5,"acertos":4,"erros":1,"observacao":"Direito de reunião; extradição de brasileiro naturalizado; presunção de inocência; racismo; interceptação telefónica; acesso ? informação; inafastabilidade da jurisdição/acesso ? Justiça.","materia":"Direito Constitucional"},{"id":"cf_7","seq":7,"bloco":"1.2 Direitos Individuais e Coletivos","topico":"Liberdade de consciência, crença e culto; assistência religiosa; escusa de consciência; liberdade intelectual/artística/científica/comunicação; intimidade, vida privada, honra e imagem.","artigo":"Art. 5º, VI ao X","prioridade":"Alta","status":"Revisão de erros realizada - reforçar","confianca":4,"data_inicio":"2026-05-16","revisoes":{"d1":"2026-05-17","d3":"2026-05-19","d7":"2026-05-23","d15":"2026-05-31","d30":"2026-06-15"},"revisoes_feitas":[],"questoes":5,"acertos":4,"erros":2,"observacao":"Direito de reunião; extradição de brasileiro naturalizado; presunção de inocência; racismo; interceptação telefónica; acesso ? informação; inafastabilidade da jurisdição/acesso ? Justiça.","materia":"Direito Constitucional"},{"id":"cf_8","seq":8,"bloco":"1.2 Direitos Individuais e Coletivos","topico":"Inviolabilidade da casa; sigilo das comunicações; liberdade profissional; acesso à informação e sigilo da fonte; liberdade de locomoção.","artigo":"Art. 5º, XI ao XV","prioridade":"Alta","status":"Revisão de erros realizada - reforçar","confianca":4,"data_inicio":"2026-05-16","revisoes":{"d1":"2026-05-17","d3":"2026-05-19","d7":"2026-05-23","d15":"2026-05-31","d30":"2026-06-15"},"revisoes_feitas":[],"questoes":5,"acertos":5,"erros":3,"observacao":"Direito de reunião; extradição de brasileiro naturalizado; presunção de inocência; racismo; interceptação telefónica; acesso ? informação; inafastabilidade da jurisdição/acesso ? Justiça.","materia":"Direito Constitucional"},{"id":"cf_9","seq":9,"bloco":"1.2 Direitos Individuais e Coletivos","topico":"Direito de reunião; liberdade de associação; criação de associações e cooperativas; dissolução/suspensão de associações; ninguém é obrigado a se associar; representação por entidades associativas.","artigo":"Art. 5º, XVI ao XXI","prioridade":"Alta","status":"Revisão de erros realizada - reforçar","confianca":1,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"Direito de reunião; extradição de brasileiro naturalizado; presunção de inocência; racismo; interceptação telefónica; acesso ? informação; inafastabilidade da jurisdição/acesso ? Justiça.","materia":"Direito Constitucional"},{"id":"cf_10","seq":10,"bloco":"1.2 Direitos Individuais e Coletivos","topico":"Direito de propriedade; função social; desapropriação; requisição administrativa; pequena propriedade rural; direitos autorais; propriedade industrial; herança; sucessão de bens de estrangeiros.","artigo":"Art. 5º, XXII ao XXXI","prioridade":"Média","status":"Não estudado","confianca":1,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"sigilo da fonte, locomoção em tempo de paz, associação paramilitar, direito de reunião, certidões gratuitas, liberdade de expressão sem licença, escusa de consciência, pena de morte em guerra declarada, indenização por violação à intimidade/honra.","materia":"Direito Constitucional"},{"id":"cf_11","seq":11,"bloco":"1.2 Direitos Individuais e Coletivos","topico":"Defesa do consumidor; direito à informação pública; direito de petição e certidões; acesso à Justiça.","artigo":"Art. 5º, XXXII ao XXXV","prioridade":"Alta","status":"Revisão de erros realizada - reforçar","confianca":1,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"Direito de reunião; extradição de brasileiro naturalizado; presunção de inocência; racismo; interceptação telefónica; acesso ? informação; inafastabilidade da jurisdição/acesso ? Justiça.","materia":"Direito Constitucional"},{"id":"cf_12","seq":12,"bloco":"1.2 Direitos Individuais e Coletivos","topico":"Contraditório e ampla defesa.","artigo":"Art. 5º, LV","prioridade":"Alta","status":"Revisão de erros realizada - reforçar","confianca":1,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"Direito de reunião; extradição de brasileiro naturalizado; presunção de inocência; racismo; interceptação telefónica; acesso ? informação; inafastabilidade da jurisdição/acesso ? Justiça.","materia":"Direito Constitucional"},{"id":"cf_13","seq":13,"bloco":"1.2 Direitos Individuais e Coletivos","topico":"Garantias do preso / individualização e proporcionalidade das penas","artigo":"Art. 5º, LVI a LXVII","prioridade":"⚡ Média","status":"📕 Não estudado","confianca":1,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"","materia":"Direito Constitucional"},{"id":"cf_14","seq":14,"bloco":"1.2 Direitos Individuais e Coletivos","topico":"Remédios constitucionais: HC, MS, MI, HD, ação popular","artigo":"Art. 5º, LXVIII a LXXIII","prioridade":"🔥 Alta","status":"📕 Não estudado","confianca":1,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"","materia":"Direito Constitucional"},{"id":"cf_15","seq":15,"bloco":"1.2 Direitos Individuais e Coletivos","topico":"Razoável duração do processo / gratuidade de justiça / tratados de DH","artigo":"Art. 5º, LXXIV a LXXVIII e § 1º a § 4º","prioridade":"⚡ Média","status":"📕 Não estudado","confianca":1,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"","materia":"Direito Constitucional"},{"id":"cf_16","seq":16,"bloco":"1.2 Direitos Sociais","topico":"Rol dos direitos sociais (educação, saúde, alimentação, trabalho etc.)","artigo":"Art. 6º","prioridade":"🔥 Alta","status":"📕 Não estudado","confianca":1,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"","materia":"Direito Constitucional"},{"id":"cf_17","seq":17,"bloco":"1.2 Direitos Sociais","topico":"Direitos do trabalhador urbano e rural (FGTS, salário-mínimo, jornada)","artigo":"Art. 7º, I a XXXIV","prioridade":"🔥 Alta","status":"📕 Não estudado","confianca":1,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"","materia":"Direito Constitucional"},{"id":"cf_18","seq":18,"bloco":"1.2 Direitos Sociais","topico":"Liberdade de associação sindical / direito de greve","artigo":"Arts. 8º e 9º","prioridade":"⚡ Média","status":"📕 Não estudado","confianca":1,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"","materia":"Direito Constitucional"},{"id":"cf_19","seq":19,"bloco":"1.2 Direitos Sociais","topico":"Participação dos trabalhadores em colegiados / representante nas empresas","artigo":"Arts. 10 e 11","prioridade":"🌱 Baixa","status":"📕 Não estudado","confianca":1,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"","materia":"Direito Constitucional"},{"id":"cf_20","seq":20,"bloco":"1.3 Administração Pública — Disposições Gerais","topico":"Princípios LIMPE (Legalidade, Impessoalidade, Moralidade, Publicidade, Eficiência)","artigo":"Art. 37 caput","prioridade":"🔥 Alta","status":"Conteúdo em boa evolução","confianca":1,"data_inicio":"2026-05-20","revisoes":{"d1":"2026-05-21","d3":"2026-05-23","d7":"2026-05-27","d15":"2026-06-04","d30":"2026-06-19"},"revisoes_feitas":[],"questoes":30,"acertos":24,"erros":6,"observacao":"Revisão das erradas: 16 acertos em 19; restam 3 pontos para Anki específico.","materia":"Direito Constitucional"},{"id":"cf_21","seq":21,"bloco":"1.3 Administração Pública — Disposições Gerais","topico":"Acessibilidade a cargos / concurso público / prazo de validade","artigo":"Art. 37, I a IV","prioridade":"🔥 Alta","status":"Conteúdo em boa evolução","confianca":1,"data_inicio":"2026-05-20","revisoes":{"d1":"2026-05-21","d3":"2026-05-23","d7":"2026-05-27","d15":"2026-06-04","d30":"2026-06-19"},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"Revisão das erradas: 16 acertos em 19; restam 3 pontos para Anki específico.","materia":"Direito Constitucional"},{"id":"cf_22","seq":22,"bloco":"1.3 Administração Pública — Disposições Gerais","topico":"Cargos em comissão / reserva para PCD / contratação temporária","artigo":"Art. 37, V a IX","prioridade":"🔥 Alta","status":"Conteúdo em boa evolução","confianca":1,"data_inicio":"2026-05-20","revisoes":{"d1":"2026-05-21","d3":"2026-05-23","d7":"2026-05-27","d15":"2026-06-04","d30":"2026-06-19"},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"Revisão das erradas: 16 acertos em 19; restam 3 pontos para Anki específico.","materia":"Direito Constitucional"},{"id":"cf_23","seq":23,"bloco":"1.3 Administração Pública — Disposições Gerais","topico":"Remuneração e teto remuneratório / irredutibilidade","artigo":"Art. 37, X a XV","prioridade":"🔥 Alta","status":"Conteúdo em boa evolução","confianca":1,"data_inicio":"2026-05-20","revisoes":{"d1":"2026-05-21","d3":"2026-05-23","d7":"2026-05-27","d15":"2026-06-04","d30":"2026-06-19"},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"Revisão das erradas: 16 acertos em 19; restam 3 pontos para Anki específico.","materia":"Direito Constitucional"},{"id":"cf_24","seq":24,"bloco":"1.3 Administração Pública — Disposições Gerais","topico":"Acumulação de cargos / vedações","artigo":"Art. 37, XVI e XVII","prioridade":"🔥 Alta","status":"Conteúdo em boa evolução","confianca":1,"data_inicio":"2026-05-20","revisoes":{"d1":"2026-05-21","d3":"2026-05-23","d7":"2026-05-27","d15":"2026-06-04","d30":"2026-06-19"},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"Revisão das erradas: 16 acertos em 19; restam 3 pontos para Anki específico.","materia":"Direito Constitucional"},{"id":"cf_25","seq":25,"bloco":"1.3 Administração Pública — Disposições Gerais","topico":"Responsabilidade civil do Estado / improbidade / responsabilização","artigo":"Art. 37, § 4º a § 6º","prioridade":"🔥 Alta","status":"Conteúdo em boa evolução","confianca":1,"data_inicio":"2026-05-20","revisoes":{"d1":"2026-05-21","d3":"2026-05-23","d7":"2026-05-27","d15":"2026-06-04","d30":"2026-06-19"},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"Revisão das erradas: 16 acertos em 19; restam 3 pontos para Anki específico.","materia":"Direito Constitucional"},{"id":"cf_26","seq":26,"bloco":"1.3 Administração Pública — Disposições Gerais","topico":"Servidor público no exercício de mandato eletivo","artigo":"Art. 38, I a V","prioridade":"⚡ Média","status":"Conteúdo em boa evolução","confianca":1,"data_inicio":"2026-05-20","revisoes":{"d1":"2026-05-21","d3":"2026-05-23","d7":"2026-05-27","d15":"2026-06-04","d30":"2026-06-19"},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"Revisão das erradas: 16 acertos em 19; restam 3 pontos para Anki específico.","materia":"Direito Constitucional"},{"id":"cf_27","seq":27,"bloco":"1.3 Servidores Públicos","topico":"Regime jurídico único / planos de carreira / subsídio","artigo":"Art. 39","prioridade":"🔥 Alta","status":"📕 Não estudado","confianca":1,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"","materia":"Direito Constitucional"},{"id":"cf_28","seq":28,"bloco":"1.3 Servidores Públicos","topico":"Aposentadoria do servidor (RPPS) — regras gerais","artigo":"Art. 40 (com redação atual)","prioridade":"⚡ Média","status":"📕 Não estudado","confianca":1,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"","materia":"Direito Constitucional"},{"id":"cf_29","seq":29,"bloco":"1.3 Servidores Públicos","topico":"Estabilidade do servidor / estágio probatório / perda do cargo","artigo":"Art. 41","prioridade":"🔥 Alta","status":"📕 Não estudado","confianca":1,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"","materia":"Direito Constitucional"},{"id":"cf_30","seq":30,"bloco":"1.3 Servidores Públicos","topico":"Disposições gerais sobre militares e procuradores (visão geral)","artigo":"Arts. 42 e 132","prioridade":"🌱 Baixa","status":"📕 Não estudado","confianca":1,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"","materia":"Direito Constitucional"}],"topicos_adm":[{"id":"adm_1","seq":1,"bloco":"2.1 Estado, governo e Administração Pública","topico":"Conceitos básicos","artigo":"Estado, governo, Administração Pública, diferença entre Governo e Administração, Administração em sentido amplo e estrito","prioridade":"Média","status":"Não iniciado","confianca":0,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"Base teórica para entender o restante","materia":"Direito Administrativo"},{"id":"adm_2","seq":2,"bloco":"2.1 Estado, governo e Administração Pública","topico":"Elementos do Estado","artigo":"Povo, território, soberania/governo, finalidade do Estado","prioridade":"Média","status":"Não iniciado","confianca":0,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"Saber diferenciar povo, população e nação, se aparecer","materia":"Direito Administrativo"},{"id":"adm_3","seq":3,"bloco":"2.2 Ato administrativo","topico":"Conceito de ato administrativo","artigo":"Manifestação unilateral da Administração Pública, sob regime de direito público, que produz efeitos jurídicos","prioridade":"Alta","status":"Não iniciado","confianca":0,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"Entender diferença entre ato administrativo e ato da Administração","materia":"Direito Administrativo"},{"id":"adm_4","seq":4,"bloco":"2.2 Ato administrativo","topico":"Requisitos/elementos do ato administrativo","artigo":"Competência, finalidade, forma, motivo e objeto","prioridade":"Muito alta","status":"Não iniciado","confianca":0,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"Decorar os 5 requisitos; atenção a vícios","materia":"Direito Administrativo"},{"id":"adm_5","seq":5,"bloco":"2.2 Ato administrativo","topico":"Atributos do ato administrativo","artigo":"Presunção de legitimidade/veracidade, imperatividade, autoexecutoriedade e tipicidade","prioridade":"Muito alta","status":"Não iniciado","confianca":0,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"Autoexecutoriedade não existe em todos os atos","materia":"Direito Administrativo"},{"id":"adm_6","seq":6,"bloco":"2.2 Ato administrativo","topico":"Classificação dos atos administrativos","artigo":"Atos vinculados e discricionários; simples, complexo e composto; gerais e individuais; internos e externos","prioridade":"Alta","status":"Não iniciado","confianca":0,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"Diferenciar vinculado x discricionário","materia":"Direito Administrativo"},{"id":"adm_7","seq":7,"bloco":"2.2 Ato administrativo","topico":"Extinção do ato administrativo","artigo":"Anulação, revogação e convalidação","prioridade":"Muito alta","status":"Não iniciado","confianca":0,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"Anulação = ilegalidade; revogação = conveniência/oportunidade","materia":"Direito Administrativo"},{"id":"adm_8","seq":8,"bloco":"2.3 Poderes da Administração Pública","topico":"Poder hierárquico","artigo":"Distribuir funções, dar ordens, fiscalizar, controlar e rever atos dos subordinados","prioridade":"Alta","status":"Não iniciado","confianca":0,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"Hierarquia ocorre dentro da mesma estrutura administrativa","materia":"Direito Administrativo"},{"id":"adm_9","seq":9,"bloco":"2.3 Poderes da Administração Pública","topico":"Poder disciplinar","artigo":"Apurar infrações e aplicar sanções a servidores e particulares com vínculo especial com a Administração","prioridade":"Muito alta","status":"Não iniciado","confianca":0,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"Não confundir com poder de polícia","materia":"Direito Administrativo"},{"id":"adm_10","seq":10,"bloco":"2.3 Poderes da Administração Pública","topico":"Poder regulamentar","artigo":"Editar decretos e regulamentos para fiel execução da lei","prioridade":"Alta","status":"Não iniciado","confianca":0,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"Regulamento não pode inovar a lei além dos limites permitidos","materia":"Direito Administrativo"},{"id":"adm_11","seq":11,"bloco":"2.3 Poderes da Administração Pública","topico":"Poder de polícia","artigo":"Limitar ou condicionar direitos individuais em benefício do interesse público","prioridade":"Muito alta","status":"Não iniciado","confianca":0,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"Poder de polícia atua sobre particulares; pode ser preventivo ou repressivo","materia":"Direito Administrativo"},{"id":"adm_12","seq":12,"bloco":"2.4 LC 840/2011","topico":"Provimento","artigo":"Formas de provimento, nomeação, posse, exercício e requisitos para investidura","prioridade":"Muito alta","status":"Evoluiu bem após revisão","confianca":0,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":104,"acertos":75,"erros":29,"observacao":"estágio probatório, recondução, disponibilidade/remuneração e conceito de cargo público. Manter atenção aos pontos anteriores, mas a última bateria mostrou recuperação forte.","materia":"Direito Administrativo"},{"id":"adm_13","seq":13,"bloco":"2.4 LC 840/2011","topico":"Vacância","artigo":"Exoneração, demissão, aposentadoria, falecimento e demais hipóteses previstas na LC 840/2011","prioridade":"Muito alta","status":"Não iniciado","confianca":0,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"Diferenciar exoneração e demissão","materia":"Direito Administrativo"},{"id":"adm_14","seq":14,"bloco":"2.4 LC 840/2011","topico":"Direitos dos servidores / Carreiras, regime e jornada","artigo":"Arts. 55 ao 65: carreiras, regime, jornada de trabalho e regras correlatas da LC 840/2011","prioridade":"Muito alta","status":"Revisar antes de avançar","confianca":0,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":20,"acertos":14,"erros":6,"observacao":"Pontos de atenção: art. 57, art. 61, art. 62 e art. 64.","materia":"Direito Administrativo"},{"id":"adm_15","seq":15,"bloco":"2.4 LC 840/2011","topico":"Deveres dos servidores","artigo":"Deveres funcionais, conduta, assiduidade, pontualidade, zelo, obediência às normas e atendimento ao público","prioridade":"Muito alta","status":"Não iniciado","confianca":0,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"Banca cobra literalidade da lei","materia":"Direito Administrativo"},{"id":"adm_16","seq":16,"bloco":"2.4 LC 840/2011","topico":"Responsabilidade do servidor","artigo":"Responsabilidade civil, penal e administrativa","prioridade":"Muito alta","status":"Não iniciado","confianca":0,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"As esferas podem ser independentes, com exceções importantes","materia":"Direito Administrativo"},{"id":"adm_17","seq":17,"bloco":"2.4 LC 840/2011","topico":"Process? Administrativo Disciplinar","artigo":"Sindicância, PAD, comissão, defesa, contraditório, ampla defesa, penalidades e prazos","prioridade":"Muito alta","status":"Não iniciado","confianca":0,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"Relacionar com art. 5º, LV: contraditório e ampla defesa","materia":"Direito Administrativo"},{"id":"adm_18","seq":18,"bloco":"2.4 LC 840/2011","topico":"Licenças - arts. 130 a 150","artigo":"Licença-servidor; atividade política; interesses particulares; proteção da servidora gestante; PDF 66 ao 180","prioridade":"Muito alta","status":"Revisar erros e concluir pendentes","confianca":0,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":15,"acertos":11,"erros":4,"observacao":"Erros em licença-servidor, licença para atividade política, licença para tratar de interesses particulares e proteção da servidora gestante.","materia":"Direito Administrativo"},{"id":"adm_1","seq":1,"bloco":"Estado, governo e Administração Pública — estudar rápido, apenas para base.","topico":"","artigo":"","prioridade":"","status":"Não iniciado","confianca":0,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"","materia":"Direito Administrativo"},{"id":"adm_2","seq":2,"bloco":"Ato administrativo — estudar com atenção, principalmente requisitos, atributos, anulação e revogação.","topico":"","artigo":"","prioridade":"","status":"Não iniciado","confianca":0,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"","materia":"Direito Administrativo"},{"id":"adm_3","seq":3,"bloco":"Poderes administrativos — estudar hierárquico, disciplinar, regulamentar e polícia.","topico":"","artigo":"","prioridade":"","status":"Não iniciado","confianca":0,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"","materia":"Direito Administrativo"},{"id":"adm_4","seq":4,"bloco":"LC 840/2011 — estudar com prioridade máxima, principalmente provimento, vacância, direitos, deveres, responsabilidade e PAD.","topico":"","artigo":"","prioridade":"","status":"Não iniciado","confianca":0,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"","materia":"Direito Administrativo"},{"id":"adm_1","seq":1,"bloco":"LC 840/2011 — provimento.","topico":"","artigo":"","prioridade":"","status":"Não iniciado","confianca":0,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"","materia":"Direito Administrativo"},{"id":"adm_2","seq":2,"bloco":"LC 840/2011 — vacância.","topico":"","artigo":"","prioridade":"","status":"Não iniciado","confianca":0,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"","materia":"Direito Administrativo"},{"id":"adm_3","seq":3,"bloco":"LC 840/2011 — direitos dos servidores.","topico":"","artigo":"","prioridade":"","status":"Não iniciado","confianca":0,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"","materia":"Direito Administrativo"},{"id":"adm_4","seq":4,"bloco":"LC 840/2011 — deveres dos servidores.","topico":"","artigo":"","prioridade":"","status":"Não iniciado","confianca":0,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"","materia":"Direito Administrativo"},{"id":"adm_5","seq":5,"bloco":"LC 840/2011 — responsabilidade do servidor.","topico":"","artigo":"","prioridade":"","status":"Não iniciado","confianca":0,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"","materia":"Direito Administrativo"},{"id":"adm_6","seq":6,"bloco":"LC 840/2011 — process? administrativo disciplinar.","topico":"","artigo":"","prioridade":"","status":"Não iniciado","confianca":0,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"","materia":"Direito Administrativo"},{"id":"adm_7","seq":7,"bloco":"Ato administrativo — requisitos: competência, finalidade, forma, motivo e objeto.","topico":"","artigo":"","prioridade":"","status":"Não iniciado","confianca":0,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"","materia":"Direito Administrativo"},{"id":"adm_8","seq":8,"bloco":"Ato administrativo — atributos.","topico":"","artigo":"","prioridade":"","status":"Não iniciado","confianca":0,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"","materia":"Direito Administrativo"},{"id":"adm_9","seq":9,"bloco":"Ato administrativo — anulação x revogação.","topico":"","artigo":"","prioridade":"","status":"Não iniciado","confianca":0,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"","materia":"Direito Administrativo"},{"id":"adm_10","seq":10,"bloco":"Poder disciplinar.","topico":"","artigo":"","prioridade":"","status":"Não iniciado","confianca":0,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"","materia":"Direito Administrativo"},{"id":"adm_11","seq":11,"bloco":"Poder de polícia.","topico":"","artigo":"","prioridade":"","status":"Não iniciado","confianca":0,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"","materia":"Direito Administrativo"},{"id":"adm_1","seq":1,"bloco":"Administração Pública só pode fazer o que a lei autoriza.","topico":"","artigo":"","prioridade":"","status":"Não iniciado","confianca":0,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"","materia":"Direito Administrativo"},{"id":"adm_2","seq":2,"bloco":"Cidadão pode fazer tudo que a lei não proíbe; Administração só faz o que a lei permite.","topico":"","artigo":"","prioridade":"","status":"Não iniciado","confianca":0,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"","materia":"Direito Administrativo"},{"id":"adm_3","seq":3,"bloco":"LIMPE = legalidade, impessoalidade, moralidade, publicidade e eficiência.","topico":"","artigo":"","prioridade":"","status":"Não iniciado","confianca":0,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"","materia":"Direito Administrativo"},{"id":"adm_4","seq":4,"bloco":"Requisitos do ato administrativo = competência, finalidade, forma, motivo e objeto.","topico":"","artigo":"","prioridade":"","status":"Não iniciado","confianca":0,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"","materia":"Direito Administrativo"},{"id":"adm_5","seq":5,"bloco":"Anulação = ato ilegal.","topico":"","artigo":"","prioridade":"","status":"Não iniciado","confianca":0,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"","materia":"Direito Administrativo"},{"id":"adm_6","seq":6,"bloco":"Revogação = ato legal, mas inconveniente ou inoportuno.","topico":"","artigo":"","prioridade":"","status":"Não iniciado","confianca":0,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"","materia":"Direito Administrativo"},{"id":"adm_7","seq":7,"bloco":"Poder disciplinar = pune servidor ou particular com vínculo especial.","topico":"","artigo":"","prioridade":"","status":"Não iniciado","confianca":0,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"","materia":"Direito Administrativo"},{"id":"adm_8","seq":8,"bloco":"Poder de polícia = limita direitos de particulares em favor do interesse público.","topico":"","artigo":"","prioridade":"","status":"Não iniciado","confianca":0,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"","materia":"Direito Administrativo"},{"id":"adm_9","seq":9,"bloco":"Poder regulamentar = detalha a lei, não pode contrariar a lei.","topico":"","artigo":"","prioridade":"","status":"Não iniciado","confianca":0,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"","materia":"Direito Administrativo"},{"id":"adm_10","seq":10,"bloco":"PAD precisa respeitar contraditório e ampla defesa.","topico":"","artigo":"","prioridade":"","status":"Não iniciado","confianca":0,"data_inicio":null,"revisoes":{},"revisoes_feitas":[],"questoes":0,"acertos":0,"erros":0,"observacao":"","materia":"Direito Administrativo"}],"registros":[{"id":"reg_0","data":"2026-05-16","materia":"Direito Constitucional","tema":"CF/88 - Art. 1º ao 4º - Princípios Fundamentais","artigos":"Art. 1º ao 4º da CF/88 — Princípios Fundamentais","questoes":20,"acertos":16,"erros":4,"pontos_atencao":"desenvolvimento nacional, relações internacionais, fundamentos da República, autodeterminação dos povos e supremacia do interesse público."},{"id":"reg_1","data":"2026-05-16","materia":"Direito Constitucional","tema":"Constituição Federal de 1988","artigos":"Art. 5º, incisos I ao V — Direitos e deveres individuais e coletivos","questoes":13,"acertos":12,"erros":1,"pontos_atencao":"Art. 5º, II — princípio da legalidade/reserva legal; cuidado com a expressão lei expressa."},{"id":"reg_2","data":"2026-05-16","materia":"Direito Constitucional","tema":"Constituição Federal de 1988","artigos":"Art. 5º, incisos VI ao X — Direitos e deveres individuais e coletivos","questoes":11,"acertos":9,"erros":2,"pontos_atencao":"Art. 5º, X — indenização por dano material ou moral; Art. 5º, XI — casa: ordem judicial somente durante o dia."},{"id":"reg_3","data":"2026-05-16","materia":"Direito Constitucional","tema":"Constituição Federal de 1988","artigos":"Art. 5º, incisos X ao XV — estudado e praticado","questoes":20,"acertos":17,"erros":3,"pontos_atencao":"Liberdade profissional; locomoção em tempo de paz; mandado de segurança coletivo apareceu por engano no bloco e deve ser revisado depois."},{"id":"reg_4","data":"16/05/2026","materia":"Direito Administrativo","tema":"LC 840/2011","artigos":"Provimento / Cargos Públicos e Funções de Confiança — arts. 8º ao 10, 14 ao 24, 35 a 37, 41 a 45","questoes":38,"acertos":24,"erros":14,"pontos_atencao":"Pontos fracos: direção x chefia x assessoramento; nepotismo; posse; exercício; estágio probatório; recondução x reintegração; remoção x redistribuição."},{"id":"reg_5","data":"17/05/2026","materia":"Direito Constitucional","tema":"CF/88 - Art. 5º, incisos I ao XV","artigos":"CF/88 - Art. 5º, incisos I ao XV","questoes":15,"acertos":13,"erros":2,"pontos_atencao":"liberdade de locomoção em tempo de paz; acess? à informação com sigilo da fonte."},{"id":"reg_6","data":"2026-05-17","materia":"Direito Administrativo","tema":"LC 840/2011 - Provimento / Cargos Públicos","artigos":"LC 840/2011 — Provimento / Cargos Públicos","questoes":16,"acertos":13,"erros":3,"pontos_atencao":"posse x exercício; requisitos para investidura; criação de cargos Públicos por lei."},{"id":"reg_7","data":"2026-05-17","materia":"Direito Constitucional","tema":"CF/88 - Art. 5º - Direitos e garantias individuais e coletivos","artigos":"Art. 5º da CF/88 — bateria geral de direitos e garantias individuais e coletivos","questoes":50,"acertos":38,"erros":12,"pontos_atencao":"sigilo da fonte, locomoção em tempo de paz, associação paramilitar, direito de reunião, certidões gratuitas, liberdade de expressão sem licença, escusa de consciência, pena de morte em guerra declarada, indenização por violação à intimidade/honra."},{"id":"reg_8","data":"2026-05-17","materia":"Direito Administrativo","tema":"LC 840/2011 - Cargos Públicos e Funções de Confiança","artigos":"LC 840/2011 — Cargos Públicos e Funções de Confiança","questoes":20,"acertos":12,"erros":8,"pontos_atencao":"concurs? público, posse, exercício, interinidade, acumulação ilegal, redistribuição, estágio probatório e função de confiança."},{"id":"reg_9","data":"2026-05-17","materia":"Direito Administrativo","tema":"LC 840/2011 - Cargos Públicos e Funções","artigos":"LC 840/2011 — Cargos Públicos e Funções","questoes":30,"acertos":26,"erros":4,"pontos_atencao":"estágio probatório, recondução, disponibilidade/remuneração e conceito de cargo público."},{"id":"reg_10","data":"2026-05-17","materia":"Direito Constitucional","tema":"CF/88 - Art. 5º - Direitos e Garantias Individuais e Coletivos","artigos":"Art. 5º da CF/88 — Direitos e Garantias Individuais e Coletivos","questoes":50,"acertos":41,"erros":9,"pontos_atencao":"sigilo da fonte, locomoção em tempo de paz, associação, direito de reunião, certidões, escusa de consciência, penas proibidas e indenização por dano material/moral."},{"id":"reg_11","data":"2026-05-17","materia":"Direito Administrativo","tema":"LC 840/2011 - Carreiras, Regime e Jornada de Trabalho - arts. 55 ao 65","artigos":"LC 840/2011 — Carreiras, Regime e Jornada de Trabalho - arts. 55 ao 65","questoes":20,"acertos":14,"erros":6,"pontos_atencao":"art. 57, art. 61, art. 62 e art. 64."},{"id":"reg_12","data":"2026-05-18","materia":"Direito Constitucional","tema":"CF/88 - Art. 37 - Princípios da Administração Pública - LIMPE","artigos":"Art. 37 caput — Princípios da Administração Pública - LIMPE","questoes":30,"acertos":24,"erros":6,"pontos_atencao":"gestão da ética, eficiência na redação original da CF/88, eficiência ligada ao acesso/representação, impessoalidade/finalidade administrativa, publicidade e sigilo, publicidade via Diário Oficial."},{"id":"reg_13","data":"2026-05-20","materia":"Direito Constitucional","tema":"CF/88 - Administração Pública - arts. 37 e 38","artigos":"Arts. 37 e 38 da CF/88 — Administração Pública","questoes":80,"acertos":56,"erros":19,"pontos_atencao":"Pontos fracos: alcance do LIMPE na Administração Direta e Indireta; eficiência pela EC 19/1998; acumulação em EP/SEM/subsidiárias/controladas; art. 38 e mandato eletivo; estabilidade de 3 anos; estrangeiros na forma da lei; validade de concurs? até 2 anos prorrogável uma vez; Administração Indireta por lei/autorização legal; responsabilidade objetiva e regress? por dolo ou culpa; transformar 19 erros em Anki. Aproveitamento informado: 73,68%. Conferir números: 56 acertos em 80 questões calcula 70%; 56 acertos e 19 erros somam 75 questões."},{"id":"reg_14","data":"2026-05-20","materia":"Direito Constitucional","tema":"CF/88 - Administração Pública - arts. 37 e 38 - revisão das erradas","artigos":"Arts. 37 e 38 da CF/88 — revisão das 19 questões erradas","questoes":19,"acertos":16,"erros":3,"pontos_atencao":"Houve evolução significativa: as 19 questões erradas foram revisadas e o desempenho chegou a 84,21%, indicando boa consolidação do bloco."},{"id":"reg_15","data":"2026-05-20","materia":"Direito Constitucional","tema":"CF/88 - Princípios Fundamentais - arts. 1º ao 4º","artigos":"Arts. 1º ao 4º da CF/88 — Princípios Fundamentais","questoes":60,"acertos":46,"erros":14,"pontos_atencao":"Pontos fortes: boa base geral dos princípios fundamentais; reconhece fundamentos da República como soberania, cidadania, dignidade da pessoa humana, valores sociais do trabalho e da livre iniciativa e pluralismo político; identifica regras do art. 2º sobre separação dos Poderes; evolução na leitura da banca Quadrix. Pontos fracos: confusão entre fundamentos da República, objetivos fundamentais e princípios das relações internacionais; diferenciar autonomia dos entes federativos e soberania da República; união indissolúvel e ausência de direito de secessão; art. 4º com integração da América Latina; intervenção x não intervenção; funções típicas e atípicas dos Poderes, especialmente Legislativo em função administrativa como licitação; garantia do desenvolvimento nacional é objetivo do art. 3º."},{"id":"reg_16","data":"2026-05-20","materia":"Direito Constitucional","tema":"CF/88 - Art. 5º - Revisão do caderno de erros","artigos":"Art. 5º da CF/88 — Direitos e Garantias Individuais e Coletivos - revisão dos erros de 17 a 20/05","questoes":25,"acertos":18,"erros":7,"pontos_atencao":"Direito de reunião; extradição de brasileiro naturalizado; presunção de inocência; racismo; interceptação telefónica; acess? à informação; inafastabilidade da jurisdição/acess? à Justiça."},{"id":"reg_17","data":"2026-05-23","materia":"Direito Administrativo","tema":"LC 840/2011 - Licenças - arts. 130 a 150 - PDF 66 ao 180","artigos":"LC 840/2011 - arts. 130 a 150 - Licenças - PDF 66 ao 180","questoes":15,"acertos":11,"erros":4,"pontos_atencao":"Erros em licença-servidor, licença para atividade política, licença para tratar de interesses particulares e proteção da servidora gestante. Questões erradas: 9, 10, 31 e 50. Anki feito: sim."},{"id":"reg_18","data":"Resumo Constitucional","materia":"393 questões | 306 acertos | 82 erros | 77,9%","tema":"","artigos":"","questoes":0,"acertos":0,"erros":0,"pontos_atencao":""},{"id":"reg_19","data":"Resumo Direito Administrativo","materia":"139 questões | 100 acertos | 39 erros | 71,9%","tema":"","artigos":"","questoes":0,"acertos":0,"erros":0,"pontos_atencao":""},{"id":"reg_20","data":"Total confirmado","materia":"532 questões | 406 acertos | 121 erros | 76,3%","tema":"","artigos":"","questoes":0,"acertos":0,"erros":0,"pontos_atencao":""},{"id":"reg_21","data":"Prioridade real","materia":"LC 840 Licenças ficou em 73%; revisar 4 erros já com Anki e responder pendentes 51, 52, 57, 58, 60 e 65.","tema":"","artigos":"","questoes":0,"acertos":0,"erros":0,"pontos_atencao":""},{"id":"reg_22","data":"Meta próxima","materia":"Meta imediata: concluir pendentes de Licencas, revisar 4 erros, Art. 5 6/7, Principios 85%+.","tema":"","artigos":"","questoes":0,"acertos":0,"erros":0,"pontos_atencao":""},{"id":"reg_24","data":"2026-05-23","materia":"Administração de Recursos Materiais","tema":"Noções de Classificação de Materiais","artigos":"Noções de Classificação de Materiais - acumulado","questoes":72,"acertos":51,"erros":21,"pontos_atencao":"Acumulado atualizado para 72 questões. Houve melhora no desempenho no último bloco: 20 questões feitas, 16 acertos e 4 erros, com taxa de acerto de 80%. Manter revisão dos erros por Anki."}],"erros":[{"id":"err_0","data":"2026-05-23","materia":"Direito Administrativo","fonte":"PDF 66 ao 180","bloco":"LC 840/2011 - arts. 130 a 150 - Licenças","n_questao":9,"tema":"Licença-servidor","minha_resp":"B","gabarito":"A","meu_erro":"Confundi a regra da remuneração.","ponto_correto":"A licença-servidor ? de 3 meses a cada 5 anos de efetivo exercício, sem prejuízo da remuneração, inclusive da retribuição do cargo em comissão eventualmente exercido.","tipo_erro":"conteúdo/literalidade da lei","anki_feito":"sim","cards_anki":"Licença-servidor: 3 meses a cada 5 anos de efetivo exercício. | Licença-servidor: sem prejuízo da remuneração, inclusive cargo em comissão eventualmente exercido.","proxima_tarefa":"Responder questões pendentes 51, 52, 57, 58, 60 e 65."},{"id":"err_1","data":"2026-05-23","materia":"Direito Administrativo","fonte":"PDF 66 ao 180","bloco":"LC 840/2011 - arts. 130 a 150 - Licenças","n_questao":10,"tema":"Licença para atividade política","minha_resp":"A","gabarito":"C","meu_erro":"Confundi o marco inicial e final do primeiro per?odo.","ponto_correto":"O primeiro per?odo vai da escolha em convenção partid?ria at? a véspera do registro da candidatura na Justiça Eleitoral, sem remuneração.","tipo_erro":"troca de prazo/marco temporal","anki_feito":"sim","cards_anki":"Licença para atividade política: escolha em convenção at? a véspera do registro = sem remuneração. | Licença para atividade política: registro at? o 10º dia seguinte ao da eleição = com remuneração.","proxima_tarefa":"Responder questões pendentes 51, 52, 57, 58, 60 e 65."},{"id":"err_2","data":"2026-05-23","materia":"Direito Administrativo","fonte":"PDF 66 ao 180","bloco":"LC 840/2011 - arts. 130 a 150 - Licenças","n_questao":31,"tema":"Licença para tratar de interesses particulares","minha_resp":"Errado","gabarito":"Certo","meu_erro":"Achei que o servidor não poderia exercer outro cargo público.","ponto_correto":"Durante a licença para interesses particulares, o servidor pode exercer outro cargo ou emprego público, desde que seja cumulável com o cargo de origem. O que ? vedado ? cargo ou emprego público inacumulável.","tipo_erro":"generalização indevida","anki_feito":"sim","cards_anki":"Interesses particulares: pode exercer outro cargo público se for cumulável. | Interesses particulares: não pode exercer cargo ou emprego público inacumulável.","proxima_tarefa":"Responder questões pendentes 51, 52, 57, 58, 60 e 65."},{"id":"err_3","data":"2026-05-23","materia":"Direito Administrativo","fonte":"PDF 66 ao 180","bloco":"LC 840/2011 - arts. 130 a 150 - Licenças","n_questao":50,"tema":"proteção da servidora gestante","minha_resp":"B","gabarito":"A","meu_erro":"Confundi regra de local salubre/servi?o n?o perigoso com o direito expresso exclusivo cobrado na quest?o.","ponto_correto":"A servidora gestante ocupante de cargo em comissão sem vínculo com o serviço público não pode ser exonerada de ofício sem justa causa desde a confirmação da gravidez at? cinco meses após o parto, salvo mediante indenização.","tipo_erro":"interpretação do comando + literalidade","anki_feito":"sim","cards_anki":"Gestante comissionada sem vínculo: não pode ser exonerada sem justa causa da confirmação da gravidez at? cinco meses após o parto, salvo indenização.","proxima_tarefa":"Responder questões pendentes 51, 52, 57, 58, 60 e 65."}]};
+
+function getState(){
+  try{const s=localStorage.getItem("estudo_sedes_v2");if(s)return JSON.parse(s);}catch(e){}
+  const init=JSON.parse(JSON.stringify(INITIAL_DATA));
+  saveState(init);return init;
+}
+function saveState(s){localStorage.setItem("estudo_sedes_v2",JSON.stringify(s));}
+
+function today(){return new Date().toISOString().split("T")[0];}
+function addDays(dateStr,n){
+  const d=new Date(dateStr+"T12:00:00");d.setDate(d.getDate()+n);
+  return d.toISOString().split("T")[0];
+}
+function fmtDate(s){
+  if(!s)return"";const[y,m,d]=s.split("-");return d+"/"+m+"/"+y;
+}
+function revStatus(dateStr){
+  if(!dateStr)return"sem_data";
+  const t=today();
+  if(dateStr<t)return"atrasada";
+  if(dateStr===t)return"hoje";
+  if(dateStr<=addDays(t,3))return"em_breve";
+  return"futura";
+}
+function revLabel(s){
+  if(s==="atrasada")return'<span class="badge badge-red">Atrasada</span>';
+  if(s==="hoje")return'<span class="badge badge-yellow">Hoje</span>';
+  if(s==="em_breve")return'<span class="badge badge-orange">Em breve</span>';
+  if(s==="futura")return'<span class="badge badge-gray">Futura</span>';
+  return"";
+}
+function revPriority(s){
+  return{atrasada:0,hoje:1,em_breve:2,futura:3}[s]??4;
+}
+function getRevMethod(key){
+  const m={
+    d1:{label:"Anki",icon:"🎴",cls:"badge-cyan"},
+    d3:{label:"Anki",icon:"🎴",cls:"badge-cyan"},
+    d7:{label:"Questoes",icon:"❓",cls:"badge-blue"},
+    d15:{label:"Questoes",icon:"❓",cls:"badge-blue"},
+    d30:{label:"Simulado",icon:"📊",cls:"badge-orange"},
+  };
+  return m[key]||{label:key,icon:"",cls:"badge-gray"};
+}
+function revMethodBadge(key){
+  const m=getRevMethod(key);
+  return `<span class="badge ${m.cls}">${m.icon} ${m.label}</span>`;
+}
+function escHtml(s){
+  if(!s)return"";
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+function escAttr(s){
+  if(!s)return"";return String(s).replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+}
+
+function getAllTopics(state){return[...state.topicos_cf,...state.topicos_adm];}
+
+function getPendingRevs(state){
+  const t=today(),revs=[];
+  for(const tp of getAllTopics(state)){
+    if(!tp.data_inicio)continue;
+    for(const[key,date] of Object.entries(tp.revisoes)){
+      if((tp.revisoes_feitas||[]).includes(key))continue;
+      const status=revStatus(date);
+      if(status==="futura")continue;
+      revs.push({tp,key,date,status});
+    }
+  }
+  revs.sort((a,b)=>{
+    const pd=revPriority(a.status)-revPriority(b.status);
+    return pd!==0?pd:a.date.localeCompare(b.date);
+  });
+  return revs;
+}
+
+function getAllRevs(state,filterMat,filterStatus){
+  const revs=[];
+  for(const tp of getAllTopics(state)){
+    if(!tp.data_inicio)continue;
+    if(filterMat&&tp.materia!==filterMat)continue;
+    for(const[key,date] of Object.entries(tp.revisoes)){
+      const done=(tp.revisoes_feitas||[]).includes(key);
+      const status=done?"feita":revStatus(date);
+      if(filterStatus&&filterStatus!=="todas"&&status!==filterStatus)continue;
+      revs.push({tp,key,date,status,done});
+    }
+  }
+  revs.sort((a,b)=>{
+    if(a.done!==b.done)return a.done?1:-1;
+    const pd=revPriority(a.status)-revPriority(b.status);
+    return pd!==0?pd:a.date.localeCompare(b.date);
+  });
+  return revs;
+}
+
+function markRevDone(topicId,key){
+  const state=getState();
+  const tp=getAllTopics(state).find(t=>t.id===topicId);
+  if(!tp)return;
+  if(!tp.revisoes_feitas)tp.revisoes_feitas=[];
+  if(!tp.revisoes_feitas.includes(key))tp.revisoes_feitas.push(key);
+  saveState(state);
+}
+function unmarkRevDone(topicId,key){
+  const state=getState();
+  const tp=getAllTopics(state).find(t=>t.id===topicId);
+  if(!tp)return;
+  tp.revisoes_feitas=(tp.revisoes_feitas||[]).filter(k=>k!==key);
+  saveState(state);
+}
+
+function calcStats(state){
+  const regs=state.registros||[];
+  let totalQ=0,totalA=0;
+  const byMat={};
+  for(const r of regs){
+    totalQ+=(r.questoes||0);totalA+=(r.acertos||0);
+    if(!byMat[r.materia])byMat[r.materia]={q:0,a:0};
+    byMat[r.materia].q+=(r.questoes||0);
+    byMat[r.materia].a+=(r.acertos||0);
+  }
+  return{totalQ,totalA,byMat};
+}
+
+// Pontuacao inteligente: urgencia + dificuldade
+// urgencia: atrasada=4, hoje=3, em_breve=2, futura=1
+// dificuldade: (100 - pct_acerto) / 20  (0 a 5)
+// bonus se topico nunca teve questoes mas ja tem revisao pendente: +1
+function smartScore(revObj){
+  const urg={atrasada:4,hoje:3,em_breve:2,futura:1}[revObj.status]||0;
+  const tp=revObj.tp;
+  const pct=tp.questoes>0?Math.round(100*tp.acertos/tp.questoes):50;
+  const dif=(100-pct)/20;
+  return urg*10+dif;
+}
+
+function getSmartRevs(state){
+  const revs=getPendingRevs(state);
+  // Adiciona score e reordena
+  return revs.map(r=>({...r,score:smartScore(r)}))
+    .sort((a,b)=>b.score-a.score);
+}
+
+function getPontosFragos(state){
+  return getAllTopics(state)
+    .filter(t=>t.questoes>=5)
+    .map(t=>({...t,pct:Math.round(100*t.acertos/t.questoes)}))
+    .sort((a,b)=>a.pct-b.pct)
+    .slice(0,8);
+}
+
+function getErrorPatterns(state){
+  const erros=state.erros||[];
+  const byTipo={};
+  for(const e of erros){
+    const t=e.tipo_erro||"outro";
+    byTipo[t]=(byTipo[t]||0)+1;
+  }
+  return Object.entries(byTipo).sort((a,b)=>b[1]-a[1]);
+}
+
+// ---- DASHBOARD ----
+function renderDashboard(){
+  const state=getState();
+  const stats=calcStats(state);
+  const pct=stats.totalQ>0?Math.round(100*stats.totalA/stats.totalQ):0;
+  const smartRevs=getSmartRevs(state);
+  const atrasadas=smartRevs.filter(r=>r.status==="atrasada").length;
+  const hojeC=smartRevs.filter(r=>r.status==="hoje").length;
+  const emBreve=smartRevs.filter(r=>r.status==="em_breve").length;
+  const fracos=getPontosFragos(state);
+  const errPat=getErrorPatterns(state);
+  const dateStr=new Date().toLocaleDateString("pt-BR",{weekday:"long",year:"numeric",month:"long",day:"numeric"});
+
+  let html=`
+  <div class="date-card">
+    <div>
+      <div class="date-label">Hoje</div>
+      <div class="date-val">${dateStr}</div>
+    </div>
+    <div class="meta-right">
+      <span><b>${stats.totalQ}</b> questoes</span>
+      <span><b>${stats.totalA}</b> acertos</span>
+      <span><b>${smartRevs.length}</b> revisoes pendentes</span>
+    </div>
+  </div>
+  <div class="grid-4">
+    <div class="stat-card accent-red"><div class="card-label">Atrasadas</div><div class="card-value red">${atrasadas}</div></div>
+    <div class="stat-card accent-yellow"><div class="card-label">Para Hoje</div><div class="card-value yellow">${hojeC}</div></div>
+    <div class="stat-card accent-orange"><div class="card-label">Em Breve</div><div class="card-value orange">${emBreve}</div></div>
+    <div class="stat-card accent-${pct>=85?"green":pct>=70?"yellow":"red"}">
+      <div class="card-label">Acerto Geral</div>
+      <div class="card-value ${pct>=85?"green":pct>=70?"yellow":"red"}">${pct}%</div>
+      <div class="card-sub">${stats.totalA}/${stats.totalQ}</div>
+    </div>
+  </div>`;
+
+  // Foco Agora: lista inteligente por score
+  const top=smartRevs.slice(0,8);
+  if(top.length>0){
+    html+=`<div class="card">
+      <div class="section-title">Foco Agora
+        <span style="font-size:11px;font-weight:400;color:var(--muted);margin-left:8px">ordenado por urgencia + dificuldade</span>
+      </div>
+      <div class="today-rev-list">`;
+    for(const r of top){
+      const tipo={d1:"D+1",d3:"D+3",d7:"D+7",d15:"D+15",d30:"D+30"}[r.key]||r.key;
+      const tpPct=r.tp.questoes>0?Math.round(100*r.tp.acertos/r.tp.questoes):null;
+      const pctColor=tpPct===null?"var(--muted)":tpPct>=85?"var(--green)":tpPct>=70?"var(--yellow)":"var(--red)";
+      const pctBadge=tpPct!==null
+        ?`<span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:${pctColor};min-width:36px;text-align:right">${tpPct}%</span>`
+        :`<span style="font-size:11px;color:var(--muted);min-width:36px">sem q.</span>`;
+      html+=`<div class="rev-item">
+        ${revLabel(r.status)}
+        <div class="rev-info">
+          <div class="rev-topico">${escHtml(r.tp.topico)}</div>
+          <div class="rev-meta">${escHtml(r.tp.artigo||"")} &middot; <span class="badge badge-gray" style="font-size:10px;padding:1px 6px">${tipo}</span> &middot; ${fmtDate(r.date)}</div>
+        </div>
+        ${pctBadge}
+        ${revMethodBadge(r.key)}
+        <button class="btn btn-green" onclick="doneRev('${r.tp.id}','${r.key}')">Feito</button>
+      </div>`;
+    }
+    html+=`</div></div>`;
+  } else {
+    html+=`<div class="card"><div class="empty">Nenhuma revisao pendente. Bom trabalho!</div></div>`;
+  }
+
+  // Pontos Fracos
+  if(fracos.length>0){
+    html+=`<div class="card"><div class="section-title">Pontos Fracos
+      <span style="font-size:11px;font-weight:400;color:var(--muted);margin-left:8px">topicos com menor acerto (min. 5 questoes)</span>
+    </div>`;
+    for(const t of fracos){
+      const color=t.pct>=85?"var(--green)":t.pct>=70?"var(--yellow)":"var(--red)";
+      const nextRev=t.data_inicio?Object.entries(t.revisoes||{})
+        .filter(([k])=>!(t.revisoes_feitas||[]).includes(k))
+        .map(([k,d])=>({k,d,st:revStatus(d)}))
+        .sort((a,b)=>revPriority(a.st)-revPriority(b.st))[0]:null;
+      const revTag=nextRev&&nextRev.st!=="futura"
+        ?`&nbsp;${revLabel(nextRev.st)}`:"";
+      html+=`<div class="stat-bar-row" style="align-items:center">
+        <div class="stat-bar-label" style="width:260px" title="${escAttr(t.topico)}">${escHtml(t.topico)}${revTag}</div>
+        <div class="stat-bar-track"><div class="stat-bar-fill" style="width:${t.pct}%;background:${color}"></div></div>
+        <div class="stat-bar-pct" style="color:${color}">${t.pct}%</div>
+        <div style="font-size:11px;color:var(--muted);margin-left:8px;white-space:nowrap;font-family:'JetBrains Mono',monospace">${t.acertos}/${t.questoes}</div>
+      </div>`;
+    }
+    html+=`</div>`;
+  }
+
+  // Padrao de Erros
+  if(errPat.length>0){
+    const totalErros=errPat.reduce((s,[,n])=>s+n,0);
+    html+=`<div class="card"><div class="section-title">Padrao de Erros
+      <span style="font-size:11px;font-weight:400;color:var(--muted);margin-left:8px">${totalErros} erros registrados</span>
+    </div>`;
+    for(const[tipo,n] of errPat){
+      const pBar=Math.round(100*n/totalErros);
+      html+=`<div class="stat-bar-row">
+        <div class="stat-bar-label" style="width:260px">${escHtml(tipo)}</div>
+        <div class="stat-bar-track"><div class="stat-bar-fill" style="width:${pBar}%;background:var(--orange)"></div></div>
+        <div class="stat-bar-pct" style="color:var(--orange)">${n}x</div>
+      </div>`;
+    }
+    html+=`</div>`;
+  }
+
+  document.getElementById("dash-content").innerHTML=html;
+}
+
+// ---- REGISTRO ----
+function renderRegistro(){
+  const state=getState();
+  let html=`<div class="card">
+  <div class="section-title">Registrar Sessao de Estudo</div>
+  <form id="form-reg" onsubmit="submitReg(event)">
+    <div class="form-row">
+      <div class="field"><label>Data</label><input type="date" id="reg-data" value="${today()}" required></div>
+      <div class="field"><label>Materia</label>
+        <select id="reg-mat" onchange="updateTopicSelect()">
+          <option value="Direito Constitucional">Direito Constitucional</option>
+          <option value="Direito Administrativo">Direito Administrativo</option>
+          <option value="Administracao de Recursos Materiais">Adm. Recursos Materiais</option>
+        </select>
+      </div>
+    </div>
+    <div class="field"><label>Topico</label>
+      <select id="reg-topico" onchange="checkTopicInicio()">
+        <option value="">-- Digitar manualmente --</option>`;
+  for(const t of state.topicos_cf){
+    html+=`<option value="${escAttr(t.id)}" data-mat="Direito Constitucional">${escHtml(t.topico)} — ${escHtml(t.artigo)}</option>`;
+  }
+  for(const t of state.topicos_adm){
+    html+=`<option value="${escAttr(t.id)}" data-mat="Direito Administrativo" style="display:none">${escHtml(t.topico)}</option>`;
+  }
+  html+=`</select></div>
+    <div id="reg-topico-manual-wrap" class="field"><label>Topico (texto livre)</label><input type="text" id="reg-topico-manual" placeholder="Ex: Art. 5 - Direitos Fundamentais"></div>
+    <div class="field"><label>Artigos / Incisos Estudados</label><input type="text" id="reg-artigos" placeholder="Ex: Art. 5, I a X"></div>
+    <div class="form-row-3">
+      <div class="field"><label>Questoes feitas</label><input type="number" id="reg-q" min="0" value="0" oninput="calcErros()"></div>
+      <div class="field"><label>Acertos</label><input type="number" id="reg-a" min="0" value="0" oninput="calcErros()"></div>
+      <div class="field"><label>Erros</label><input type="number" id="reg-e" min="0" value="0" readonly style="background:rgba(248,113,113,.08);color:var(--red);border-color:rgba(248,113,113,.2)"></div>
+    </div>
+    <div class="field"><label>Pontos de Atencao</label><textarea id="reg-obs" placeholder="O que voce errou, o que precisa reforcar..."></textarea></div>
+    <div id="reg-inicio-wrap" style="display:none" class="warn-box">
+      Este topico ainda nao tem data de inicio registrada. Marcar hoje como inicio gera automaticamente as datas D+1, D+3, D+7, D+15 e D+30 para revisao espacada.
+      <label style="display:flex;align-items:center;gap:6px;margin-top:8px;font-weight:500;cursor:pointer">
+        <input type="checkbox" id="reg-set-inicio" checked> Marcar hoje como data de inicio
+      </label>
+    </div>
+    <button type="submit" class="btn btn-primary">Salvar Registro</button>
+  </form>
+  </div>`;
+
+  const regs=[...(state.registros||[])].reverse().slice(0,15);
+  html+=`<div class="card"><div class="section-title">Ultimos Registros</div>`;
+  if(regs.length===0){html+=`<div class="empty">Nenhum registro ainda.</div>`;}
+  else{
+    html+=`<table><thead><tr><th>Data</th><th>Materia</th><th>Topico</th><th>Questoes</th><th>Acertos</th><th>%</th><th></th></tr></thead><tbody>`;
+    for(const r of regs){
+      const p=r.questoes>0?Math.round(100*r.acertos/r.questoes):0;
+      const color=r.questoes>0?(p>=85?"var(--green)":p>=70?"var(--yellow)":"var(--red)"):"var(--muted)";
+      html+=`<tr>
+        <td style="white-space:nowrap">${fmtDate(r.data)}</td>
+        <td>${escHtml((r.materia||"").replace("Direito ","").replace("Administracao de ","Adm."))}</td>
+        <td style="max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escHtml(r.tema||"")}</td>
+        <td>${r.questoes||0}</td>
+        <td>${r.acertos||0}</td>
+        <td style="color:${color};font-weight:600">${r.questoes>0?p+"%":"-"}</td>
+        <td><button class="btn btn-danger" onclick="deleteReg('${escAttr(r.id||"")}')" title="Excluir">x</button></td>
+      </tr>`;
+    }
+    html+=`</tbody></table>`;
+  }
+  html+=`</div>`;
+  document.getElementById("reg-content").innerHTML=html;
+  updateTopicSelect();
+}
+
+function calcErros(){
+  const q=parseInt(document.getElementById("reg-q").value)||0;
+  const a=parseInt(document.getElementById("reg-a").value)||0;
+  document.getElementById("reg-e").value=Math.max(0,q-a);
+}
+
+function updateTopicSelect(){
+  const mat=document.getElementById("reg-mat")?.value;
+  if(!mat)return;
+  const sel=document.getElementById("reg-topico");
+  for(const opt of sel.querySelectorAll("option[data-mat]")){
+    opt.style.display=opt.dataset.mat===mat?"":"none";
+  }
+  sel.value="";
+  document.getElementById("reg-topico-manual-wrap").style.display="";
+  document.getElementById("reg-inicio-wrap").style.display="none";
+}
+
+function checkTopicInicio(){
+  const val=document.getElementById("reg-topico").value;
+  const wrap=document.getElementById("reg-inicio-wrap");
+  const manualWrap=document.getElementById("reg-topico-manual-wrap");
+  if(!val){wrap.style.display="none";manualWrap.style.display="";return;}
+  manualWrap.style.display="none";
+  const state=getState();
+  const tp=getAllTopics(state).find(t=>t.id===val);
+  wrap.style.display=(tp&&!tp.data_inicio)?"":"none";
+}
+
+function submitReg(e){
+  e.preventDefault();
+  const state=getState();
+  const data=document.getElementById("reg-data").value;
+  const mat=document.getElementById("reg-mat").value;
+  const topicoSel=document.getElementById("reg-topico").value;
+  const topicoManual=document.getElementById("reg-topico-manual")?.value||"";
+  const q=parseInt(document.getElementById("reg-q").value)||0;
+  const a=parseInt(document.getElementById("reg-a").value)||0;
+  const artigos=document.getElementById("reg-artigos").value;
+  const obs=document.getElementById("reg-obs").value;
+  let tema="";
+  if(topicoSel){
+    const tp=getAllTopics(state).find(t=>t.id===topicoSel);
+    tema=tp?tp.topico:topicoSel;
+    if(tp&&!tp.data_inicio){
+      const setInicio=document.getElementById("reg-set-inicio")?.checked;
+      if(setInicio){
+        tp.data_inicio=data;
+        const base=new Date(data+"T12:00:00");
+        tp.revisoes={};
+        for(const[k,n] of [["d1",1],["d3",3],["d7",7],["d15",15],["d30",30]]){
+          const nd=new Date(base);nd.setDate(nd.getDate()+n);
+          tp.revisoes[k.trim()]=nd.toISOString().split("T")[0];
+        }
+        tp.revisoes_feitas=[];
+      }
+    }
+    if(tp){
+      tp.questoes=(tp.questoes||0)+q;
+      tp.acertos=(tp.acertos||0)+a;
+      tp.erros=(tp.erros||0)+Math.max(0,q-a);
+    }
+  } else {tema=topicoManual;}
+  const reg={
+    id:"reg_"+Date.now(),data,materia:mat,tema,artigos,
+    questoes:q,acertos:a,erros:Math.max(0,q-a),pontos_atencao:obs
+  };
+  state.registros.push(reg);
+  saveState(state);
+  alert("Registro salvo com sucesso!");
+  renderRegistro();
+}
+
+function deleteReg(id){
+  if(!id||!confirm("Excluir este registro?"))return;
+  const state=getState();
+  state.registros=state.registros.filter(r=>r.id!==id);
+  saveState(state);renderRegistro();
+}
+
+// ---- REVISOES ----
+function renderRevisoes(){
+  const matEl=document.getElementById("rev-mat-filter");
+  const statusEl=document.getElementById("rev-status-filter");
+  const matVal=matEl?matEl.value:"";
+  const statusVal=statusEl?statusEl.value:"todas";
+  const state=getState();
+  const revs=getAllRevs(state,matVal,statusVal);
+
+  let html=`<div class="card">
+  <div class="section-title">Calendario de Revisoes</div>
+  <div class="filters">
+    <select id="rev-mat-filter" onchange="renderRevisoes()">
+      <option value="">Todas as materias</option>
+      <option value="Direito Constitucional"${matVal==="Direito Constitucional"?" selected":""}>Constitucional</option>
+      <option value="Direito Administrativo"${matVal==="Direito Administrativo"?" selected":""}>Administrativo</option>
+    </select>
+    <select id="rev-status-filter" onchange="renderRevisoes()">
+      <option value="todas"${statusVal==="todas"?" selected":""}>Todos os status</option>
+      <option value="atrasada"${statusVal==="atrasada"?" selected":""}>Atrasadas</option>
+      <option value="hoje"${statusVal==="hoje"?" selected":""}>Hoje</option>
+      <option value="em_breve"${statusVal==="em_breve"?" selected":""}>Em breve</option>
+      <option value="futura"${statusVal==="futura"?" selected":""}>Futuras</option>
+      <option value="feita"${statusVal==="feita"?" selected":""}>Feitas</option>
+    </select>
+  </div>`;
+
+  if(revs.length===0){html+=`<div class="empty">Nenhuma revisao encontrada.</div>`;}
+  else{
+    html+=`<table><thead><tr><th>Status</th><th>Topico</th><th>Artigo</th><th>Tipo</th><th>Metodo</th><th>Data</th><th></th></tr></thead><tbody>`;
+    for(const r of revs){
+      const tipo={d1:"D+1",d3:"D+3",d7:"D+7",d15:"D+15",d30:"D+30"}[r.key]||r.key;
+      const st=r.done?'<span class="badge badge-green">Feita</span>':revLabel(r.status);
+      const btn=r.done
+        ?`<button class="btn btn-ghost" style="font-size:11px;padding:3px 8px" onclick="undoRev('${r.tp.id}','${r.key}')">Desfazer</button>`
+        :`<button class="btn btn-green" onclick="doneRev('${r.tp.id}','${r.key}')">Feito</button>`;
+      html+=`<tr>
+        <td>${st}</td>
+        <td style="max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escHtml(r.tp.topico)}</td>
+        <td style="white-space:nowrap;font-size:12px">${escHtml(r.tp.artigo||"")}</td>
+        <td><span class="badge badge-blue">${tipo}</span></td>
+        <td>${revMethodBadge(r.key)}</td>
+        <td style="white-space:nowrap">${fmtDate(r.date)}</td>
+        <td>${btn}</td>
+      </tr>`;
+    }
+    html+=`</tbody></table>`;
+  }
+  html+=`</div>`;
+  document.getElementById("rev-content").innerHTML=html;
+}
+
+// ---- ERROS ----
+function renderErros(){
+  const state=getState();
+  const tiposErro=["conteudo/literalidade da lei","troca de prazo/marco temporal","generalizacao indevida","interpretacao do comando","confusao de institutos","outro"];
+
+  let html=`<div class="card">
+  <div class="section-title">Registrar Erro de Questao</div>
+  <form id="form-err" onsubmit="submitErr(event)">
+    <div class="form-row">
+      <div class="field"><label>Data</label><input type="date" id="err-data" value="${today()}" required></div>
+      <div class="field"><label>Materia</label>
+        <select id="err-mat">
+          <option>Direito Constitucional</option>
+          <option>Direito Administrativo</option>
+          <option>Administracao de Recursos Materiais</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="field"><label>Bloco / Tema</label><input type="text" id="err-bloco" placeholder="Ex: LC 840 - Licencas" required></div>
+      <div class="field"><label>Numero da Questao</label><input type="number" id="err-nq" min="1" placeholder="ex: 42"></div>
+    </div>
+    <div class="form-row">
+      <div class="field"><label>Minha Resposta</label><input type="text" id="err-minha" placeholder="A, B, C... ou Certo/Errado"></div>
+      <div class="field"><label>Gabarito Correto</label><input type="text" id="err-gab" placeholder="A, B, C... ou Certo/Errado"></div>
+    </div>
+    <div class="field"><label>Meu Erro (o que confundi)</label><textarea id="err-erro" placeholder="Descreva o que voce errou ou confundiu..."></textarea></div>
+    <div class="field"><label>Ponto Correto (regra que nao pode esquecer)</label><textarea id="err-correto" placeholder="Escreva a regra correta para fixar..."></textarea></div>
+    <div class="form-row">
+      <div class="field"><label>Tipo de Erro</label>
+        <select id="err-tipo">`;
+  for(const t of tiposErro)html+=`<option>${escHtml(t)}</option>`;
+  html+=`</select></div>
+      <div class="field"><label>Anki feito?</label>
+        <select id="err-anki"><option value="nao">Nao</option><option value="sim">Sim</option></select>
+      </div>
+    </div>
+    <div class="field"><label>Proxima Tarefa</label><input type="text" id="err-tarefa" placeholder="Ex: Refazer questoes 51-65"></div>
+    <button type="submit" class="btn btn-primary">Salvar Erro</button>
+  </form>
+  </div>`;
+
+  const erros=[...(state.erros||[])].reverse();
+  html+=`<div class="card"><div class="section-title">Erros Registrados (${erros.length})</div>`;
+  if(erros.length===0){html+=`<div class="empty">Nenhum erro registrado. Continue assim!</div>`;}
+  else{
+    html+=`<table><thead><tr><th>Data</th><th>Materia</th><th>Tema</th><th>Q</th><th>Tipo de Erro</th><th>Anki</th><th>Ponto Correto</th><th></th></tr></thead><tbody>`;
+    for(const r of erros){
+      const ankiBadge=r.anki_feito==="sim"?'<span class="badge badge-green">Sim</span>':'<span class="badge badge-gray">Nao</span>';
+      html+=`<tr>
+        <td style="white-space:nowrap">${fmtDate(r.data)}</td>
+        <td>${escHtml((r.materia||"").replace("Direito ","").replace("Administracao de ","Adm."))}</td>
+        <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escHtml(r.tema||r.bloco||"")}</td>
+        <td>${r.n_questao||"-"}</td>
+        <td><span class="badge badge-orange">${escHtml(r.tipo_erro||"")}</span></td>
+        <td>${ankiBadge}</td>
+        <td style="max-width:200px;font-size:12px;color:var(--text)">${escHtml(r.ponto_correto||"")}</td>
+        <td><button class="btn btn-danger" onclick="deleteErr('${escAttr(r.id||"")}')" title="Excluir">x</button></td>
+      </tr>`;
+    }
+    html+=`</tbody></table>`;
+  }
+  html+=`</div>`;
+  document.getElementById("err-content").innerHTML=html;
+}
+
+function submitErr(e){
+  e.preventDefault();
+  const state=getState();
+  const err={
+    id:"err_"+Date.now(),
+    data:document.getElementById("err-data").value,
+    materia:document.getElementById("err-mat").value,
+    bloco:document.getElementById("err-bloco").value,
+    tema:document.getElementById("err-bloco").value,
+    n_questao:parseInt(document.getElementById("err-nq").value)||0,
+    minha_resp:document.getElementById("err-minha").value,
+    gabarito:document.getElementById("err-gab").value,
+    meu_erro:document.getElementById("err-erro").value,
+    ponto_correto:document.getElementById("err-correto").value,
+    tipo_erro:document.getElementById("err-tipo").value,
+    anki_feito:document.getElementById("err-anki").value,
+    proxima_tarefa:document.getElementById("err-tarefa").value,
+  };
+  state.erros.push(err);
+  saveState(state);
+  alert("Erro registrado!");
+  renderErros();
+}
+
+function deleteErr(id){
+  if(!id||!confirm("Excluir este erro?"))return;
+  const state=getState();
+  state.erros=state.erros.filter(r=>r.id!==id);
+  saveState(state);renderErros();
+}
+
+// ---- ESTATISTICAS ----
+function renderStats(){
+  const state=getState();
+  const stats=calcStats(state);
+  const regs=state.registros||[];
+
+  const byTopic={};
+  for(const tp of getAllTopics(state)){
+    if(tp.questoes>0) byTopic[tp.topico]={q:tp.questoes,a:tp.acertos,mat:tp.materia};
+  }
+  const topicArr=Object.entries(byTopic).sort((a,b)=>b[1].q-a[1].q).slice(0,15);
+
+  const days=[];
+  for(let i=6;i>=0;i--)days.push(addDays(today(),-i));
+  const byDay={};
+  for(const d of days)byDay[d]={q:0,a:0};
+  for(const r of regs){if(byDay[r.data]!==undefined){byDay[r.data].q+=(r.questoes||0);byDay[r.data].a+=(r.acertos||0);}}
+
+  const cfTotal=state.topicos_cf.length;
+  const cfEstudados=state.topicos_cf.filter(t=>t.data_inicio||t.questoes>0).length;
+  const admTotal=state.topicos_adm.length;
+  const admEstudados=state.topicos_adm.filter(t=>t.data_inicio||t.questoes>0).length;
+
+  let revFeitas=0,revPend=0;
+  for(const tp of getAllTopics(state)){
+    if(!tp.data_inicio)continue;
+    for(const key of Object.keys(tp.revisoes)){
+      if((tp.revisoes_feitas||[]).includes(key))revFeitas++;
+      else revPend++;
+    }
+  }
+
+  const pctCf=cfTotal>0?Math.round(100*cfEstudados/cfTotal):0;
+  const pctAdm=admTotal>0?Math.round(100*admEstudados/admTotal):0;
+  const totalRevs=revFeitas+revPend;
+  const pctRevFeitas=totalRevs>0?Math.round(100*revFeitas/totalRevs):0;
+  const pctRevPend=totalRevs>0?Math.round(100*revPend/totalRevs):0;
+
+  let html=`
+  <div class="grid-2">
+    <div class="card">
+      <div class="section-title">Progresso dos Topicos</div>
+      <div class="stat-bar-row"><div class="stat-bar-label">Constitucional</div>
+        <div class="stat-bar-track"><div class="stat-bar-fill" style="width:${pctCf}%;background:var(--blue)"></div></div>
+        <div class="stat-bar-pct" style="color:var(--cyan)">${cfEstudados}/${cfTotal}</div>
+      </div>
+      <div class="stat-bar-row"><div class="stat-bar-label">Administrativo</div>
+        <div class="stat-bar-track"><div class="stat-bar-fill" style="width:${pctAdm}%;background:linear-gradient(90deg,var(--blue),var(--cyan))"></div></div>
+        <div class="stat-bar-pct" style="color:var(--cyan)">${admEstudados}/${admTotal}</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="section-title">Revisoes Espacadas</div>
+      <div class="stat-bar-row"><div class="stat-bar-label">Feitas</div>
+        <div class="stat-bar-track"><div class="stat-bar-fill" style="width:${pctRevFeitas}%;background:var(--green)"></div></div>
+        <div class="stat-bar-pct">${revFeitas}</div>
+      </div>
+      <div class="stat-bar-row"><div class="stat-bar-label">Pendentes</div>
+        <div class="stat-bar-track"><div class="stat-bar-fill" style="width:${pctRevPend}%;background:var(--orange)"></div></div>
+        <div class="stat-bar-pct">${revPend}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-title">Questoes Ultimos 7 Dias</div>
+    <table><thead><tr><th>Data</th><th>Questoes</th><th>Acertos</th><th>% Acerto</th></tr></thead><tbody>`;
+  for(const d of days){
+    const s=byDay[d];
+    const p=s.q>0?Math.round(100*s.a/s.q):0;
+    const color=s.q>0?(p>=85?"var(--green)":p>=70?"var(--yellow)":"var(--red)"):"var(--muted)";
+    html+=`<tr><td>${fmtDate(d)}</td><td>${s.q||"-"}</td><td>${s.q>0?s.a:"-"}</td><td style="color:${color};font-weight:600">${s.q>0?p+"%":"-"}</td></tr>`;
+  }
+  html+=`</tbody></table></div>`;
+
+  if(topicArr.length>0){
+    html+=`<div class="card"><div class="section-title">Acerto por Topico (top ${topicArr.length})</div>`;
+    for(const[name,s] of topicArr){
+      const p=Math.round(100*s.a/s.q);
+      const color=p>=85?"var(--green)":p>=70?"var(--yellow)":"var(--red)";
+      html+=`<div class="stat-bar-row">
+        <div class="stat-bar-label" title="${escAttr(name)}">${escHtml(name)}</div>
+        <div class="stat-bar-track"><div class="stat-bar-fill" style="width:${p}%;background:${color}"></div></div>
+        <div class="stat-bar-pct" style="color:${color}">${p}%</div>
+      </div>`;
+    }
+    html+=`</div>`;
+  }
+  document.getElementById("stats-content").innerHTML=html;
+}
+
+// ---- ACTIONS ----
+function doneRev(topicId,key){
+  markRevDone(topicId,key);
+  const activeTab=document.querySelector("section.active").id;
+  if(activeTab==="dashboard")renderDashboard();
+  else if(activeTab==="revisoes")renderRevisoes();
+}
+function undoRev(topicId,key){
+  unmarkRevDone(topicId,key);renderRevisoes();
+}
+
+// ---- NAV ----
+function showTab(id,btn){
+  document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
+  document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  if(btn)btn.classList.add("active");
+  if(id==="dashboard")renderDashboard();
+  else if(id==="registro")renderRegistro();
+  else if(id==="revisoes")renderRevisoes();
+  else if(id==="erros")renderErros();
+  else if(id==="stats")renderStats();
+}
+
+renderDashboard();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,333 @@
+"""Gera memoria_lc840.html — Jogo da Memória LC 840/2011
+Pares: termo ↔ valor/definição. Clique para virar, encontre os pares."""
+
+PARES = [
+    # POSSE / EXERCÍCIO
+    {"cat":"Posse/Exercício","a":"Prazo para tomar posse","b":"30 dias"},
+    {"cat":"Posse/Exercício","a":"Prazo para entrar em exercício","b":"5 dias úteis"},
+    {"cat":"Posse/Exercício","a":"Duração do estágio probatório","b":"3 anos"},
+    {"cat":"Posse/Exercício","a":"Validade do concurso público","b":"2 anos (+ 2 anos)"},
+    {"cat":"Posse/Exercício","a":"Vagas para PCD no concurso","b":"20% das vagas"},
+    {"cat":"Posse/Exercício","a":"Cargos em comissão p/ servidor de carreira","b":"70% mínimo"},
+    # RETORNO AO CARGO
+    {"cat":"Retorno ao Cargo","a":"Prazo para retornar — REVERSÃO","b":"15 dias úteis"},
+    {"cat":"Retorno ao Cargo","a":"Prazo para retornar — REINTEGRAÇÃO","b":"5 dias úteis"},
+    {"cat":"Retorno ao Cargo","a":"Prazo para retornar — RECONDUÇÃO","b":"Dia seguinte"},
+    {"cat":"Retorno ao Cargo","a":"Prazo para retornar — APROVEITAMENTO","b":"30 dias"},
+    {"cat":"Retorno ao Cargo","a":"Reversão voluntária — tempo máx. desde aposentadoria","b":"Menos de 5 anos"},
+    {"cat":"Retorno ao Cargo","a":"Remuneração na disponibilidade","b":"Mínimo 1/3"},
+    # JORNADA
+    {"cat":"Jornada","a":"Jornada do servidor efetivo","b":"30 horas semanais"},
+    {"cat":"Jornada","a":"Jornada do cargo em comissão","b":"40 horas semanais"},
+    {"cat":"Jornada","a":"Limite de horas extras por dia","b":"2 horas"},
+    {"cat":"Jornada","a":"Adicional por hora extra","b":"50%"},
+    {"cat":"Jornada","a":"Adicional noturno (22h–5h)","b":"25%"},
+    {"cat":"Jornada","a":"Abono de ponto — dias por ano","b":"5 dias"},
+    {"cat":"Jornada","a":"Abono de ponto — prazo para usar","b":"31/12 do ano seguinte"},
+    # FÉRIAS
+    {"cat":"Férias","a":"Férias — período aquisitivo","b":"12 meses"},
+    {"cat":"Férias","a":"Férias — duração","b":"30 dias"},
+    {"cat":"Férias","a":"Férias — máximo de acumulação","b":"2 períodos"},
+    {"cat":"Férias","a":"Férias — parcelamento máximo","b":"3 parcelas"},
+    {"cat":"Férias","a":"Férias — mínimo por parcela","b":"10 dias"},
+    # FALTAS
+    {"cat":"Faltas","a":"Abandono de cargo","b":"+30 dias consecutivos"},
+    {"cat":"Faltas","a":"Inassiduidade habitual","b":"+60 dias interpolados / 12 meses"},
+    {"cat":"Faltas","a":"Ausência justificada — casamento / falecimento","b":"8 dias consecutivos"},
+    {"cat":"Faltas","a":"Ausência justificada — alistamento eleitoral","b":"2 dias"},
+    {"cat":"Faltas","a":"Ausência justificada — doação de sangue","b":"1 dia"},
+    # LICENÇAS
+    {"cat":"Licenças","a":"Licença-maternidade","b":"180 dias"},
+    {"cat":"Licenças","a":"Licença-paternidade","b":"7 dias consecutivos"},
+    {"cat":"Licenças","a":"Licença por doença em familiar — máx. com remuneração","b":"180 dias/ano"},
+    {"cat":"Licenças","a":"Licença por doença em familiar — por período","b":"30 dias"},
+    {"cat":"Licenças","a":"Licença acompanhar cônjuge deslocado","b":"Até 5 anos"},
+    {"cat":"Licenças","a":"Licença para interesses particulares","b":"Até 3 anos (+3)"},
+    {"cat":"Licenças","a":"Licença-servidor — periodicidade","b":"A cada 5 anos"},
+    {"cat":"Licenças","a":"Licença-servidor — duração","b":"3 meses"},
+    {"cat":"Licenças","a":"Proteção gestante comissionada após parto","b":"5 meses"},
+    # ACUMULAÇÃO
+    {"cat":"Acumulação","a":"Opção na acumulação ilegal — prazo","b":"10 dias improrrogáveis"},
+    {"cat":"Acumulação","a":"Acumulação permitida: professor + ___","b":"Técnico ou científico"},
+    # PETIÇÃO
+    {"cat":"Petição","a":"Prazo para recurso ou reconsideração","b":"30 dias"},
+    {"cat":"Petição","a":"Prescrição p/ direito de requerer — demissão","b":"5 anos"},
+    {"cat":"Petição","a":"Prescrição p/ direito de requerer — demais casos","b":"120 dias"},
+    # PROCESSO DISCIPLINAR
+    {"cat":"Disciplinar","a":"Cancelamento do registro — ADVERTÊNCIA","b":"3 anos"},
+    {"cat":"Disciplinar","a":"Cancelamento do registro — SUSPENSÃO","b":"5 anos"},
+    {"cat":"Disciplinar","a":"Prescrição disciplinar — DEMISSÃO","b":"5 anos"},
+    {"cat":"Disciplinar","a":"Prescrição disciplinar — SUSPENSÃO","b":"2 anos"},
+    {"cat":"Disciplinar","a":"Prescrição disciplinar — ADVERTÊNCIA","b":"1 ano"},
+    {"cat":"Disciplinar","a":"Prazo da sindicância","b":"30 + 30 dias"},
+    {"cat":"Disciplinar","a":"Prazo do PAD","b":"60 + 60 dias"},
+    {"cat":"Disciplinar","a":"Afastamento preventivo","b":"60 + 60 dias"},
+    {"cat":"Disciplinar","a":"Defesa escrita — 1 acusado","b":"10 dias"},
+    {"cat":"Disciplinar","a":"Defesa escrita — 2+ acusados","b":"20 dias"},
+    {"cat":"Disciplinar","a":"Julgamento do PAD","b":"20 dias dos autos"},
+    {"cat":"Disciplinar","a":"Suspensão Grupo I — máximo","b":"30 dias"},
+    {"cat":"Disciplinar","a":"Suspensão Grupo II — máximo","b":"90 dias"},
+    # REMUNERAÇÃO
+    {"cat":"Remuneração","a":"Adicional de insalubridade MÍNIMO","b":"10%"},
+    {"cat":"Remuneração","a":"Adicional de insalubridade MÉDIO","b":"20%"},
+    {"cat":"Remuneração","a":"Adicional de insalubridade MÁXIMO","b":"40%"},
+    {"cat":"Remuneração","a":"Adicional de periculosidade","b":"30%"},
+    {"cat":"Remuneração","a":"Hora noturna — duração","b":"52min 30s"},
+]
+
+CATS = sorted(set(p["cat"] for p in PARES))
+
+CSS = """
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #0d1117; color: #e6edf3; font-family: 'Segoe UI', sans-serif; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+h1 { font-size: 1.4rem; color: #58a6ff; margin-bottom: 4px; }
+.sub { color: #8b949e; font-size: .85rem; margin-bottom: 16px; text-align: center; }
+.filter-section { width: 100%; max-width: 700px; margin-bottom: 10px; }
+.filter-label { color: #8b949e; font-size: .78rem; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; }
+.controls { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.controls label { background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 5px 10px; font-size: .78rem; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+.controls label:hover { border-color: #58a6ff; }
+.controls input[type=checkbox] { accent-color: #58a6ff; }
+.dif-row { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+.btn-dif { background: #161b22; border: 2px solid #30363d; border-radius: 8px; padding: 8px 18px; font-size: .85rem; cursor: pointer; color: #e6edf3; transition: .15s; }
+.btn-dif:hover, .btn-dif.active { border-color: #58a6ff; color: #58a6ff; background: rgba(88,166,255,.1); }
+.btn-start { background: #238636; color: #fff; border: none; border-radius: 8px; padding: 10px 28px; font-size: 1rem; cursor: pointer; }
+.btn-start:hover { background: #2ea043; }
+#game { display: none; width: 100%; max-width: 700px; }
+.hud { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; font-size: .88rem; color: #8b949e; flex-wrap: wrap; gap: 8px; }
+.hud-val { color: #e6edf3; font-weight: 600; }
+.grid { display: grid; gap: 8px; }
+.grid-8  { grid-template-columns: repeat(4, 1fr); }
+.grid-12 { grid-template-columns: repeat(4, 1fr); }
+.grid-16 { grid-template-columns: repeat(4, 1fr); }
+.grid-20 { grid-template-columns: repeat(5, 1fr); }
+.grid-24 { grid-template-columns: repeat(6, 1fr); }
+.grid-30 { grid-template-columns: repeat(6, 1fr); }
+@media (max-width: 500px) {
+  .grid { grid-template-columns: repeat(3, 1fr) !important; }
+}
+.card-wrap { perspective: 800px; }
+.mem-card { width: 100%; aspect-ratio: 1; position: relative; transform-style: preserve-3d; transition: transform .35s; cursor: pointer; }
+.mem-card.flipped { transform: rotateY(180deg); }
+.mem-card.matched { transform: rotateY(180deg); cursor: default; }
+.face { position: absolute; inset: 0; border-radius: 8px; display: flex; align-items: center; justify-content: center; text-align: center; padding: 6px; backface-visibility: hidden; }
+.face-back { background: #161b22; border: 2px solid #30363d; font-size: 1.4rem; }
+.face-front { background: #0d2136; border: 2px solid #1f6feb; transform: rotateY(180deg); font-size: .72rem; line-height: 1.35; font-weight: 600; color: #e6edf3; }
+.face-front.type-b { background: #0d1a14; border-color: #3fb950; color: #3fb950; font-size: .85rem; }
+.mem-card.matched .face-front { border-color: #3fb950; background: rgba(63,185,80,.15); }
+.mem-card.wrong .face-back { border-color: #f85149; }
+.mem-card.wrong .face-front { border-color: #f85149; }
+#result { display: none; text-align: center; padding: 30px; max-width: 640px; width: 100%; }
+#result h2 { font-size: 1.8rem; margin-bottom: 8px; }
+.score-big { font-size: 2.8rem; font-weight: 700; color: #58a6ff; margin: 10px 0; }
+.score-label { color: #8b949e; font-size: 1rem; margin-bottom: 20px; }
+.stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 14px 0; }
+.stat-card { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 12px; }
+.stat-val { font-size: 1.4rem; font-weight: 700; color: #58a6ff; }
+.stat-lbl { font-size: .72rem; color: #8b949e; margin-top: 2px; }
+.btn-retry { background: #238636; color: #fff; border: none; border-radius: 8px; padding: 12px 28px; font-size: .95rem; cursor: pointer; margin: 6px; }
+.btn-retry:hover { background: #2ea043; }
+"""
+
+JS = r"""
+const PARES = __PARES__;
+let deck=[], flipped=[], matched=0, moves=0, startTime=0, timerInt=null;
+let difPares = 10;
+
+function setDif(n, el){
+  difPares=n;
+  document.querySelectorAll('.btn-dif').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function getSelected(){return [...document.querySelectorAll('.controls input:checked')].map(i=>i.value);}
+
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+function startGame(){
+  const sel=getSelected();
+  let pool=PARES.filter(p=>sel.includes(p.cat));
+  if(pool.length<difPares){alert('Selecione mais categorias! Precisa de pelo menos '+difPares+' pares.');return;}
+  const chosen=shuffle(pool).slice(0,difPares);
+  // build deck: each pair generates 2 cards (type a and b), same pairId
+  deck=[];
+  chosen.forEach((p,i)=>{
+    deck.push({id:i*2,   pairId:i, text:p.a, type:'a'});
+    deck.push({id:i*2+1, pairId:i, text:p.b, type:'b'});
+  });
+  deck=shuffle(deck);
+
+  flipped=[]; matched=0; moves=0;
+  document.getElementById('setup').style.display='none';
+  document.getElementById('result').style.display='none';
+  document.getElementById('game').style.display='block';
+
+  const total=deck.length;
+  // choose grid class
+  const cols = total<=16?'grid-'+total : total<=24?'grid-'+total : 'grid-30';
+  const grid=document.getElementById('grid');
+  grid.className='grid '+cols;
+  grid.innerHTML='';
+  deck.forEach(c=>{
+    const wrap=document.createElement('div');
+    wrap.className='card-wrap';
+    wrap.innerHTML=`
+      <div class="mem-card" id="card-${c.id}" onclick="flipCard(${c.id})">
+        <div class="face face-back">🃏</div>
+        <div class="face face-front type-${c.type}">${c.text}</div>
+      </div>`;
+    grid.appendChild(wrap);
+  });
+
+  startTime=Date.now(); moves=0;
+  clearInterval(timerInt);
+  timerInt=setInterval(updateHud,1000);
+  updateHud();
+}
+
+function updateHud(){
+  const elapsed=Math.floor((Date.now()-startTime)/1000);
+  const m=Math.floor(elapsed/60).toString().padStart(2,'0');
+  const s=(elapsed%60).toString().padStart(2,'0');
+  document.getElementById('hud-time').textContent=m+':'+s;
+  document.getElementById('hud-moves').textContent=moves;
+  document.getElementById('hud-pairs').textContent=matched+'/'+difPares;
+}
+
+function flipCard(id){
+  if(flipped.length>=2) return;
+  const cardEl=document.getElementById('card-'+id);
+  if(cardEl.classList.contains('flipped')||cardEl.classList.contains('matched')) return;
+  cardEl.classList.add('flipped');
+  const cardData=deck.find(c=>c.id===id);
+  flipped.push({id, pairId:cardData.pairId, el:cardEl});
+
+  if(flipped.length===2){
+    moves++;
+    updateHud();
+    checkMatch();
+  }
+}
+
+function checkMatch(){
+  const [a,b]=flipped;
+  if(a.pairId===b.pairId){
+    // match!
+    setTimeout(()=>{
+      a.el.classList.remove('flipped');
+      b.el.classList.remove('flipped');
+      a.el.classList.add('matched');
+      b.el.classList.add('matched');
+      a.el.onclick=null; b.el.onclick=null;
+      flipped=[];
+      matched++;
+      updateHud();
+      if(matched===difPares) setTimeout(showResult,400);
+    },300);
+  } else {
+    // wrong
+    a.el.classList.add('wrong');
+    b.el.classList.add('wrong');
+    setTimeout(()=>{
+      a.el.classList.remove('flipped','wrong');
+      b.el.classList.remove('flipped','wrong');
+      flipped=[];
+    },900);
+  }
+}
+
+function showResult(){
+  clearInterval(timerInt);
+  document.getElementById('game').style.display='none';
+  const res=document.getElementById('result');
+  res.style.display='block';
+  const elapsed=Math.floor((Date.now()-startTime)/1000);
+  const m=Math.floor(elapsed/60), s=elapsed%60;
+  const timeStr=(m?m+'min ':'')+(s+'s');
+  const eff=Math.round(difPares/moves*100);
+  res.querySelector('h2').textContent=eff>=80?'Memória afiada! 🧠':eff>=60?'Boa performance! 💪':'Continue treinando! 📚';
+  res.querySelector('.score-big').textContent=difPares+' pares!';
+  res.querySelector('.score-label').textContent='Todos os pares encontrados';
+  document.getElementById('stat-moves').textContent=moves;
+  document.getElementById('stat-time').textContent=timeStr;
+  document.getElementById('stat-eff').textContent=eff+'%';
+}
+
+function retryAll(){
+  document.getElementById('result').style.display='none';
+  document.getElementById('setup').style.display='block';
+}
+"""
+
+def build_html():
+    import json
+    cats_checkboxes = "\n    ".join(
+        f'<label><input type="checkbox" value="{c}" checked> {c}</label>'
+        for c in CATS
+    )
+    pares_json = json.dumps(PARES, ensure_ascii=False)
+    js = JS.replace("__PARES__", pares_json)
+
+    html = f"""<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jogo da Memória — LC 840/2011</title>
+<style>{CSS}</style>
+</head>
+<body>
+<h1>🧠 Jogo da Memória</h1>
+<p class="sub">LC 840/2011 — {len(PARES)} pares disponíveis • Encontre o par de cada conceito</p>
+
+<div id="setup" style="width:100%;max-width:700px">
+  <div class="filter-section">
+    <div class="filter-label">Categorias</div>
+    <div class="controls">
+      {cats_checkboxes}
+    </div>
+    <div class="filter-label" style="margin-top:8px">Dificuldade (pares por rodada)</div>
+    <div class="dif-row">
+      <button class="btn-dif" onclick="setDif(6,this)">Fácil — 6</button>
+      <button class="btn-dif active" onclick="setDif(10,this)">Médio — 10</button>
+      <button class="btn-dif" onclick="setDif(16,this)">Difícil — 16</button>
+      <button class="btn-dif" onclick="setDif(20,this)">Expert — 20</button>
+    </div>
+  </div>
+  <div style="text-align:center">
+    <button class="btn-start" onclick="startGame()">▶ Iniciar</button>
+  </div>
+</div>
+
+<div id="game">
+  <div class="hud">
+    <span>⏱ <span class="hud-val" id="hud-time">00:00</span></span>
+    <span>🃏 Pares: <span class="hud-val" id="hud-pairs">0/10</span></span>
+    <span>🔄 Jogadas: <span class="hud-val" id="hud-moves">0</span></span>
+  </div>
+  <div id="grid" class="grid grid-20"></div>
+</div>
+
+<div id="result">
+  <h2></h2>
+  <div class="score-big"></div>
+  <div class="score-label"></div>
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-val" id="stat-moves"></div><div class="stat-lbl">Jogadas</div></div>
+    <div class="stat-card"><div class="stat-val" id="stat-time"></div><div class="stat-lbl">Tempo</div></div>
+    <div class="stat-card"><div class="stat-val" id="stat-eff"></div><div class="stat-lbl">Eficiência</div></div>
+  </div>
+  <button class="btn-retry" onclick="retryAll()">↩ Jogar novamente</button>
+</div>
+
+<script>{js}</script>
+</body>
+</html>"""
+    return html
+
+html = build_html()
+path = r"c:\Users\hacke\OneDrive - unb.br\estudo\memoria_lc840.html"
+with open(path, "w", encoding="utf-8") as f:
+    f.write(html)
+
+print(f"Criado! memoria_lc840.html — {len(PARES)} pares, {len(html)//1024}KB")

@@ -1,0 +1,276 @@
+"""Gera flashcards_lc840.html — Flashcards LC 840/2011"""
+
+CARDS = [
+    # ESTRUTURA GERAL
+    {"cat":"Estrutura","front":"LC 840/2011 se aplica a quem?","back":"Servidores públicos do Distrito Federal: efetivos, estáveis, vitalícios e em estágio probatório. Não se aplica a comissionados puros.","art":"Art. 1º"},
+    {"cat":"Estrutura","front":"Quais são as formas de provimento de cargo público?","back":"Nomeação, promoção, readaptação, reversão, aproveitamento, reintegração, recondução e transferência.","art":"Art. 7º"},
+    {"cat":"Estrutura","front":"O que é provimento originário?","back":"Nomeação (única forma de provimento originário). Todas as outras formas são derivadas.","art":"Art. 7º, §1º"},
+    # NOMEAÇÃO / POSSE / EXERCÍCIO
+    {"cat":"Posse/Exercício","front":"Prazo para tomar posse após publicação da nomeação","back":"30 dias corridos. Se não tomar posse, o ato é tornado sem efeito.","art":"Art. 17, §1º"},
+    {"cat":"Posse/Exercício","front":"Prazo para entrar em exercício após a posse","back":"5 dias úteis. Se não entrar, é exonerado.","art":"Art. 19, §2º"},
+    {"cat":"Posse/Exercício","front":"Duração do estágio probatório","back":"3 anos de efetivo exercício. Mesmo prazo da estabilidade.","art":"Art. 22"},
+    {"cat":"Posse/Exercício","front":"Quando o servidor adquire estabilidade?","back":"Após 3 anos de efetivo exercício + aprovação no estágio probatório + avaliação especial de desempenho.","art":"Art. 32"},
+    {"cat":"Posse/Exercício","front":"Validade do concurso público","back":"Até 2 anos, prorrogável 1 vez por igual período (total máximo: 4 anos).","art":"Art. 12"},
+    {"cat":"Posse/Exercício","front":"Reserva de vagas para PCD em concurso","back":"20% das vagas, desprezada a parte decimal.","art":"Art. 13"},
+    {"cat":"Posse/Exercício","front":"Percentual mínimo de cargos em comissão para servidores de carreira","back":"70% devem ser providos por servidores de carreira do PGDF.","art":"Art. 10, §1º"},
+    # REMUNERAÇÃO
+    {"cat":"Remuneração","front":"O que é subsídio?","back":"Parcela única que reúne todas as verbas. Vedadas quaisquer acréscimos, exceto em casos previstos em lei.","art":"Art. 71"},
+    {"cat":"Remuneração","front":"Quais adicionais podem ser cumulados mesmo em regime de subsídio?","back":"Diárias, ajuda de custo, indenizações por transporte, auxílio-alimentação e auxílio-moradia.","art":"Art. 71, §§"},
+    {"cat":"Remuneração","front":"Adicional de insalubridade — percentuais","back":"Mínimo: 10% | Médio: 20% | Máximo: 40% sobre o vencimento básico.","art":"Art. 88"},
+    {"cat":"Remuneração","front":"Adicional de periculosidade — percentual","back":"30% sobre o vencimento básico.","art":"Art. 89"},
+    {"cat":"Remuneração","front":"Adicional noturno — percentual e horário","back":"25% sobre a hora normal. Período: 22h às 5h. A hora noturna = 52min30s.","art":"Art. 85"},
+    {"cat":"Remuneração","front":"Adicional por serviço extraordinário — percentual e limite","back":"50% sobre a hora normal. Máximo de 2 horas extras por dia.","art":"Arts. 84 e 60"},
+    # JORNADA
+    {"cat":"Jornada","front":"Jornada do servidor efetivo","back":"30 horas semanais como regra geral.","art":"Art. 57"},
+    {"cat":"Jornada","front":"Jornada do cargo em comissão","back":"40 horas semanais, com integral dedicação.","art":"Art. 58"},
+    {"cat":"Jornada","front":"Abono de ponto — dias e prazo para usar","back":"5 dias por ano (sem faltas injustificadas). Prazo extingue em 31/12 do ANO SEGUINTE ao aquisitivo.","art":"Art. 151"},
+    # FÉRIAS
+    {"cat":"Férias","front":"Férias — período aquisitivo e duração","back":"30 dias corridos a cada 12 meses de efetivo exercício.","art":"Art. 125"},
+    {"cat":"Férias","front":"Férias — acumulação máxima","back":"Até 2 períodos, por necessidade do serviço.","art":"Art. 125, §4º"},
+    {"cat":"Férias","front":"Férias — parcelamento","back":"Até 3 parcelas, nenhuma inferior a 10 dias.","art":"Art. 125, §5º"},
+    # FALTAS
+    {"cat":"Faltas","front":"Abandono de cargo — prazo e tipo de falta","back":"Ausência injustificada por mais de 30 dias CONSECUTIVOS. Punição: demissão.","art":"Art. 64, I"},
+    {"cat":"Faltas","front":"Inassiduidade habitual — prazo e tipo de falta","back":"Ausência injustificada por mais de 60 dias INTERPOLADOS em 12 meses. Punição: demissão.","art":"Art. 64, II"},
+    {"cat":"Faltas","front":"Ausências justificadas: 1 dia","back":"Doação de sangue ou exame preventivo de câncer (1 vez por ano).","art":"Art. 62, I"},
+    {"cat":"Faltas","front":"Ausências justificadas: 2 dias","back":"Alistamento ou transferência eleitoral.","art":"Art. 62, II"},
+    {"cat":"Faltas","front":"Ausências justificadas: 8 dias","back":"Casamento ou falecimento de familiar (cônjuge, companheiro, pais, padrastos, filhos, enteados, menores tutelados ou curatelados e irmãos). 8 dias consecutivos incluindo o dia do evento.","art":"Art. 62, III"},
+    # LICENÇAS
+    {"cat":"Licenças","front":"Licença por doença em pessoa da família","back":"30 dias por período (com remuneração). Máximo de 180 dias por ano. Acima: sem remuneração.","art":"Art. 134, §3º"},
+    {"cat":"Licenças","front":"Licença para acompanhar cônjuge deslocado","back":"Até 5 anos, sem remuneração.","art":"Art. 133, §1º"},
+    {"cat":"Licenças","front":"Licença para tratar de interesses particulares","back":"Até 3 anos, sem remuneração. Prorrogável por mais 3 anos (1 única vez, total máx: 6 anos).","art":"Art. 144"},
+    {"cat":"Licenças","front":"Licença-servidor (antiga licença-prêmio) — duração e periodicidade","back":"3 meses a cada 5 anos (quinquênio) de efetivo exercício. Com remuneração integral.","art":"Art. 139"},
+    {"cat":"Licenças","front":"Licença-maternidade — duração","back":"180 dias, a contar do parto. Pode ser antecipada em até 28 dias.","art":"Art. 149-A"},
+    {"cat":"Licenças","front":"Licença-paternidade — duração","back":"7 dias CONSECUTIVOS, incluído o dia do nascimento.","art":"Art. 150"},
+    {"cat":"Licenças","front":"Proteção da gestante comissionada","back":"Não pode ser exonerada de ofício até 5 MESES após o parto.","art":"Art. 53"},
+    {"cat":"Licenças","front":"Licença para atividade política — com ou sem remuneração?","back":"COM remuneração: do registro até 10 dias após a eleição.\nSEM remuneração: da convenção até véspera do registro.","art":"Art. 137"},
+    # REVERSÃO / REINTEGRAÇÃO / RECONDUÇÃO
+    {"cat":"Retorno ao Cargo","front":"Prazo para retornar na REVERSÃO","back":"15 dias úteis da comunicação.","art":"Art. 34, §1º"},
+    {"cat":"Retorno ao Cargo","front":"Prazo para retornar na REINTEGRAÇÃO","back":"5 dias úteis da comunicação.","art":"Art. 36, §3º"},
+    {"cat":"Retorno ao Cargo","front":"Prazo para retornar na RECONDUÇÃO","back":"O dia seguinte à ciência do ato.","art":"Art. 37, §2º"},
+    {"cat":"Retorno ao Cargo","front":"Prazo para retornar no APROVEITAMENTO (disponibilidade)","back":"30 dias da comunicação.","art":"Art. 40, §1º"},
+    {"cat":"Retorno ao Cargo","front":"Reversão voluntária — requisito de tempo","back":"Menos de 5 anos decorridos desde a aposentadoria.","art":"Art. 34, III, b"},
+    {"cat":"Retorno ao Cargo","front":"Remuneração na disponibilidade","back":"Proporcional ao tempo de serviço. Nunca inferior a 1/3 do que o servidor percebia.","art":"Art. 38, §único"},
+    # ACUMULAÇÃO
+    {"cat":"Acumulação","front":"Quais acumulações são permitidas?","back":"1) 2 cargos de professor\n2) 1 cargo de professor + 1 técnico ou científico\n3) 2 cargos de profissional de saúde com profissões regulamentadas\n(Requisito: compatibilidade de horários)","art":"Art. 47"},
+    {"cat":"Acumulação","front":"Prazo para opção na acumulação ilegal","back":"10 dias IMPRORROGÁVEIS da ciência da notificação.","art":"Art. 48"},
+    # PETIÇÃO / PRESCRIÇÃO
+    {"cat":"Petição","front":"Prazo para recurso ou pedido de reconsideração","back":"30 dias a contar da publicação ou ciência do ato.","art":"Art. 172"},
+    {"cat":"Petição","front":"Prescrição do direito de requerer — casos de demissão","back":"5 anos (demissão, cassação de aposentadoria e interesse patrimonial).","art":"Art. 175, I e II"},
+    {"cat":"Petição","front":"Prescrição do direito de requerer — demais casos","back":"120 dias.","art":"Art. 175, III"},
+    # PROCESSO DISCIPLINAR
+    {"cat":"Disciplinar","front":"Infrações e penalidades — quadro geral","back":"Leve → Advertência\nMédia Grupo I → Suspensão até 30 dias\nMédia Grupo II → Suspensão até 90 dias\nGrave → Demissão / Cassação / Destituição","art":"Art. 196–200"},
+    {"cat":"Disciplinar","front":"Cancelamento do registro da advertência","back":"3 anos sem nova infração.","art":"Art. 201"},
+    {"cat":"Disciplinar","front":"Cancelamento do registro da suspensão","back":"5 anos sem nova infração.","art":"Art. 201"},
+    {"cat":"Disciplinar","front":"Prescrição — ação disciplinar para demissão/destituição","back":"5 anos.","art":"Art. 208, I"},
+    {"cat":"Disciplinar","front":"Prescrição — ação disciplinar para suspensão","back":"2 anos.","art":"Art. 208, II"},
+    {"cat":"Disciplinar","front":"Prescrição — ação disciplinar para advertência","back":"1 ano.","art":"Art. 208, III"},
+    {"cat":"Disciplinar","front":"Prazo da SINDICÂNCIA","back":"30 dias, prorrogável por mais 30 dias (30 + 30).","art":"Art. 214, §2º"},
+    {"cat":"Disciplinar","front":"Prazo do PROCESSO ADMINISTRATIVO DISCIPLINAR (PAD)","back":"60 dias, prorrogável por mais 60 dias (60 + 60).","art":"Art. 217, §1º"},
+    {"cat":"Disciplinar","front":"Afastamento preventivo — prazo e remuneração","back":"Até 60 dias, prorrogável por mais 60 dias (60 + 60). Sem prejuízo de remuneração.","art":"Art. 222"},
+    {"cat":"Disciplinar","front":"Prazo para defesa escrita no PAD (1 acusado)","back":"10 dias, prorrogável pelo dobro (20 dias).","art":"Art. 250"},
+    {"cat":"Disciplinar","front":"Prazo para defesa escrita no PAD (2+ acusados)","back":"20 dias, prorrogável pelo dobro (40 dias).","art":"Art. 250"},
+    {"cat":"Disciplinar","front":"Prazo para julgamento no PAD","back":"20 dias do recebimento dos autos pela autoridade julgadora.","art":"Art. 256"},
+    # INFRAÇÕES GRAVES (DEMISSÃO)
+    {"cat":"Infrações Graves","front":"Quais condutas levam à DEMISSÃO?","back":"Crime contra adm pública, improbidade, abandono, inassiduidade, corrupção, desídia habitual, aplicação irregular de dinheiros públicos, lesão ao erário, revelação de segredo, acumulação ilegal após opção, advocacia administrativa, transgressão dos arts. 56–58.","art":"Art. 203"},
+    {"cat":"Infrações Graves","front":"O que é advocacia administrativa?","back":"Patrocinar causa de interesse de particular perante a Administração, com ou sem recebimento de vantagem.","art":"Art. 203, XIV"},
+    {"cat":"Infrações Graves","front":"Quando a demissão é convertida em cassação de aposentadoria?","back":"Quando a falta punível com demissão é praticada por servidor já aposentado.","art":"Art. 205"},
+    # RESPONSABILIDADES
+    {"cat":"Responsabilidades","front":"Tipos de responsabilidade do servidor público","back":"Civil (ressarcimento ao erário), Penal (responde pelo crime) e Administrativa (disciplinar). São independentes e cumuláveis.","art":"Arts. 183–188"},
+    {"cat":"Responsabilidades","front":"A absolvição criminal afasta a responsabilidade administrativa?","back":"Somente se reconhecida a inexistência do fato ou negada a autoria. Mera insuficiência de provas não afasta.","art":"Art. 184"},
+]
+
+CATS = sorted(set(c["cat"] for c in CARDS))
+
+CSS = """
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #0d1117; color: #e6edf3; font-family: 'Segoe UI', sans-serif; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+h1 { font-size: 1.4rem; color: #58a6ff; margin-bottom: 4px; }
+.sub { color: #8b949e; font-size: .85rem; margin-bottom: 16px; }
+.controls { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; justify-content: center; }
+.controls label { background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 6px 12px; font-size: .8rem; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+.controls label:hover { border-color: #58a6ff; }
+.controls input[type=checkbox] { accent-color: #58a6ff; }
+.btn-start { background: #238636; color: #fff; border: none; border-radius: 8px; padding: 10px 28px; font-size: 1rem; cursor: pointer; margin-bottom: 16px; }
+.btn-start:hover { background: #2ea043; }
+#game { display: none; width: 100%; max-width: 640px; }
+.score-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: .9rem; color: #8b949e; }
+#num-badge { background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 4px 10px; font-size: .8rem; }
+.flashcard-wrap { perspective: 1200px; width: 100%; margin-bottom: 16px; cursor: pointer; }
+.flashcard { width: 100%; min-height: 240px; position: relative; transform-style: preserve-3d; transition: transform .5s; border-radius: 12px; }
+.flashcard.flipped { transform: rotateY(180deg); }
+.face { position: absolute; width: 100%; min-height: 240px; border-radius: 12px; padding: 28px 24px; backface-visibility: hidden; display: flex; flex-direction: column; justify-content: center; }
+.front { background: #161b22; border: 2px solid #1f6feb; }
+.back { background: #0d2136; border: 2px solid #3fb950; transform: rotateY(180deg); }
+.face-label { font-size: .7rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; opacity: .6; }
+.front .face-label { color: #58a6ff; }
+.back .face-label { color: #3fb950; }
+.face-text { font-size: 1.1rem; line-height: 1.6; white-space: pre-line; }
+.face-art { font-size: .75rem; color: #8b949e; margin-top: 10px; }
+.hint { text-align: center; color: #8b949e; font-size: .8rem; margin-bottom: 12px; }
+.rating-row { display: flex; gap: 10px; justify-content: center; margin-bottom: 16px; }
+.btn-rate { border: none; border-radius: 8px; padding: 12px 20px; font-size: .9rem; font-weight: 600; cursor: pointer; flex: 1; max-width: 180px; transition: .15s; }
+.btn-rate.bad { background: rgba(248,81,73,.15); border: 2px solid #f85149; color: #f85149; }
+.btn-rate.bad:hover { background: rgba(248,81,73,.3); }
+.btn-rate.good { background: rgba(63,185,80,.15); border: 2px solid #3fb950; color: #3fb950; }
+.btn-rate.good:hover { background: rgba(63,185,80,.3); }
+.rating-row { display: none; }
+.rating-row.show { display: flex; }
+#result { display: none; text-align: center; padding: 30px; }
+#result h2 { font-size: 1.8rem; margin-bottom: 8px; }
+.score-big { font-size: 3rem; font-weight: 700; color: #58a6ff; margin: 12px 0; }
+.score-label { color: #8b949e; margin-bottom: 20px; }
+.btn-retry { background: #238636; color: #fff; border: none; border-radius: 8px; padding: 12px 28px; font-size: 1rem; cursor: pointer; margin: 6px; }
+.btn-retry:hover { background: #2ea043; }
+.btn-wrongs { background: #b62324; color: #fff; border: none; border-radius: 8px; padding: 12px 28px; font-size: 1rem; cursor: pointer; margin: 6px; }
+.cat-tag { font-size: .75rem; color: #8b949e; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 8px; }
+"""
+
+JS = r"""
+const CARDS = __CARDS__;
+let deck=[], idx=0, wrongs=[], flipped=false;
+
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function getSelected(){return [...document.querySelectorAll('.controls input:checked')].map(i=>i.value);}
+
+function startGame(mode){
+  const sel=getSelected();
+  let source = mode==='wrongs' ? wrongs : CARDS.filter(c=>sel.includes(c.cat));
+  deck=shuffle([...source]);
+  if(!deck.length){alert('Nenhum card disponível!');return;}
+  idx=0; wrongs=[];
+  document.getElementById('setup').style.display='none';
+  document.getElementById('game').style.display='block';
+  document.getElementById('result').style.display='none';
+  showCard();
+}
+
+function showCard(){
+  if(idx>=deck.length){showResult();return;}
+  const c=deck[idx];
+  flipped=false;
+  const fc=document.querySelector('.flashcard');
+  fc.classList.remove('flipped');
+  document.querySelector('.cat-tag').textContent=c.cat;
+  document.querySelector('.front .face-text').textContent=c.front;
+  document.querySelector('.back .face-text').textContent=c.back;
+  document.querySelector('.face-art').textContent=c.art;
+  document.getElementById('num-badge').textContent=`${idx+1} / ${deck.length}`;
+  document.querySelector('.hint').textContent='Clique no card para revelar';
+  document.querySelector('.rating-row').className='rating-row';
+}
+
+function flipCard(){
+  if(!flipped){
+    flipped=true;
+    document.querySelector('.flashcard').classList.add('flipped');
+    document.querySelector('.hint').textContent='Como foi?';
+    document.querySelector('.rating-row').className='rating-row show';
+  }
+}
+
+function rate(ok){
+  if(!ok) wrongs.push(deck[idx]);
+  idx++;
+  showCard();
+}
+
+function showResult(){
+  document.getElementById('game').style.display='none';
+  const res=document.getElementById('result');
+  res.style.display='block';
+  const total=deck.length, wrong=wrongs.length, right=total-wrong;
+  const pct=Math.round(right/total*100);
+  res.querySelector('h2').textContent= pct>=80?'Dominando! 🎯': pct>=60?'Bom progresso! 💪':'Continue revisando! 📚';
+  res.querySelector('.score-big').textContent=`${right}/${total}`;
+  res.querySelector('.score-label').textContent=`${pct}% memorizados`;
+  const btnW=document.getElementById('btn-wrongs');
+  btnW.style.display = wrongs.length ? 'inline-block' : 'none';
+}
+
+function retryAll(){
+  document.getElementById('result').style.display='none';
+  document.getElementById('setup').style.display='block';
+}
+function retryWrongs(){
+  document.getElementById('result').style.display='none';
+  startGame('wrongs');
+}
+"""
+
+def build_html():
+    import json
+    cats_checkboxes = "\n    ".join(
+        f'<label><input type="checkbox" value="{c}" checked> {c}</label>'
+        for c in CATS
+    )
+    cards_json = json.dumps(CARDS, ensure_ascii=False)
+    js = JS.replace("__CARDS__", cards_json)
+
+    html = f"""<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flashcards — LC 840/2011</title>
+<style>{CSS}</style>
+</head>
+<body>
+<h1>🃏 Flashcards LC 840/2011</h1>
+<p class="sub">{len(CARDS)} cards • Clique para virar • Avalie seu conhecimento</p>
+
+<div id="setup">
+  <p style="color:#8b949e;font-size:.85rem;margin-bottom:10px;text-align:center">Selecione os temas:</p>
+  <div class="controls">
+    {cats_checkboxes}
+  </div>
+  <div style="text-align:center">
+    <button class="btn-start" onclick="startGame('all')">▶ Iniciar</button>
+  </div>
+</div>
+
+<div id="game">
+  <div class="score-bar">
+    <span style="color:#8b949e;font-size:.8rem">Flashcards</span>
+    <span id="num-badge">1 / {len(CARDS)}</span>
+  </div>
+  <div class="cat-tag"></div>
+  <div class="flashcard-wrap" onclick="flipCard()">
+    <div class="flashcard">
+      <div class="face front">
+        <div class="face-label">Pergunta</div>
+        <div class="face-text"></div>
+      </div>
+      <div class="face back">
+        <div class="face-label">Resposta</div>
+        <div class="face-text"></div>
+        <div class="face-art"></div>
+      </div>
+    </div>
+  </div>
+  <p class="hint">Clique no card para revelar</p>
+  <div class="rating-row">
+    <button class="btn-rate bad" onclick="rate(false)">✗ Não sabia</button>
+    <button class="btn-rate good" onclick="rate(true)">✓ Sabia!</button>
+  </div>
+</div>
+
+<div id="result">
+  <h2></h2>
+  <div class="score-big"></div>
+  <div class="score-label"></div>
+  <br>
+  <button class="btn-retry" onclick="retryAll()">↩ Novo baralho</button>
+  <button class="btn-wrongs" id="btn-wrongs" onclick="retryWrongs()" style="display:none">🔁 Revisar erros</button>
+</div>
+
+<script>{js}</script>
+</body>
+</html>"""
+    return html
+
+html = build_html()
+path = r"c:\Users\hacke\OneDrive - unb.br\estudo\flashcards_lc840.html"
+with open(path, "w", encoding="utf-8") as f:
+    f.write(html)
+
+print(f"Criado! flashcards_lc840.html — {len(CARDS)} cards, {len(html)//1024}KB")
