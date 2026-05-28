@@ -75,6 +75,70 @@ QUESTOES = [
     {"cat":"Remuneração","q":"O adicional de periculosidade é de 25% sobre o vencimento básico.","g":"E","art":"Art. 89","tip":"Periculosidade = 30% (não 25%). 25% é o noturno."},
     {"cat":"Remuneração","q":"Os adicionais de insalubridade e periculosidade podem ser acumulados quando o servidor exercer atividades que justifiquem ambos.","g":"E","art":"Art. 88, §2º","tip":"NÃO são cumuláveis. O servidor opta pelo mais favorável."},
     {"cat":"Remuneração","q":"A hora noturna, entre 22h e 5h, equivale a 52 minutos e 30 segundos.","g":"C","art":"Art. 85, §2º","tip":"Hora noturna = 52min30s (menor que a hora normal de 60min)."},
+    # INFRAÇÕES LEVES — ADVERTÊNCIA (Art. 190)
+    {"cat":"Infração Leve","q":"Retirar da repartição qualquer documento ou objeto sem anuência da chefia é infração punível com advertência.","g":"C","art":"Art. 190, II","tip":"Infração leve = advertência. Reincidência: suspensão de até 30 dias."},
+    {"cat":"Infração Leve","q":"Recusar-se a participar de programa de treinamento obrigatório constitui infração punível com suspensão.","g":"E","art":"Art. 190, VII","tip":"É infração LEVE → advertência (não suspensão)."},
+    {"cat":"Infração Leve","q":"Negar fé a documento público é infração punível com advertência.","g":"C","art":"Art. 190, VI","tip":"Infração leve. Reincidência eleva para suspensão de até 30 dias."},
+    {"cat":"Infração Leve","q":"O servidor que não comparece a inspeção ou perícia médica quando convocado pratica infração leve, punível com advertência.","g":"C","art":"Art. 190, VIII","tip":"Ausência a inspeção médica = infração leve → advertência."},
+    {"cat":"Infração Leve","q":"Cometer a outro servidor atribuições estranhas ao seu cargo, fora de emergência, é infração punível com demissão.","g":"E","art":"Art. 190, X","tip":"É infração LEVE → advertência, não demissão."},
+    {"cat":"Infração Leve","q":"Opor resistência injustificada ao andamento de processo ou serviço é infração punível com advertência.","g":"C","art":"Art. 190, IX","tip":"Infração leve. Reincidência: suspensão de até 30 dias."},
+    {"cat":"Infração Leve","q":"Usar indevidamente a identificação funcional em benefício próprio ou de terceiros é infração leve.","g":"C","art":"Art. 190, XV","tip":"Carteira/crachá funcional indevidamente usado = advertência."},
+    {"cat":"Infração Leve","q":"Descumprir decisões administrativas regularmente emitidas pela chefia é infração punível com suspensão de até 90 dias.","g":"E","art":"Art. 190, I","tip":"É infração LEVE → advertência. Suspensão de 90 dias corresponde ao Grupo II."},
+    # INFRAÇÕES MÉDIAS — SUSPENSÃO ATÉ 30 DIAS (Art. 191)
+    {"cat":"Infração Média","q":"Exercer atividade privada durante o expediente de trabalho sujeita o servidor a suspensão de até 30 dias.","g":"C","art":"Art. 191, III","tip":"Atividade privada NO horário de serviço = suspensão até 30 dias (Grupo I)."},
+    {"cat":"Infração Média","q":"Praticar comércio ou usura dentro da repartição é punido com advertência.","g":"E","art":"Art. 191, V","tip":"Comércio/usura na repartição = suspensão de até 30 dias (não advertência)."},
+    {"cat":"Infração Média","q":"Discriminar subordinado no trabalho por motivo de raça, sexo ou idade é infração punível com suspensão de até 30 dias.","g":"C","art":"Art. 191, VI","tip":"Discriminação no ambiente de trabalho = suspensão até 30 dias (Grupo I)."},
+    {"cat":"Infração Média","q":"Praticar ato incompatível com a moralidade administrativa implica suspensão de até 30 dias.","g":"C","art":"Art. 191, IV","tip":"Ato imoral = suspensão até 30 dias."},
+    {"cat":"Infração Média","q":"Cometer a pessoa estranha à repartição atribuições de servidor ou subordinado sujeita à suspensão de até 30 dias.","g":"C","art":"Art. 191, I","tip":"Terceiro estranho exercendo função pública = suspensão até 30 dias."},
+    # INFRAÇÕES MÉDIAS — SUSPENSÃO ATÉ 90 DIAS (Art. 192)
+    {"cat":"Infração Média","q":"O assédio moral ou sexual praticado por servidor é punido com suspensão de até 90 dias.","g":"C","art":"Art. 192, II","tip":"Assédio = suspensão até 90 dias (Grupo II)."},
+    {"cat":"Infração Média","q":"A ofensa física em serviço sujeita o servidor a suspensão de até 90 dias, inclusive quando praticada em legítima defesa.","g":"E","art":"Art. 192, I","tip":"Legítima defesa própria é EXCEÇÃO: não configura a infração."},
+    {"cat":"Infração Média","q":"Fornecer senha de acesso a sistema para pessoa não autorizada sujeita o servidor a suspensão de até 90 dias.","g":"C","art":"Art. 192, VI","tip":"Facilitar acesso restrito a não autorizado = suspensão até 90 dias."},
+    {"cat":"Infração Média","q":"Exercer atividade privada incompatível com o cargo, mesmo fora do horário de expediente, é punido com suspensão de até 90 dias.","g":"C","art":"Art. 192, IV","tip":"Incompatibilidade fora do expediente = 90 dias (mais grave que dentro = 30 dias)."},
+    {"cat":"Infração Média","q":"Coagir subordinado a filiar-se a sindicato ou partido político sujeita à suspensão de até 90 dias.","g":"C","art":"Art. 192, III","tip":"Coação sindical/partidária = suspensão até 90 dias (Grupo II)."},
+    {"cat":"Infração Média","q":"Usar recursos computacionais da repartição para disseminar vírus ou acessar sites remunerados é punido com advertência.","g":"E","art":"Art. 192, V","tip":"Mau uso de TI = suspensão até 90 dias (não advertência)."},
+    # INFRAÇÕES GRAVES — DEMISSÃO GRUPO I (Art. 193)
+    {"cat":"Infração Grave","q":"O abandono de cargo por mais de 30 dias consecutivos resulta em demissão.","g":"C","art":"Art. 193, I c/c Art. 64, I","tip":"Abandono (30 dias) e inassiduidade (60 dias interpolados) = demissão (Grupo I)."},
+    {"cat":"Infração Grave","q":"Proceder de forma desidiosa, com negligência reiterada nos deveres, é infração grave punível com demissão.","g":"C","art":"Art. 193, III","tip":"Desídia = demissão (Grupo I). Não gera impedimento de 10 anos."},
+    {"cat":"Infração Grave","q":"Aceitar comissão, emprego ou pensão de Estado estrangeiro é infração punível com demissão.","g":"C","art":"Art. 193, VIII","tip":"Vínculo com Estado estrangeiro = demissão (Grupo I)."},
+    {"cat":"Infração Grave","q":"A acumulação ilegal de cargos públicos é infração punível com suspensão de até 90 dias.","g":"E","art":"Art. 193, II","tip":"Acumulação ilegal = DEMISSÃO (Grupo I), não suspensão."},
+    {"cat":"Infração Grave","q":"Insubordinação grave que subverte ostensivamente a ordem hierárquica é punida com demissão.","g":"C","art":"Art. 193, V","tip":"Insubordinação grave = demissão (Grupo I)."},
+    {"cat":"Infração Grave","q":"Dispensar licitação de forma ilegal para contratar empresa de parente configura infração grave punível com demissão.","g":"C","art":"Art. 193, VI","tip":"Dispensa ilegal de licitação = demissão (Grupo I)."},
+    # INFRAÇÕES GRAVES — DEMISSÃO GRUPO II (Art. 194) — 10 ANOS DE IMPEDIMENTO
+    {"cat":"Infração Grave","q":"A demissão por improbidade administrativa impede o ex-servidor de assumir cargo no DF por 10 anos.","g":"C","art":"Art. 194, I","tip":"Grupo II = demissão + impedimento de 10 anos para novo cargo no DF."},
+    {"cat":"Infração Grave","q":"A demissão por abandono de cargo impede o servidor de retornar ao serviço público do DF por 10 anos.","g":"E","art":"Art. 193 x Art. 194","tip":"Abandono é Grupo I (Art. 193): SEM impedimento de 10 anos. Só o Grupo II (Art. 194) gera o impedimento."},
+    {"cat":"Infração Grave","q":"Exigir, solicitar ou aceitar propina ou presente de pessoa com interesse em decisão administrativa resulta em demissão.","g":"C","art":"Art. 194, III","tip":"Corrupção passiva = demissão (Grupo II) + 10 anos de impedimento."},
+    {"cat":"Infração Grave","q":"Usar conhecimentos do cargo para invadir sistemas da repartição é infração grave do Grupo II.","g":"C","art":"Art. 194, II","tip":"Ataque a sistemas usando saberes do cargo = Grupo II: demissão + 10 anos."},
+    {"cat":"Infração Grave","q":"Valer-se do cargo para obter proveito indevido para si ou terceiros é infração do Grupo I, punível com demissão simples.","g":"E","art":"Art. 194, IV","tip":"Valer-se do cargo para proveito indevido = Grupo II (Art. 194): demissão + 10 anos de impedimento."},
+    # DEVERES (Art. 43)
+    {"cat":"Deveres","q":"O servidor deve cumprir as ordens dos superiores hierárquicos, mesmo quando manifestamente ilegais.","g":"E","art":"Art. 43, IV","tip":"Dever de obediência com RESSALVA: não se aplica a ordens manifestamente ilegais."},
+    {"cat":"Deveres","q":"É dever do servidor comunicar à autoridade superior qualquer irregularidade de que tenha ciência no exercício do cargo.","g":"C","art":"Art. 43, VI","tip":"Denunciar irregularidades é dever funcional, não mera faculdade."},
+    {"cat":"Deveres","q":"Tratar com urbanidade as pessoas é dever funcional do servidor público.","g":"C","art":"Art. 43, XI","tip":"Urbanidade = dever expresso no Art. 43. Violação = infração disciplinar."},
+    {"cat":"Deveres","q":"Ser assíduo e pontual ao serviço é dever do servidor, podendo seu descumprimento ensejar infração disciplinar.","g":"C","art":"Art. 43, X","tip":"Assiduidade e pontualidade constam expressamente no rol de deveres."},
+    {"cat":"Deveres","q":"O dever de guardar sigilo sobre assuntos da repartição pode ser afastado por ordem do superior imediato.","g":"E","art":"Art. 43, VIII","tip":"Sigilo é dever irrestrito. Nenhum superior tem poder de dispensar o servidor desse dever."},
+    {"cat":"Deveres","q":"Zelar pela economia do material e pela conservação do patrimônio público é dever funcional expresso na LC 840.","g":"C","art":"Art. 43, VII","tip":"Conservação do patrimônio público é dever de todos os servidores."},
+    {"cat":"Deveres","q":"Manter conduta compatível com a moralidade administrativa é dever do servidor, não apenas uma recomendação ética.","g":"C","art":"Art. 43, IX","tip":"Moralidade administrativa = dever legal expresso, não mera diretriz."},
+    # RESPONSABILIDADE (Art. 183-184)
+    {"cat":"Responsabilidade","q":"As responsabilidades civil, penal e administrativa do servidor são independentes entre si.","g":"C","art":"Art. 184","tip":"Independência das três esferas: prazos, provas e decisões são autônomas."},
+    {"cat":"Responsabilidade","q":"A absolvição criminal por insuficiência de provas impede a punição administrativa pelo mesmo fato.","g":"E","art":"Art. 184","tip":"Só vincula se houver reconhecimento de INEXISTÊNCIA DO FATO ou NEGATIVA DE AUTORIA."},
+    {"cat":"Responsabilidade","q":"A decisão judicial que reconhece a inexistência material do fato vincula obrigatoriamente a esfera administrativa.","g":"C","art":"Art. 184","tip":"Inexistência do fato e negação de autoria na esfera penal vinculam as demais esferas."},
+    {"cat":"Responsabilidade","q":"A condenação criminal do servidor implica automaticamente sua demissão do cargo público.","g":"E","art":"Art. 184","tip":"Independência das esferas: condenação penal não gera demissão automática — depende de PAD."},
+    {"cat":"Responsabilidade","q":"O servidor responde civil, penal e administrativamente pelo exercício irregular de suas atribuições.","g":"C","art":"Art. 183","tip":"Responsabilidade tríplice pelo exercício irregular do cargo."},
+    # PROIBIÇÕES (Art. 44)
+    {"cat":"Proibições","q":"É vedado ao servidor atuar como procurador ou intermediário de interesses privados junto à Administração Pública do DF.","g":"C","art":"Art. 44","tip":"Proibição absoluta: nepotismo e intermediação de interesses são incompatíveis com o cargo."},
+    {"cat":"Proibições","q":"É proibido ao servidor receber propina, comissão ou presente em razão das atribuições de seu cargo.","g":"C","art":"Art. 44","tip":"Vedação absoluta. Constitui infração grave (Art. 194, III) com demissão + 10 anos de impedimento."},
+    {"cat":"Proibições","q":"A proibição de praticar usura restringe-se ao horário de expediente e ao ambiente da repartição.","g":"E","art":"Art. 44","tip":"Proibição de usura é ABSOLUTA: independe de local ou horário."},
+    {"cat":"Proibições","q":"É vedado ao servidor participar de gerência ou administração de sociedade privada, salvo exceções previstas em lei.","g":"C","art":"Art. 44","tip":"Participação em gerência privada é proibida, ressalvadas as hipóteses legais (acionista, cotista etc.)."},
+    {"cat":"Proibições","q":"O servidor pode exercer qualquer atividade privada fora do expediente, desde que não prejudique o desempenho do cargo.","g":"E","art":"Art. 44 c/c Art. 192, IV","tip":"Atividade privada INCOMPATÍVEL com o cargo é vedada mesmo fora do expediente."},
+    # CARGO EM COMISSÃO E FUNÇÃO DE CONFIANÇA
+    {"cat":"Provimento","q":"As funções de confiança só podem ser exercidas por servidores ocupantes de cargo efetivo.","g":"C","art":"Art. 9º, §1º","tip":"FC = exclusiva para efetivos. CC pode ser qualquer pessoa (livre nomeação)."},
+    {"cat":"Provimento","q":"O servidor efetivo nomeado para cargo em comissão perde automaticamente seu cargo efetivo.","g":"E","art":"Art. 11","tip":"O cargo efetivo fica resguardado: o servidor pode retornar a ele quando deixar o CC."},
+    {"cat":"Provimento","q":"O cargo em comissão pode ser exonerado a qualquer tempo, independentemente de motivação.","g":"C","art":"Art. 8º","tip":"CC = livre nomeação e exoneração (ad nutum). Diferente do efetivo, que exige processo."},
+    {"cat":"Provimento","q":"Ao menos 70% dos cargos em comissão do DF devem ser ocupados por servidores de carreira.","g":"C","art":"Art. 10, §1º","tip":"70% CC para efetivos. A questão com 50% é a mais cobrada como pegadinha."},
+    # REMUNERAÇÃO — QUINQUÊNIO
+    {"cat":"Remuneração","q":"O adicional por tempo de serviço (quinquênio) corresponde a 5% do vencimento básico a cada 5 anos.","g":"C","art":"Art. 82","tip":"Quinquênio = 5% por período de 5 anos de efetivo exercício."},
+    {"cat":"Remuneração","q":"O adicional por tempo de serviço pode ultrapassar 35% do vencimento básico com o acúmulo de quinquênios.","g":"E","art":"Art. 82","tip":"Limite máximo = 7 quinquênios = 35% do vencimento básico."},
+    {"cat":"Remuneração","q":"O adicional por tempo de serviço incide sobre a remuneração total do servidor, incluindo gratificações.","g":"E","art":"Art. 82","tip":"Quinquênio incide sobre o VENCIMENTO BÁSICO, não sobre a remuneração total."},
 ]
 
 CATS = sorted(set(q["cat"] for q in QUESTOES))
@@ -123,6 +187,15 @@ h1 { font-size: 1.4rem; color: #f85149; margin-bottom: 4px; }
 .tip-txt { color: #c9d1d9; flex-basis: 100%; margin-top: 4px; }
 .btn-retry { background: #b62324; color: #fff; border: none; border-radius: 8px; padding: 12px 28px; font-size: .95rem; cursor: pointer; margin: 16px auto; display: block; }
 .btn-retry:hover { background: #f85149; }
+.feedback { display: none; margin-top: 16px; padding-top: 14px; border-top: 1px solid #30363d; }
+.fb-result { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; }
+.fb-result.ok { color: #3fb950; }
+.fb-result.nok { color: #f85149; }
+.fb-gabarito { margin-bottom: 8px; font-size: .88rem; }
+.fb-art { color: #8b949e; font-size: .8rem; margin-bottom: 5px; }
+.fb-tip { color: #c9d1d9; font-size: .9rem; line-height: 1.55; }
+#btn-proxima { display: none; width: 100%; max-width: 640px; margin-top: 10px; background: #1f6feb; color: #fff; border: none; border-radius: 8px; padding: 14px; font-size: 1rem; font-weight: 700; cursor: pointer; }
+#btn-proxima:hover { background: #388bfd; }
 """
 
 JS = r"""
@@ -145,7 +218,7 @@ function startGame(){
 }
 
 function onKey(e){
-  if(esperando) return;
+  if(esperando){ if(e.key==='Enter'||e.key===' ') proxima(); return; }
   if(e.key==='c'||e.key==='C') responder('C');
   if(e.key==='e'||e.key==='E') responder('E');
 }
@@ -195,7 +268,21 @@ function flash(ok){
   esperando=true;
   const card=document.querySelector('.card');
   card.classList.add(ok?'flash-ok':'flash-nok');
-  setTimeout(()=>{idx++;nextQ();},350);
+  const q=deck[idx];
+  const fb=document.getElementById('feedback');
+  fb.innerHTML=`<div class="fb-result ${ok?'ok':'nok'}">${ok?'✓ Correto!':'✗ Errado!'}</div>`+
+    `<div class="fb-gabarito">Gabarito: <span class="gabarito ${q.g}">${q.g==='C'?'CERTO':'ERRADO'}</span></div>`+
+    `<div class="fb-art">${q.art}</div>`+
+    `<div class="fb-tip">${q.tip}</div>`;
+  fb.style.display='block';
+  document.getElementById('btn-proxima').style.display='block';
+}
+
+function proxima(){
+  document.getElementById('feedback').style.display='none';
+  document.getElementById('btn-proxima').style.display='none';
+  idx++;
+  nextQ();
 }
 
 function showResult(){
@@ -268,7 +355,9 @@ def build_html():
       <button class="btn-ce certo" onclick="responder('C')">✓ CERTO<span class="kbd">tecla C</span></button>
       <button class="btn-ce errado" onclick="responder('E')">✗ ERRADO<span class="kbd">tecla E</span></button>
     </div>
+    <div id="feedback" class="feedback"></div>
   </div>
+  <button id="btn-proxima" onclick="proxima()">Próxima → <span style="font-size:.72rem;font-weight:400;opacity:.65">Enter / Espaço</span></button>
 </div>
 <div id="result">
   <div class="result-header">

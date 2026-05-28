@@ -17,6 +17,7 @@ JOGOS = {
     "Modo Sobrevivencia": "survival_lc840.html",
     "Complete a Frase": "complete_lc840.html",
     "App de Estudos": "estudo.html",
+    "Gestao de Estoques": "gestao_estoques.html",
 }
 
 

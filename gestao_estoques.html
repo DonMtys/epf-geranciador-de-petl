@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="pt-BR" translate="no">
+<head>
+<meta charset="UTF-8">
+<meta name="google" content="notranslate">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quiz — Gestão de Estoques</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0d1117;color:#e6edf3;font-family:'Segoe UI',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px}
+h1{font-size:1.5rem;color:#58a6ff;margin-bottom:4px;text-align:center}
+.sub{color:#8b949e;font-size:.85rem;margin-bottom:20px;text-align:center}
+.menu-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;max-width:560px;margin-top:10px}
+.menu-btn{background:#161b22;border:2px solid #30363d;border-radius:12px;padding:18px 14px;cursor:pointer;text-align:left;transition:.15s;color:#e6edf3}
+.menu-btn:hover{border-color:#58a6ff;transform:translateY(-2px)}
+.menu-btn .icon{font-size:1.8rem;margin-bottom:6px}
+.menu-btn .title{font-size:1rem;font-weight:700;color:#58a6ff}
+.menu-btn .desc{font-size:.78rem;color:#8b949e;margin-top:3px}
+#game{display:none;width:100%;max-width:640px}
+.top-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:.85rem;color:#8b949e}
+.mode-badge{background:#1f6feb;color:#fff;border-radius:6px;padding:2px 8px;font-size:.72rem;font-weight:700}
+.timer-wrap{height:4px;background:#21262d;border-radius:2px;margin-bottom:14px}
+#timer-bar{height:4px;border-radius:2px;background:#3fb950;transition:width 1s linear,background .5s}
+.card{background:#161b22;border:1px solid #30363d;border-radius:12px;padding:20px;margin-bottom:12px}
+.q-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.badge{font-size:.68rem;padding:2px 8px;border-radius:10px;border:1px solid}
+.b-assunto{border-color:#58a6ff;color:#58a6ff;background:rgba(88,166,255,.1)}
+.b-dif-facil{border-color:#3fb950;color:#3fb950}
+.b-dif-medio{border-color:#d29922;color:#d29922}
+.b-dif-dificil{border-color:#f85149;color:#f85149}
+.b-tipo{border-color:#8b949e;color:#8b949e}
+.enunciado{font-size:1rem;line-height:1.65;margin-bottom:16px}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{background:#161b22;border:2px solid #30363d;border-radius:8px;padding:12px 14px;text-align:left;font-size:.92rem;cursor:pointer;transition:.12s;color:#e6edf3;line-height:1.45}
+.opt:hover:not(:disabled){border-color:#58a6ff;background:rgba(88,166,255,.08);color:#58a6ff}
+.opt.correct{border-color:#3fb950;background:rgba(63,185,80,.15);color:#3fb950}
+.opt.wrong{border-color:#f85149;background:rgba(248,81,73,.15);color:#f85149}
+.opt:disabled{cursor:default}
+.opt .opt-letter{display:inline-block;width:22px;height:22px;border-radius:50%;background:#30363d;color:#8b949e;font-size:.72rem;font-weight:700;text-align:center;line-height:22px;margin-right:8px;flex-shrink:0}
+.opt.correct .opt-letter{background:rgba(63,185,80,.3);color:#3fb950}
+.opt.wrong .opt-letter{background:rgba(248,81,73,.3);color:#f85149}
+.lacuna-form{display:flex;gap:8px;margin-top:8px}
+#lacuna-input{flex:1;background:#0d1117;border:2px solid #30363d;border-radius:8px;padding:10px 12px;color:#e6edf3;font-size:.95rem;outline:none}
+#lacuna-input:focus{border-color:#58a6ff}
+#lacuna-input.correct{border-color:#3fb950}
+#lacuna-input.wrong{border-color:#f85149}
+.btn-check{background:#1f6feb;color:#fff;border:none;border-radius:8px;padding:10px 18px;font-size:.9rem;cursor:pointer}
+.btn-check:hover{background:#388bfd}
+.feedback{margin-top:12px;padding:14px;border-radius:8px;display:none;line-height:1.6}
+.feedback.show{display:block}
+.feedback.ok{background:rgba(63,185,80,.08);border:1px solid #3fb950}
+.feedback.nok{background:rgba(248,81,73,.08);border:1px solid #f85149}
+.fb-header{font-weight:700;margin-bottom:6px;font-size:.92rem}
+.fb-exp{font-size:.88rem;color:#c9d1d9;margin-bottom:8px}
+.fb-macete{font-size:.82rem;color:#d29922;background:rgba(210,153,34,.1);border:1px solid rgba(210,153,34,.3);border-radius:6px;padding:8px 10px;margin-top:6px}
+.fb-errtag{display:inline-block;font-size:.7rem;padding:2px 8px;border-radius:8px;margin-top:6px;font-weight:700}
+.et-formula{background:rgba(88,166,255,.2);color:#58a6ff}
+.et-conceito{background:rgba(163,113,247,.2);color:#a371f7}
+.et-pegadinha{background:rgba(247,129,102,.2);color:#f78166}
+.et-calculo{background:rgba(210,153,34,.2);color:#d29922}
+.et-novo{background:rgba(63,185,80,.2);color:#3fb950}
+.btn-next{display:none;width:100%;padding:11px;background:#1f6feb;border:none;border-radius:8px;color:#fff;font-size:.95rem;cursor:pointer;margin-top:10px}
+.btn-next:hover{background:#388bfd}
+.btn-next.show{display:block}
+#result{display:none;text-align:center;padding:24px;max-width:640px;width:100%}
+.score-big{font-size:2.8rem;font-weight:700;color:#58a6ff;margin:10px 0}
+.score-lbl{color:#8b949e;margin-bottom:16px}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:12px 0}
+.stat{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:10px}
+.stat-v{font-size:1.3rem;font-weight:700;color:#58a6ff}
+.stat-l{font-size:.72rem;color:#8b949e;margin-top:2px}
+.subj-table{width:100%;border-collapse:collapse;margin:12px 0;text-align:left}
+.subj-table th{color:#8b949e;font-size:.75rem;padding:6px 8px;border-bottom:1px solid #30363d}
+.subj-table td{padding:6px 8px;font-size:.82rem;border-bottom:1px solid #21262d}
+.pct-bar{height:6px;border-radius:3px;background:#21262d;margin-top:4px}
+.pct-fill{height:6px;border-radius:3px}
+.action-btns{display:flex;gap:8px;justify-content:center;margin-top:14px;flex-wrap:wrap}
+.btn-act{padding:10px 20px;border:none;border-radius:8px;font-size:.9rem;cursor:pointer}
+.btn-green{background:#238636;color:#fff}.btn-green:hover{background:#2ea043}
+.btn-red{background:#b62324;color:#fff}.btn-red:hover{background:#da3633}
+.btn-blue{background:#1f6feb;color:#fff}.btn-blue:hover{background:#388bfd}
+.score-bar{display:flex;justify-content:space-between;font-size:.85rem;color:#8b949e;margin-bottom:6px}
+#num-badge{background:#161b22;border:1px solid #30363d;border-radius:6px;padding:3px 9px;font-size:.78rem}
+.progress{font-size:.8rem;color:#58a6ff}
+/* Gabarito detalhado */
+.review-section{margin-top:16px;text-align:left;width:100%}
+.review-title{color:#58a6ff;font-size:1rem;font-weight:700;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid #30363d}
+.review-item{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:14px;margin-bottom:10px}
+.review-q{font-size:.88rem;color:#c9d1d9;margin-bottom:8px;line-height:1.5}
+.review-q strong{color:#e6edf3}
+.review-ans{font-size:.82rem;margin-bottom:4px}
+.review-ans.wrong{color:#f85149}
+.review-ans.correct{color:#3fb950}
+.review-exp{font-size:.82rem;color:#8b949e;margin-top:6px;line-height:1.5;background:rgba(88,166,255,.05);border-left:3px solid #1f6feb;padding:6px 10px;border-radius:0 4px 4px 0}
+.review-macete{font-size:.78rem;color:#d29922;margin-top:6px;background:rgba(210,153,34,.08);border:1px solid rgba(210,153,34,.2);border-radius:6px;padding:6px 9px}
+</style>
+</head>
+<body>
+
+<h1>📦 Gestão de Estoques</h1>
+<p class="sub">Administração de Recursos Materiais — Revisão para Concurso</p>
+
+<div id="menu" style="width:100%;max-width:560px">
+  <div class="menu-grid">
+    <button class="menu-btn" onclick="startMode('revisao')">
+      <div class="icon">📖</div>
+      <div class="title">Revisão Rápida</div>
+      <div class="desc">Todas as questões, sem timer. Veja a explicação após cada resposta.</div>
+    </button>
+    <button class="menu-btn" onclick="startMode('prova')">
+      <div class="icon">⏱️</div>
+      <div class="title">Modo Prova</div>
+      <div class="desc">Timer de 30s por questão. Simule a pressão real da prova.</div>
+    </button>
+    <button class="menu-btn" onclick="startMode('erros')">
+      <div class="icon">🔁</div>
+      <div class="title">Modo Erros</div>
+      <div class="desc">Repete somente as questões que você errou anteriormente.</div>
+    </button>
+    <button class="menu-btn" onclick="startMode('formulas')">
+      <div class="icon">🧮</div>
+      <div class="title">Modo Fórmulas</div>
+      <div class="desc">Somente questões de cálculo e fórmulas. Foco em contas.</div>
+    </button>
+    <button class="menu-btn" onclick="startMode('lacunas')" style="grid-column:1/3">
+      <div class="icon">✏️</div>
+      <div class="title">Modo Lacunas (Anki)</div>
+      <div class="desc">Complete a frase digitando a resposta. Ativa a memória ativa.</div>
+    </button>
+  </div>
+  <div id="err-count" style="text-align:center;margin-top:14px;color:#8b949e;font-size:.82rem"></div>
+</div>
+
+<div id="game">
+  <div class="score-bar">
+    <span>Acertos: <span id="score-val" style="color:#3fb950;font-weight:700">0</span> &nbsp;|&nbsp; Erros: <span id="err-val" style="color:#f85149;font-weight:700">0</span></span>
+    <span id="num-badge">1 / 0</span>
+  </div>
+  <div class="timer-wrap"><div id="timer-bar" style="width:100%"></div></div>
+  <div class="card">
+    <div class="q-meta">
+      <span class="badge b-assunto" id="q-assunto"></span>
+      <span class="badge b-tipo" id="q-tipo"></span>
+      <span class="badge" id="q-dif"></span>
+    </div>
+    <div class="enunciado" id="q-enun"></div>
+    <div id="q-opts"></div>
+    <div class="feedback" id="feedback">
+      <div class="fb-header" id="fb-header"></div>
+      <div class="fb-exp" id="fb-exp"></div>
+      <div class="fb-macete" id="fb-macete" style="display:none"></div>
+      <div id="fb-errtag"></div>
+    </div>
+    <button class="btn-next" id="btn-next" onclick="nextQ()">Próximo →</button>
+  </div>
+</div>
+
+<div id="result">
+  <h2 id="res-title"></h2>
+  <div class="score-big" id="res-score"></div>
+  <div class="score-lbl" id="res-pct"></div>
+  <div class="stats-grid">
+    <div class="stat"><div class="stat-v" id="s-acertos"></div><div class="stat-l">Acertos</div></div>
+    <div class="stat"><div class="stat-v" id="s-erros"></div><div class="stat-l">Erros</div></div>
+    <div class="stat"><div class="stat-v" id="s-tempo"></div><div class="stat-l">Tempo</div></div>
+  </div>
+  <table class="subj-table">
+    <thead><tr><th>Assunto</th><th>Acertos</th><th>Total</th><th>%</th></tr></thead>
+    <tbody id="subj-body"></tbody>
+  </table>
+  <div id="err-types-section" style="margin-top:8px;text-align:left">
+    <div style="color:#8b949e;font-size:.78rem;margin-bottom:6px">Tipo de erro predominante:</div>
+    <div id="err-types"></div>
+  </div>
+  <!-- Gabarito detalhado -->
+  <div class="review-section" id="review-section" style="display:none">
+    <div class="review-title">📋 Gabarito Detalhado — Questões Erradas</div>
+    <div id="review-body"></div>
+  </div>
+  <div class="action-btns">
+    <button class="btn-act btn-green" onclick="goMenu()">↩ Menu</button>
+    <button class="btn-act btn-blue" onclick="retryAll()">🔄 Repetir</button>
+    <button class="btn-act btn-red" id="btn-retry-erros" onclick="retryErros()" style="display:none">❌ Só Erros</button>
+  </div>
+</div>
+
+<script>
+const QUESTOES = [
+  // ── MÚLTIPLA ESCOLHA (convertidas de C/E) ────────────────────────────────
+  {
+    id:1, tipo:"multipla_escolha", assunto:"Noções Gerais", dif:"facil",
+    q:"Qual é o PRINCIPAL objetivo da gestão de estoques?",
+    opts:[
+      "Manter o maior estoque possível para garantir que nunca falte material",
+      "Manter o nível adequado — equilíbrio entre custo de armazenagem e disponibilidade",
+      "Eliminar completamente os estoques para reduzir custos de armazenagem ao máximo",
+      "Garantir o menor custo de pedido possível, independente do nível de estoque"
+    ],
+    a:1,
+    exp:"Gestão de estoques busca o NÍVEL ADEQUADO — nem excesso nem falta. Excesso gera custo de armazenagem, capital parado e risco de obsolescência. Falta gera ruptura e insatisfação.",
+    macete:"Gestão de estoque = equilíbrio. Nem falta, nem sobra.",
+    err:"conceito"
+  },
+  {
+    id:2, tipo:"multipla_escolha", assunto:"Estoque de Segurança", dif:"facil",
+    q:"O estoque de segurança tem como finalidade principal:",
+    opts:[
+      "Aumentar o lote de compra para aproveitar economias de escala",
+      "Substituir o ponto de pedido em situações de consumo regular",
+      "Proteger contra variações de demanda e atrasos no ressuprimento",
+      "Reduzir o giro de estoque e aumentar a cobertura do período"
+    ],
+    a:2,
+    exp:"O estoque de segurança (ou estoque mínimo) existe para cobrir imprevistos: variação no consumo e atrasos no ressuprimento. É o 'pneu estepe' do estoque.",
+    macete:"Segurança = 'pneu estepe' do estoque. Cobre o inesperado.",
+    err:null
+  },
+  {
+    id:3, tipo:"multipla_escolha", assunto:"Ruptura de Estoque", dif:"facil",
+    q:"Ruptura de estoque (stockout) ocorre quando:",
+    opts:[
+      "O estoque ultrapassa o nível máximo planejado",
+      "O ponto de pedido é atingido antes do previsto",
+      "A organização não consegue atender uma demanda por falta de material",
+      "O lote de compra é insuficiente para atingir o estoque máximo"
+    ],
+    a:2,
+    exp:"Ruptura = a demanda existe mas não há produto para atendê-la. É a 'fila chegou e o caixa está vazio'. Consequência direta de estoque insuficiente.",
+    macete:"Ruptura = ruptura no atendimento — sem estoque, sem venda.",
+    err:null
+  },
+  {
+    id:4, tipo:"multipla_escolha", assunto:"Noções Gerais", dif:"medio",
+    q:"Material de ESTOQUE, em oposição a material eventual, possui demanda:",
+    opts:[
+      "Imprevisível e irregular, dependente de projetos específicos",
+      "Eventual e esporádica, difícil de projetar",
+      "Previsível e regular, justificando sua manutenção contínua em estoque",
+      "Sazonal, com picos de consumo em períodos específicos do ano"
+    ],
+    a:2,
+    exp:"Material de ESTOQUE tem demanda previsível/regular — por isso é mantido continuamente. Material eventual tem demanda imprevisível e só é adquirido quando surge a necessidade.",
+    macete:"Estoque = previsível. Eventual = imprevisível. Inverta e erre.",
+    err:"conceito"
+  },
+  {
+    id:5, tipo:"multipla_escolha", assunto:"Efeito Chicote", dif:"medio",
+    q:"O efeito chicote (bullwhip effect) na cadeia de suprimentos é caracterizado por:",
+    opts:[
+      "Redução progressiva das variações de demanda ao longo da cadeia",
+      "Amplificação das variações de demanda do consumidor ao longo da cadeia",
+      "Uniformização dos pedidos entre os elos da cadeia",
+      "Sincronização automática dos estoques entre fornecedores e clientes"
+    ],
+    a:1,
+    exp:"No efeito chicote as variações são AMPLIFICADAS à medida que sobem na cadeia. Uma pequena variação do consumidor gera pedidos muito maiores nos fornecedores mais distantes.",
+    macete:"Chicote: a ponta bate mais forte do que o pulso. Amplifica, não reduz.",
+    err:"pegadinha"
+  },
+  {
+    id:6, tipo:"multipla_escolha", assunto:"Just in Time", dif:"facil",
+    q:"O Just in Time (JIT) tem como princípio fundamental:",
+    opts:[
+      "Produzir o máximo possível em cada ciclo para reduzir o custo unitário",
+      "Manter altos estoques de segurança para garantir continuidade da produção",
+      "Produzir somente o necessário, no tempo certo, no lugar certo e na quantidade certa",
+      "Utilizar previsão de demanda avançada para antecipar a produção"
+    ],
+    a:2,
+    exp:"JIT é a filosofia do 'certo': produto certo, quantidade certa, hora certa, lugar certo — eliminando estoques intermediários e desperdícios.",
+    macete:"JIT = zero desperdício. Só faz quando precisa.",
+    err:null
+  },
+  {
+    id:7, tipo:"multipla_escolha", assunto:"Custos de Estoque", dif:"medio",
+    q:"Qual afirmação sobre os CUSTOS DE ESTOQUE está CORRETA?",
+    opts:[
+      "Custo de pedido cresce proporcionalmente ao aumento do estoque médio",
+      "Custo de armazenagem independe do nível médio do estoque mantido",
+      "Custo de pedido depende do número de pedidos; custo de armazenagem do nível de estoque",
+      "Ambos os custos (pedido e armazenagem) aumentam juntos com o estoque médio"
+    ],
+    a:2,
+    exp:"Custo de PEDIDO depende do número de pedidos realizados. Custo de ARMAZENAGEM (espaço, capital parado, perdas) sobe com o estoque médio. São inversamente relacionados — comprando mais vezes, menos estoque; comprando menos vezes, mais estoque.",
+    macete:"Pedido = frequência de compra. Armazenagem = quanto tem guardado.",
+    err:"conceito"
+  },
+  {
+    id:8, tipo:"multipla_escolha", assunto:"Inventário", dif:"facil",
+    q:"O inventário PERMANENTE difere do inventário PERIÓDICO por:",
+    opts:[
+      "Exigir contagem física mensal de todos os itens do estoque",
+      "Fornecer o saldo de estoque apenas ao final de cada período determinado",
+      "Ser aplicado exclusivamente a itens de Classe A na Curva ABC",
+      "Registrar entradas e saídas continuamente, fornecendo saldo em tempo real"
+    ],
+    a:3,
+    exp:"Inventário permanente/contínuo registra toda entrada e saída, permitindo saber o saldo a qualquer momento. O periódico exige contagem física em datas específicas.",
+    macete:"Permanente = permanentemente atualizado = saldo em tempo real.",
+    err:null
+  },
+  {
+    id:9, tipo:"multipla_escolha", assunto:"Curva ABC", dif:"facil",
+    q:"Na Curva ABC, a Classe A é caracterizada por:",
+    opts:[
+      "Menor valor/importância, exigindo controle simples e periódico",
+      "Maior valor/importância, exigindo controle rigoroso e frequente",
+      "Quantidade de itens equivalente à soma das classes B e C",
+      "Materiais de uso eventual que não justificam controle contínuo"
+    ],
+    a:1,
+    exp:"Classe A = MAIOR valor/importância = controle RIGOROSO. Representa poucos itens mas grande parte do valor total. Classe C = menor valor = controle mais simples.",
+    macete:"A de Alto impacto. C de Controle simples.",
+    err:"conceito"
+  },
+  {
+    id:10, tipo:"multipla_escolha", assunto:"Just in Time", dif:"medio",
+    q:"Na produção PUXADA (pull), a fabricação é iniciada:",
+    opts:[
+      "Com base em previsão estatística da demanda futura",
+      "Quando o nível de estoque atinge o ponto de pedido calculado",
+      "A partir de um pedido real já confirmado pelo cliente",
+      "Ao receber sinal de reposição do inventário periódico"
+    ],
+    a:2,
+    exp:"Produção PUXADA = baseada na demanda REAL (pedido já feito pelo cliente). Produção EMPURRADA = baseada em PREVISÃO — a empresa produz 'empurrando' para o estoque.",
+    macete:"Puxada = cliente 'puxou' o pedido. Empurrada = empresa 'empurrou' pro estoque.",
+    err:"conceito"
+  },
+  {
+    id:11, tipo:"multipla_escolha", assunto:"Ruptura de Estoque", dif:"facil",
+    q:"Qual é a consequência direta de manter estoque INSUFICIENTE?",
+    opts:[
+      "Aumento dos custos de armazenagem e capital imobilizado",
+      "Ampliação do tempo de cobertura e redução do giro de estoque",
+      "Ruptura de estoque, impedindo o atendimento da demanda",
+      "Redução do ponto de pedido e necessidade de lotes maiores"
+    ],
+    a:2,
+    exp:"Falta de estoque leva à ruptura: a demanda existe mas não há produto para atender. Já o excesso de estoque é que gera custo de armazenagem e capital parado.",
+    macete:"Sem estoque = sem atendimento = ruptura.",
+    err:null
+  },
+  {
+    id:12, tipo:"multipla_escolha", assunto:"Previsão de Estoque", dif:"medio",
+    q:"O método de previsão chamado PREDILEÇÃO baseia-se em:",
+    opts:[
+      "Séries históricas de consumo e projeções estatísticas",
+      "Variáveis e fatores externos que explicam o comportamento da demanda",
+      "Médias móveis ponderadas dos períodos anteriores",
+      "Opiniões, julgamento e experiência de especialistas"
+    ],
+    a:3,
+    exp:"PREDILEÇÃO usa opiniões e experiência de especialistas. Quem usa histórico é a PROJEÇÃO. Quem usa variáveis explicativas é a EXPLICAÇÃO. Predileção = 'feeling' de quem sabe.",
+    macete:"Predileção = predileção dos especialistas (opinião). Projeção = repete o passado.",
+    err:"pegadinha"
+  },
+  {
+    id:13, tipo:"multipla_escolha", assunto:"Classificação de Materiais", dif:"facil",
+    q:"Qual alternativa descreve corretamente a MATÉRIA-PRIMA?",
+    opts:[
+      "Auxilia o processo produtivo sem integrar fisicamente o produto final",
+      "Toma parte no produto final sem alterar suas propriedades físicas e químicas",
+      "Incorpora-se fisicamente ao produto final, alterando sua composição",
+      "Produto já finalizado, pronto para consumo ou venda imediata"
+    ],
+    a:2,
+    exp:"Matéria-prima entra na composição física do produto. Ex.: madeira vira mesa; farinha vira pão. Ela se transforma e faz parte do produto final.",
+    macete:"Matéria-prima = entra no produto e vira parte dele.",
+    err:null
+  },
+  {
+    id:14, tipo:"multipla_escolha", assunto:"Classificação de Materiais", dif:"facil",
+    q:"Produto ACABADO é definido como:",
+    opts:[
+      "Material que ainda requer etapas de beneficiamento antes da venda",
+      "Componente que entra na composição do produto sem alterar suas propriedades",
+      "Produto em processo de fabricação, aguardando conclusão",
+      "Produto que concluiu todo o processo produtivo e está pronto para consumo ou venda"
+    ],
+    a:3,
+    exp:"Produto ACABADO = já passou por todas as etapas = pronto para vender ou usar. Não confundir com produto em processo (WIP — Work in Progress) que ainda está sendo fabricado.",
+    macete:"Acabado = acabou de fabricar = pronto para vender.",
+    err:"conceito"
+  },
+  {
+    id:15, tipo:"multipla_escolha", assunto:"Consignação", dif:"medio",
+    q:"Na relação de consignação, o CONSIGNATÁRIO é:",
+    opts:[
+      "Quem envia o produto para ser vendido por terceiro",
+      "Quem fabrica o produto antes de consignar ao distribuidor",
+      "Quem financia a compra antecipada do estoque consignado",
+      "Quem recebe o produto para vender, sem precisar pagar antecipadamente"
+    ],
+    a:3,
+    exp:"CONSIGNATÁRIO = quem RECEBE para vender. CONSIGNANTE = quem ENVIA. O produto permanece de propriedade do consignante até ser vendido. Consig-NATÁRIO = destinaTÁRIO.",
+    macete:"Consig-NATÁRIO = NATÁRIO rima com 'destinatário' = quem recebe.",
+    err:"conceito"
+  },
+  {
+    id:16, tipo:"multipla_escolha", assunto:"Custos de Estoque", dif:"facil",
+    q:"O excesso de estoque gera, principalmente:",
+    opts:[
+      "Maior risco de ruptura e insatisfação dos clientes",
+      "Redução no tempo de cobertura e aumento no giro de estoque",
+      "Custos de armazenagem, capital imobilizado e risco de obsolescência",
+      "Necessidade de ampliação do lote de compra mínimo"
+    ],
+    a:2,
+    exp:"Excesso de estoque tem vários custos: armazenagem (espaço, energia), capital imobilizado (dinheiro parado), risco de perda, deterioração e obsolescência (produto ultrapassado).",
+    macete:"Excesso custa: guarda, prende capital e envelhece.",
+    err:null
+  },
+  {
+    id:17, tipo:"multipla_escolha", assunto:"Custos de Estoque", dif:"medio",
+    q:"Qual relação entre CUSTO DE PEDIDO e nível de estoque está CORRETA?",
+    opts:[
+      "Custo de pedido aumenta conforme o estoque médio cresce",
+      "Custo de pedido diminui conforme o estoque médio cresce, pois há menos pedidos",
+      "Custo de pedido é fixo e não tem qualquer relação com o nível de estoque",
+      "Custo de pedido e custo de armazenagem crescem juntos com o estoque médio"
+    ],
+    a:1,
+    exp:"Maior estoque médio = lotes maiores = menos pedidos no período = MENOR custo de pedido. Mas aumenta o custo de armazenagem. Os dois custos se equilibram no Lote Econômico de Compra (LEC).",
+    macete:"Pedido = frequência de compra. Mais estoque = menos pedidos = menor custo de pedido.",
+    err:"formula"
+  },
+  {
+    id:18, tipo:"multipla_escolha", assunto:"Previsão de Estoque", dif:"medio",
+    q:"Na previsão de demanda, qual afirmação sobre os métodos de médias está CORRETA?",
+    opts:[
+      "Média móvel simples dá mais peso ao período mais recente",
+      "Média ponderada atribui o mesmo peso a todos os períodos",
+      "Média exponencialmente ponderada usa o mesmo peso para todos os períodos",
+      "Média ponderada atribui pesos distintos, sendo maior para o período mais recente"
+    ],
+    a:3,
+    exp:"Média SIMPLES = mesma importância para todos os períodos. Média PONDERADA = pesos diferentes (mais para o recente). Média EXPONENCIALMENTE PONDERADA = ajusta continuamente por fator β.",
+    macete:"Simples = igualzinho para todos. Ponderada = dá mais valor ao mais recente.",
+    err:"conceito"
+  },
+  {
+    id:19, tipo:"multipla_escolha", assunto:"Previsão de Estoque", dif:"medio",
+    q:"O método de previsão chamado PROJEÇÃO assume que:",
+    opts:[
+      "O comportamento futuro é explicado por variáveis causais identificáveis",
+      "Especialistas experientes são os melhores estimadores da demanda futura",
+      "O comportamento passado do consumo se repetirá no futuro",
+      "A média dos últimos períodos, com pesos iguais, determina a demanda futura"
+    ],
+    a:2,
+    exp:"Projeção = 'copiar e colar' o passado no futuro. Se vendeu 100/mês, projeta 100 para o próximo. Simples mas não considera tendências nem sazonalidade.",
+    macete:"Projeção = 'projeta' o passado para o futuro. Cópia do histórico.",
+    err:null
+  },
+  {
+    id:20, tipo:"multipla_escolha", assunto:"Just in Time", dif:"medio",
+    q:"Na produção EMPURRADA (push), a fabricação:",
+    opts:[
+      "É iniciada somente após recebimento de pedido confirmado pelo cliente",
+      "É baseada em previsão de demanda, produzindo antecipadamente para o estoque",
+      "Utiliza o sistema kanban para controlar o fluxo de produção",
+      "Elimina estoques intermediários sincronizando-se com a demanda real"
+    ],
+    a:1,
+    exp:"Produção EMPURRADA = baseada em PREVISÃO. A empresa produz 'empurrando' para o estoque antes de ter pedido. Puxada é que reage à demanda real. Kanban é associado à produção puxada.",
+    macete:"Empurrada = empresa empurra o produto para o estoque esperando vender.",
+    err:"conceito"
+  },
+
+  // ── MÚLTIPLA ESCOLHA (originais) ────────────────────────────────────────────
+  {
+    id:21, tipo:"multipla_escolha", assunto:"Ponto de Pedido", dif:"medio",
+    q:"Qual é a fórmula CORRETA do PONTO DE PEDIDO (ponto de ressuprimento)?",
+    opts:["Consumo médio × lote de compra","Consumo médio × tempo de reposição + estoque de segurança","Lote de compra + estoque de segurança","Estoque máximo − estoque mínimo"],
+    a:1,
+    exp:"Ponto de pedido = Consumo médio × Tempo de reposição + Estoque de segurança. Responde: 'quando devo fazer o pedido?' — quando o estoque cair até esse nível.",
+    macete:"PP = CM × TR + ES. Pedido = consumo × tempo + segurança.",
+    err:"formula"
+  },
+  {
+    id:22, tipo:"multipla_escolha", assunto:"Estoque Máximo", dif:"medio",
+    q:"Qual é a fórmula CORRETA do ESTOQUE MÁXIMO?",
+    opts:["Consumo médio × tempo de reposição + estoque de segurança","Ponto de pedido + consumo médio","Lote de compra + estoque de segurança","Consumo anual ÷ número de pedidos"],
+    a:2,
+    exp:"Estoque máximo = Lote de compra + Estoque de segurança. Responde: 'qual o nível mais alto planejado?' — logo após a chegada de um lote.",
+    macete:"Máximo = Lote + Segurança. Não usa consumo nem tempo — esse é o ponto de pedido.",
+    err:"formula"
+  },
+  {
+    id:23, tipo:"multipla_escolha", assunto:"Giro de Estoque", dif:"medio",
+    q:"Qual é a fórmula do GIRO DE ESTOQUE?",
+    opts:["Estoque médio ÷ consumo do período","Consumo do período ÷ estoque médio","Período ÷ estoque médio","Consumo do período × estoque médio"],
+    a:1,
+    exp:"Giro = Consumo (ou vendas) ÷ Estoque médio. Mostra quantas vezes o estoque se renovou. Ex.: giro 3 = o estoque foi zerado e reposto 3 vezes no período.",
+    macete:"Giro começa com o que SAIU: consumo em cima, estoque embaixo.",
+    err:"formula"
+  },
+  {
+    id:24, tipo:"multipla_escolha", assunto:"Cobertura de Estoque", dif:"medio",
+    q:"Qual é a fórmula da COBERTURA DE ESTOQUE?",
+    opts:["Consumo do período ÷ estoque médio","Giro × período","Período ÷ giro","Estoque médio × giro"],
+    a:2,
+    exp:"Cobertura = Período ÷ Giro. Mostra por quanto tempo o estoque médio cobre a demanda. Ex.: giro 4 no ano → cobertura = 12 ÷ 4 = 3 meses.",
+    macete:"Cobertura = quanto TEMPO dura. Giro = quantas VEZES renovou. São inversamente proporcionais.",
+    err:"formula"
+  },
+  {
+    id:25, tipo:"multipla_escolha", assunto:"Previsão de Estoque", dif:"facil",
+    q:"O método de previsão que simplesmente copia o consumo real do período anterior como previsão é:",
+    opts:["Média ponderada","Média móvel simples","Método do último período","Média exponencialmente ponderada"],
+    a:2,
+    exp:"Método do último período: previsão do próximo período = consumo real do período anterior. Simples e direto, mas ignora tendências.",
+    macete:"Último período = 'o que aconteceu semana passada vai acontecer essa semana'.",
+    err:"conceito"
+  },
+  {
+    id:26, tipo:"multipla_escolha", assunto:"Previsão de Estoque", dif:"medio",
+    q:"O método de previsão chamado PREDILEÇÃO utiliza principalmente:",
+    opts:["Séries históricas de consumo e estatística","Variáveis e fatores que explicam a demanda","Opiniões, julgamento e experiência de especialistas","Médias dos períodos com pesos iguais"],
+    a:2,
+    exp:"Predileção = opiniões de especialistas ou pessoas experientes. Não usa dados estatísticos diretamente. Ex.: gerente experiente estima a demanda com base no seu feeling.",
+    macete:"Predileção = preferência de quem sabe. Especialista decide.",
+    err:"conceito"
+  },
+  {
+    id:27, tipo:"multipla_escolha", assunto:"Consignação", dif:"medio",
+    q:"Na consignação, o CONSIGNATÁRIO é:",
+    opts:["Quem envia o produto para venda","Quem recebe o produto para vender","Quem fabrica o produto","Quem financia a compra do estoque"],
+    a:1,
+    exp:"Consignatário = quem RECEBE para vender (destinatário). Consignante = quem ENVIA/deixa o produto. O produto permanece do consignante até ser vendido.",
+    macete:"Consig-NATÁRIO = destinaTÁRIO = quem recebe.",
+    err:"conceito"
+  },
+  {
+    id:28, tipo:"multipla_escolha", assunto:"Classificação de Materiais", dif:"medio",
+    q:"Qual alternativa descreve corretamente o PRODUTO INTERMEDIÁRIO?",
+    opts:["Incorpora-se fisicamente ao produto final alterando suas propriedades","Já está pronto para consumo ou venda","Ajuda no processo produtivo sem integrar o produto final","Toma parte no produto final SEM alterar suas propriedades físicas e químicas"],
+    a:3,
+    exp:"Produto intermediário: participa do produto final sem mudar suas características. Ex.: componente que entra na montagem mas não se transforma. Diferente da matéria-prima que se incorpora fisicamente.",
+    macete:"Intermediário = entra no produto mas não muda. Matéria-prima = entra e vira parte.",
+    err:"conceito"
+  },
+  {
+    id:29, tipo:"multipla_escolha", assunto:"Inventário", dif:"facil",
+    q:"Qual tipo de inventário permite saber o saldo do estoque A QUALQUER MOMENTO?",
+    opts:["Inventário físico/periódico","Inventário permanente/contínuo","Inventário por amostragem","Inventário retrospectivo"],
+    a:1,
+    exp:"Inventário permanente/contínuo: registra toda entrada e saída em tempo real → saldo disponível a qualquer momento. Inventário físico/periódico: apenas conta fisicamente em data específica.",
+    macete:"Permanente = permanentemente atualizado. Periódico = só em datas fixas.",
+    err:"conceito"
+  },
+  {
+    id:30, tipo:"multipla_escolha", assunto:"Curva ABC", dif:"facil",
+    q:"Na Curva ABC, qual é a característica da Classe A?",
+    opts:["Menor valor/importância, controle simples","Importância intermediária, controle moderado","Maior valor/importância, exige controle rigoroso","Materiais de uso eventual sem necessidade de controle"],
+    a:2,
+    exp:"Classe A: itens de MAIOR valor, importância ou impacto financeiro → controle rigoroso e frequente. Representa poucos itens mas grande parte do valor total do estoque.",
+    macete:"A = Alto impacto = Atenção máxima. C = Controle simples = não é crítico.",
+    err:"conceito"
+  },
+  {
+    id:31, tipo:"multipla_escolha", assunto:"Previsão de Estoque", dif:"dificil",
+    q:"Na média móvel EXPONENCIALMENTE PONDERADA, se o consumo real foi MAIOR que a previsão anterior, a nova previsão:",
+    opts:["Permanece igual à previsão anterior","Diminui proporcionalmente ao erro negativo","Aumenta proporcionalmente ao erro positivo (β × erro)","É substituída diretamente pelo consumo real"],
+    a:2,
+    exp:"Nova previsão = previsão anterior + β × (consumo real − previsão anterior). Se consumo > previsão, o erro é positivo, logo a nova previsão SOBE. Se consumo < previsão, o erro é negativo e a previsão DESCE.",
+    macete:"Real maior que previsto? Previsão sobe. Real menor? Previsão desce. β controla o quanto.",
+    err:"formula"
+  },
+
+  // ── CÁLCULO ─────────────────────────────────────────────────────────────────
+  {
+    id:32, tipo:"calculo", assunto:"Ponto de Pedido", dif:"medio",
+    q:"Consumo médio: 300 un/mês. Tempo de reposição: 15 dias. Estoque de segurança: 120 un.\n\nQual o PONTO DE PEDIDO?",
+    opts:["270 unidades","420 unidades","570 unidades","300 unidades"],
+    a:0,
+    exp:"Passo 1 — Converter tempo: 15 dias = 0,5 mês.\nPasso 2 — PP = CM × TR + ES\nPP = 300 × 0,5 + 120\nPP = 150 + 120\n✅ PP = 270 unidades",
+    macete:"Sempre converta dias para meses quando o consumo está em mês! 15 dias = 0,5 mês.",
+    err:"calculo"
+  },
+  {
+    id:33, tipo:"calculo", assunto:"Estoque Máximo", dif:"facil",
+    q:"Lote de compra: 800 unidades. Estoque de segurança: 150 unidades.\n\nQual o ESTOQUE MÁXIMO?",
+    opts:["950 unidades","650 unidades","800 unidades","1.100 unidades"],
+    a:0,
+    exp:"Estoque máximo = Lote + Segurança\nEM = 800 + 150\n✅ EM = 950 unidades\n\nNão usa consumo médio nem tempo — isso seria ponto de pedido.",
+    macete:"Máximo = Lote + Segurança. Simples assim.",
+    err:"calculo"
+  },
+  {
+    id:34, tipo:"calculo", assunto:"Giro de Estoque", dif:"medio",
+    q:"Consumo anual: 4.800 unidades. Estoque inicial: 800 un. Estoque final: 400 un.\n\nQual o GIRO DE ESTOQUE?",
+    opts:["8 vezes","6 vezes","4 vezes","12 vezes"],
+    a:0,
+    exp:"Passo 1 — Estoque médio = (EI + EF) ÷ 2 = (800 + 400) ÷ 2 = 600\nPasso 2 — Giro = Consumo ÷ Estoque médio\nGiro = 4.800 ÷ 600\n✅ Giro = 8 vezes",
+    macete:"Sempre calcule o estoque médio antes do giro: (inicial + final) ÷ 2.",
+    err:"calculo"
+  },
+  {
+    id:35, tipo:"calculo", assunto:"Cobertura de Estoque", dif:"medio",
+    q:"Giro de estoque: 4 vezes ao ano.\n\nQual a COBERTURA DE ESTOQUE (em meses)?",
+    opts:["3 meses","4 meses","6 meses","2 meses"],
+    a:0,
+    exp:"Cobertura = Período ÷ Giro\nCobertura = 12 meses ÷ 4\n✅ Cobertura = 3 meses\n\nSignifica: o estoque médio cobre 3 meses de demanda.",
+    macete:"Giro 4 no ano = renova a cada 3 meses. 12 ÷ 4 = 3.",
+    err:"calculo"
+  },
+  {
+    id:36, tipo:"calculo", assunto:"Previsão de Estoque", dif:"medio",
+    q:"Previsão anterior: 400 unidades. Consumo real: 450 unidades. β = 0,2.\n\nQual a NOVA PREVISÃO (média exponencialmente ponderada)?",
+    opts:["410 unidades","450 unidades","490 unidades","440 unidades"],
+    a:0,
+    exp:"Fórmula: Nova previsão = Previsão anterior + β × (Consumo real − Previsão anterior)\nErro = 450 − 400 = 50\nNova previsão = 400 + 0,2 × 50\nNova previsão = 400 + 10\n✅ Nova previsão = 410 unidades",
+    macete:"β = 0,2 = ajusta 20% do erro. O consumo foi maior, então a previsão sobe (mas pouco).",
+    err:"calculo"
+  },
+  {
+    id:37, tipo:"calculo", assunto:"Lote de Compra", dif:"medio",
+    q:"Consumo previsto: 1.200 unidades. Estoque de segurança: 300 un. Estoque existente: 200 un.\n\nQual o LOTE DE COMPRA?",
+    opts:["1.300 unidades","1.100 unidades","1.500 unidades","700 unidades"],
+    a:0,
+    exp:"Lote = Consumo previsto + Estoque de segurança − Estoque existente\nLote = 1.200 + 300 − 200\n✅ Lote = 1.300 unidades\n\nO que já temos (200) reduz o que precisamos comprar.",
+    macete:"Lote = preciso comprar tanto pra completar consumo + segurança, mas já tenho X.",
+    err:"calculo"
+  },
+  {
+    id:38, tipo:"calculo", assunto:"Ponto de Pedido", dif:"medio",
+    q:"Consumo médio: 200 un/mês. Ponto de pedido: 550 unidades. Estoque de segurança: 150 un.\n\nQual o TEMPO DE REPOSIÇÃO?",
+    opts:["2 meses","3 meses","1,5 mês","2,5 meses"],
+    a:0,
+    exp:"PP = CM × TR + ES → TR = (PP − ES) ÷ CM\nTR = (550 − 150) ÷ 200\nTR = 400 ÷ 200\n✅ TR = 2 meses\n\nIsole o TR da fórmula do ponto de pedido.",
+    macete:"Para achar TR: TR = (PP − ES) ÷ CM. Apenas isole na fórmula.",
+    err:"calculo"
+  },
+  {
+    id:39, tipo:"calculo", assunto:"Ponto de Pedido", dif:"medio",
+    q:"Consumo médio: 500 un/mês. Tempo de reposição: 30 dias. Estoque de segurança: 200 un.\n\nQual o PONTO DE PEDIDO?",
+    opts:["700 unidades","900 unidades","500 unidades","1.200 unidades"],
+    a:0,
+    exp:"Passo 1 — Converter tempo: 30 dias = 1 mês\nPasso 2 — PP = 500 × 1 + 200\n✅ PP = 700 unidades",
+    macete:"30 dias = 1 mês. Nunca esqueça de converter antes de calcular.",
+    err:"calculo"
+  },
+  {
+    id:40, tipo:"calculo", assunto:"Giro de Estoque", dif:"dificil",
+    q:"Estoque inicial: 500 un. Compras do período: 2.000 un. Estoque final: 300 un. Período: 6 meses.\n\nQual o GIRO DE ESTOQUE nesse período e a COBERTURA em meses?",
+    opts:["Giro ≈ 5,5 | Cobertura ≈ 1,09 mês","Giro = 4 | Cobertura = 1,5 mês","Giro = 5,5 | Cobertura = 6 meses","Giro = 2,75 | Cobertura ≈ 2,18 meses"],
+    a:0,
+    exp:"Consumo = EI + Compras − EF = 500 + 2.000 − 300 = 2.200 un\nEstoque médio = (500 + 300) ÷ 2 = 400 un\nGiro = 2.200 ÷ 400 = 5,5 vezes no período\nCobertura = 6 meses ÷ 5,5 ≈ 1,09 mês\n✅ Giro = 5,5 | Cobertura ≈ 1,09 mês",
+    macete:"Consumo = EI + Entradas − EF. Calcule consumo antes do giro quando não vier explícito.",
+    err:"calculo"
+  },
+
+  // ── LACUNAS ─────────────────────────────────────────────────────────────────
+  {
+    id:41, tipo:"lacuna", assunto:"Ponto de Pedido", dif:"medio",
+    q:"Complete: Ponto de Pedido = consumo médio × ___ + estoque de segurança",
+    a:"tempo de reposição",
+    alt:["tempo","tempo reposição","tr"],
+    exp:"Ponto de Pedido = consumo médio × TEMPO DE REPOSIÇÃO + estoque de segurança. O tempo de reposição é o prazo entre fazer o pedido e receber o material.",
+    macete:"PP = CM × TR + ES. Tempo fica no meio da fórmula.",
+    err:"formula"
+  },
+  {
+    id:42, tipo:"lacuna", assunto:"Estoque Máximo", dif:"facil",
+    q:"Complete: Estoque Máximo = lote de compra + ___",
+    a:"estoque de segurança",
+    alt:["segurança","estoque segurança","es"],
+    exp:"Estoque Máximo = Lote de compra + Estoque de segurança. Representa o nível mais alto planejado para o estoque.",
+    macete:"Máximo = Lote + Segurança. Só duas variáveis.",
+    err:"formula"
+  },
+  {
+    id:43, tipo:"lacuna", assunto:"Giro de Estoque", dif:"facil",
+    q:"Complete: Giro de Estoque = consumo do período ÷ ___",
+    a:"estoque médio",
+    alt:["estoque medio","médio","medio"],
+    exp:"Giro = Consumo ÷ Estoque médio. Mostra quantas vezes o estoque se renovou no período.",
+    macete:"Giro começa com o que SAIU (consumo) dividido pelo que FICOU (médio).",
+    err:"formula"
+  },
+  {
+    id:44, tipo:"lacuna", assunto:"Cobertura de Estoque", dif:"facil",
+    q:"Complete: Cobertura de Estoque = período ÷ ___",
+    a:"giro",
+    alt:["giro de estoque"],
+    exp:"Cobertura = Período ÷ Giro. Se o giro é 4 vezes no ano, a cobertura é 12 ÷ 4 = 3 meses.",
+    macete:"Cobertura = período inteiro dividido pelas vezes que girou.",
+    err:"formula"
+  },
+  {
+    id:45, tipo:"lacuna", assunto:"Previsão de Estoque", dif:"medio",
+    q:"Na média exponencialmente ponderada:\nNova previsão = previsão anterior + β × (consumo real − ___)",
+    a:"previsão anterior",
+    alt:["previsao anterior","previsão","previsao"],
+    exp:"A fórmula completa é: Nova previsão = PA + β × (CR − PA), onde PA = previsão anterior. Esse (CR − PA) é o ERRO de previsão.",
+    macete:"O último termo é igual ao primeiro: 'previsão anterior'. Você corrige pelo erro.",
+    err:"formula"
+  },
+  {
+    id:46, tipo:"lacuna", assunto:"Previsão de Estoque", dif:"medio",
+    q:"O método de previsão que usa opiniões e experiência de especialistas chama-se ___",
+    a:"predileção",
+    alt:["predicao","predileçao"],
+    exp:"Predileção: baseia-se no julgamento de pessoas experientes. Diferente de Projeção (repete o passado) e Explicação (usa variáveis causais).",
+    macete:"Predileção = preferência/opinião dos especialistas.",
+    err:"conceito"
+  },
+  {
+    id:47, tipo:"lacuna", assunto:"Previsão de Estoque", dif:"medio",
+    q:"O método de previsão que admite que o futuro será repetição do passado chama-se ___",
+    a:"projeção",
+    alt:["projecao","projeçao"],
+    exp:"Projeção: assume continuidade do padrão histórico no futuro. Se vendeu 100 por mês, projeta 100 para o próximo.",
+    macete:"Projeção = 'projeta' o passado para o futuro.",
+    err:"conceito"
+  },
+  {
+    id:48, tipo:"lacuna", assunto:"Classificação de Materiais", dif:"facil",
+    q:"O material que se incorpora FISICAMENTE ao produto final chama-se ___",
+    a:"matéria-prima",
+    alt:["materia prima","materia-prima","matéria prima","mp"],
+    exp:"Matéria-prima entra na composição física do produto. Ex.: madeira vira mesa; farinha vira pão.",
+    macete:"Matéria = entra e vira o produto.",
+    err:"conceito"
+  },
+  {
+    id:49, tipo:"lacuna", assunto:"Lote de Compra", dif:"medio",
+    q:"Complete: Lote de Compra = consumo previsto + estoque de segurança − ___",
+    a:"estoque existente",
+    alt:["estoque atual","estoque inicial","existente","estoque residual"],
+    exp:"Lote = Consumo previsto + ES − Estoque existente. O que já temos em estoque reduz o que precisamos comprar.",
+    macete:"Lote = o que preciso ter − o que já tenho.",
+    err:"formula"
+  },
+  {
+    id:50, tipo:"lacuna", assunto:"Efeito Chicote", dif:"medio",
+    q:"O efeito ___ ocorre quando pequenas variações na demanda do consumidor final são AMPLIFICADAS ao longo da cadeia de suprimentos.",
+    a:"chicote",
+    alt:["bullwhip","bull whip"],
+    exp:"Efeito chicote: a demanda do consumidor varia pouco, mas os fornecedores enxergam variações muito maiores — como a ponta de um chicote que amplifica o movimento do punho.",
+    macete:"Chicote amplifica. A ponta bate mais forte do que o pulso.",
+    err:"conceito"
+  }
+];
+
+// ── STATE ──────────────────────────────────────────────────────────────────
+let mode='', deck=[], idx=0, score=0, errs=0, wrongs=[], timer=null, secs=30;
+let startTime=0;
+let subjectStats={}, errTypes={};
+let wrongLog=[]; // {q, chosen, chosenText}
+const LETTERS=['A','B','C','D'];
+const ERR_LABELS={formula:"Fórmula errada",conceito:"Confusão de conceito",pegadinha:"Pegadinha de palavra",calculo:"Erro de cálculo",novo:"Assunto novo"};
+
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function normText(s){return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').trim()}
+
+function startMode(m){
+  mode=m;
+  let src=QUESTOES;
+  if(m==='erros'){
+    const stored=JSON.parse(localStorage.getItem('est_wrongs')||'[]');
+    src=QUESTOES.filter(q=>stored.includes(q.id));
+    if(!src.length){alert('Você ainda não tem erros registrados! Jogue em outro modo primeiro.');return}
+  }
+  if(m==='formulas') src=QUESTOES.filter(q=>q.tipo==='calculo');
+  if(m==='lacunas') src=QUESTOES.filter(q=>q.tipo==='lacuna');
+  deck=shuffle([...src]);
+  idx=0;score=0;errs=0;wrongs=[];wrongLog=[];subjectStats={};errTypes={};
+  startTime=Date.now();
+  document.getElementById('menu').style.display='none';
+  document.getElementById('result').style.display='none';
+  document.getElementById('game').style.display='block';
+  showQ();
+}
+
+function showQ(){
+  if(idx>=deck.length){showResult();return}
+  const q=deck[idx];
+  document.getElementById('num-badge').textContent=`${idx+1} / ${deck.length}`;
+  document.getElementById('score-val').textContent=score;
+  document.getElementById('err-val').textContent=errs;
+  document.getElementById('q-assunto').textContent=q.assunto;
+  document.getElementById('q-tipo').textContent={multipla_escolha:'Múltipla escolha',calculo:'Cálculo',lacuna:'Lacuna'}[q.tipo]||q.tipo;
+  const difEl=document.getElementById('q-dif');
+  difEl.textContent={facil:'Fácil',medio:'Médio',dificil:'Difícil'}[q.dif];
+  difEl.className='badge b-dif-'+q.dif;
+  document.getElementById('q-enun').innerHTML=q.q.replace(/\n/g,'<br>');
+  const optsDiv=document.getElementById('q-opts');
+  optsDiv.innerHTML='';
+  if(q.tipo==='multipla_escolha'||q.tipo==='calculo'){
+    const ol=document.createElement('div');ol.className='opts';
+    q.opts.forEach((o,i)=>{
+      const b=document.createElement('button');b.className='opt';
+      b.innerHTML=`<span class="opt-letter">${LETTERS[i]}</span>${o}`;
+      b.onclick=()=>answerMC(i,q);ol.appendChild(b);
+    });
+    optsDiv.appendChild(ol);
+  } else if(q.tipo==='lacuna'){
+    optsDiv.innerHTML=`<div class="lacuna-form">
+      <input id="lacuna-input" type="text" placeholder="Digite a resposta..." autocomplete="off" onkeydown="if(event.key==='Enter')checkLacuna()">
+      <button class="btn-check" onclick="checkLacuna()">Verificar</button>
+    </div>`;
+    setTimeout(()=>{const el=document.getElementById('lacuna-input');if(el)el.focus()},50);
+  }
+  const fb=document.getElementById('feedback');
+  fb.className='feedback';fb.style.display='none';
+  document.getElementById('btn-next').className='btn-next';
+  if(mode==='prova') startTimer(); else {
+    clearInterval(timer);
+    const bar=document.getElementById('timer-bar');
+    bar.style.transition='none';bar.style.width='100%';bar.style.background='#3fb950';
+  }
+}
+
+function startTimer(){
+  clearInterval(timer);secs=30;
+  const bar=document.getElementById('timer-bar');
+  bar.style.transition='none';bar.style.width='100%';bar.style.background='#3fb950';
+  setTimeout(()=>{bar.style.transition='width 1s linear,background .5s';bar.style.width='0%'},50);
+  timer=setInterval(()=>{
+    secs--;
+    const pct=secs/30*100;
+    if(pct<40)bar.style.background='#d29922';
+    if(pct<20)bar.style.background='#f85149';
+    if(secs<=0){clearInterval(timer);timeout()}
+  },1000);
+}
+
+function timeout(){
+  const q=deck[idx];
+  document.querySelectorAll('.opt').forEach(b=>b.disabled=true);
+  if(q.opts) document.querySelectorAll('.opt')[q.a].classList.add('correct');
+  registerResult(false,q,-1,'(tempo esgotado)');
+  showFeedback(false,q);
+}
+
+function answerMC(i,q){
+  clearInterval(timer);
+  const ok=(i===q.a);
+  document.querySelectorAll('.opt').forEach(b=>b.disabled=true);
+  document.querySelectorAll('.opt')[i].classList.add(ok?'correct':'wrong');
+  if(!ok) document.querySelectorAll('.opt')[q.a].classList.add('correct');
+  const chosenText=q.opts[i];
+  registerResult(ok,q,i,chosenText);
+  showFeedback(ok,q);
+}
+
+function checkLacuna(){
+  const q=deck[idx];
+  const inp=document.getElementById('lacuna-input');
+  if(!inp)return;
+  const val=normText(inp.value);
+  const correct=normText(q.a);
+  const alts=(q.alt||[]).map(normText);
+  const ok=val===correct||alts.includes(val)||(val.length>2&&(correct.includes(val)||val.includes(correct)));
+  inp.disabled=true;
+  inp.className=ok?'correct':'wrong';
+  if(!ok) inp.placeholder=q.a;
+  registerResult(ok,q,-1,inp.value||'(sem resposta)');
+  showFeedback(ok,q);
+}
+
+function registerResult(ok,q,chosenIdx,chosenText){
+  if(ok) score++; else {
+    errs++;
+    wrongs.push(q.id);
+    wrongLog.push({q, chosenIdx, chosenText});
+  }
+  if(!subjectStats[q.assunto]) subjectStats[q.assunto]={ok:0,total:0};
+  subjectStats[q.assunto].total++;
+  if(ok) subjectStats[q.assunto].ok++;
+  if(!ok && q.err) errTypes[q.err]=(errTypes[q.err]||0)+1;
+}
+
+function showFeedback(ok,q){
+  const fb=document.getElementById('feedback');
+  fb.style.display='block';
+  document.getElementById('fb-header').textContent=ok?'✅ Correto!':'❌ Incorreto';
+  document.getElementById('fb-exp').innerHTML=q.exp.replace(/\n/g,'<br>');
+  const macDiv=document.getElementById('fb-macete');
+  if(q.macete){macDiv.style.display='block';macDiv.textContent='💡 Macete: '+q.macete;}
+  else macDiv.style.display='none';
+  const errDiv=document.getElementById('fb-errtag');
+  if(!ok && q.err) errDiv.innerHTML=`<span class="fb-errtag et-${q.err}">${ERR_LABELS[q.err]||q.err}</span>`;
+  else errDiv.innerHTML='';
+  fb.className='feedback show '+(ok?'ok':'nok');
+  document.getElementById('btn-next').className='btn-next show';
+}
+
+function nextQ(){idx++;showQ()}
+
+function showResult(){
+  clearInterval(timer);
+  document.getElementById('game').style.display='none';
+  const res=document.getElementById('result');
+  res.style.display='block';
+  const total=deck.length;
+  const pct=total?Math.round(score/total*100):0;
+  res.querySelector('h2').textContent=pct>=80?'Excelente! 🎯':pct>=60?'Bom trabalho! 💪':'Continue praticando! 📚';
+  document.getElementById('res-score').textContent=`${score}/${total}`;
+  document.getElementById('res-pct').textContent=`${pct}% de acerto`;
+  document.getElementById('s-acertos').textContent=score;
+  document.getElementById('s-erros').textContent=errs;
+  const elapsed=Math.round((Date.now()-startTime)/1000);
+  document.getElementById('s-tempo').textContent=elapsed>=60?`${Math.floor(elapsed/60)}min ${elapsed%60}s`:`${elapsed}s`;
+  const tbody=document.getElementById('subj-body');
+  tbody.innerHTML='';
+  Object.keys(subjectStats).sort().forEach(s=>{
+    const {ok,total}=subjectStats[s];
+    const p=Math.round(ok/total*100);
+    const color=p>=80?'#3fb950':p>=60?'#d29922':'#f85149';
+    tbody.innerHTML+=`<tr>
+      <td>${s}</td><td>${ok}</td><td>${total}</td>
+      <td><div class="pct-bar"><div class="pct-fill" style="width:${p}%;background:${color}"></div></div>${p}%</td>
+    </tr>`;
+  });
+  const etDiv=document.getElementById('err-types');
+  etDiv.innerHTML='';
+  Object.keys(errTypes).forEach(k=>{
+    etDiv.innerHTML+=`<span class="fb-errtag et-${k}" style="margin-right:6px;margin-bottom:4px;display:inline-block">${ERR_LABELS[k]}: ${errTypes[k]}x</span>`;
+  });
+  if(!Object.keys(errTypes).length) etDiv.innerHTML='<span style="color:#3fb950">Nenhum erro!</span>';
+
+  // ── Gabarito detalhado ──
+  const reviewSection=document.getElementById('review-section');
+  const reviewBody=document.getElementById('review-body');
+  reviewBody.innerHTML='';
+  if(wrongLog.length>0){
+    reviewSection.style.display='block';
+    wrongLog.forEach(({q,chosenIdx,chosenText},n)=>{
+      const correctText=q.opts?q.opts[q.a]:q.a;
+      const chosenLabel=q.opts&&chosenIdx>=0?`${LETTERS[chosenIdx]}) ${chosenText}`:chosenText;
+      const correctLabel=q.opts?`${LETTERS[q.a]}) ${correctText}`:correctText;
+      reviewBody.innerHTML+=`
+        <div class="review-item">
+          <div class="review-q"><strong>Q${n+1} — ${q.assunto}</strong><br>${q.q.replace(/\n/g,'<br>')}</div>
+          <div class="review-ans wrong">✗ Sua resposta: ${chosenLabel}</div>
+          <div class="review-ans correct">✓ Resposta correta: ${correctLabel}</div>
+          <div class="review-exp">${q.exp.replace(/\n/g,'<br>')}</div>
+          ${q.macete?`<div class="review-macete">💡 Macete: ${q.macete}</div>`:''}
+        </div>`;
+    });
+  } else {
+    reviewSection.style.display='none';
+  }
+
+  // save wrongs
+  let stored=JSON.parse(localStorage.getItem('est_wrongs')||'[]');
+  stored=[...new Set([...stored,...wrongs])];
+  const correctIds=deck.filter((q,i)=>!wrongs.includes(q.id)).map(q=>q.id);
+  stored=stored.filter(id=>!correctIds.includes(id)||wrongs.includes(id));
+  localStorage.setItem('est_wrongs',JSON.stringify(stored));
+  document.getElementById('btn-retry-erros').style.display=wrongs.length?'inline-block':'none';
+  updateErrCount();
+}
+
+function updateErrCount(){
+  const stored=JSON.parse(localStorage.getItem('est_wrongs')||'[]');
+  const el=document.getElementById('err-count');
+  if(el) el.textContent=stored.length?`❌ ${stored.length} questão(ões) marcadas para revisão`:'';
+}
+
+function goMenu(){
+  document.getElementById('result').style.display='none';
+  document.getElementById('game').style.display='none';
+  document.getElementById('menu').style.display='block';
+  updateErrCount();
+}
+function retryAll(){startMode(mode)}
+function retryErros(){
+  document.getElementById('result').style.display='none';
+  startMode('erros');
+}
+
+updateErrCount();
+</script>
+</body>
+</html>
