@@ -18,6 +18,7 @@ JOGOS = {
     "Complete a Frase": "complete_lc840.html",
     "App de Estudos": "estudo.html",
     "Gestao de Estoques": "gestao_estoques.html",
+    "Quiz ADM - Atributos do Ato": "quiz_adm_atributos.html",
 }
 
 

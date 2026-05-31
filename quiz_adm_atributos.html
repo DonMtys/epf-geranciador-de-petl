@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="pt-BR" translate="no">
+<head>
+<meta charset="UTF-8">
+<meta name="google" content="notranslate">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quiz — Atributos do Ato Administrativo</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #0d1117; color: #e6edf3; font-family: 'Segoe UI', sans-serif; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+h1 { font-size: 1.4rem; color: #58a6ff; margin-bottom: 4px; text-align: center; }
+.sub { color: #8b949e; font-size: .85rem; margin-bottom: 20px; text-align: center; }
+#setup { width: 100%; max-width: 640px; }
+.fbox { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; }
+.flbl { font-size: .75rem; text-transform: uppercase; letter-spacing: .5px; color: #8b949e; margin-bottom: 10px; font-weight: 700; }
+.cbs { display: flex; flex-wrap: wrap; gap: 8px; }
+.cbs label { background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 5px 10px; font-size: .8rem; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: border-color .15s; }
+.cbs label:hover { border-color: #58a6ff; }
+.cbs input[type=checkbox] { accent-color: #58a6ff; }
+.mode-row { display: flex; gap: 8px; }
+.mode-opt { flex: 1; padding: 10px 12px; background: #0d1117; border: 2px solid #30363d; border-radius: 8px; color: #c9d1d9; font-size: .82rem; cursor: pointer; transition: .15s; line-height: 1.5; text-align: left; }
+.mode-opt.active { border-color: #58a6ff; background: rgba(88,166,255,.1); color: #58a6ff; }
+.btn-start { width: 100%; background: #1f6feb; color: #fff; border: none; border-radius: 8px; padding: 12px; font-size: 1rem; font-weight: 700; cursor: pointer; }
+.btn-start:hover { background: #388bfd; }
+#game { display: none; width: 100%; max-width: 640px; }
+.pbar-wrap { height: 6px; background: #21262d; border-radius: 3px; margin-bottom: 10px; overflow: hidden; }
+.pbar { height: 6px; background: #58a6ff; border-radius: 3px; transition: width .3s; }
+.score-row { display: flex; justify-content: space-between; font-size: .82rem; color: #8b949e; margin-bottom: 14px; }
+.qcard { background: #161b22; border: 2px solid #30363d; border-radius: 12px; padding: 22px; margin-bottom: 12px; transition: border-color .2s, background .2s; }
+.qcard.ok { border-color: #3fb950; background: rgba(63,185,80,.06); }
+.qcard.nok { border-color: #f85149; background: rgba(248,81,73,.06); }
+.badges { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+.bdg-dif { font-size: .7rem; padding: 2px 8px; border-radius: 8px; font-weight: 700; }
+.bdg-dif.facil { background: rgba(63,185,80,.15); color: #3fb950; border: 1px solid #3fb950; }
+.bdg-dif.medio { background: rgba(210,153,34,.15); color: #d29922; border: 1px solid #d29922; }
+.bdg-tag { font-size: .7rem; padding: 2px 8px; border-radius: 8px; background: rgba(88,166,255,.1); color: #58a6ff; border: 1px solid rgba(88,166,255,.4); }
+.qtxt { font-size: 1.05rem; line-height: 1.65; }
+.ce-btns { display: flex; gap: 12px; margin-top: 18px; }
+.btn-ce { flex: 1; padding: 14px; border: 2px solid; border-radius: 10px; font-size: 1rem; font-weight: 700; cursor: pointer; background: transparent; transition: .1s; }
+.btn-ce.certo { border-color: #3fb950; color: #3fb950; }
+.btn-ce.certo:hover:not(:disabled) { background: rgba(63,185,80,.15); }
+.btn-ce.errado { border-color: #f85149; color: #f85149; }
+.btn-ce.errado:hover:not(:disabled) { background: rgba(248,81,73,.15); }
+.btn-ce .kbd { font-size: .65rem; display: block; color: #484f58; margin-top: 3px; }
+.mc-opts { display: flex; flex-direction: column; gap: 8px; margin-top: 18px; }
+.btn-mc { text-align: left; padding: 12px 14px; border: 1px solid #30363d; border-radius: 8px; background: #0d1117; color: #e6edf3; font-size: .92rem; cursor: pointer; line-height: 1.5; transition: border-color .1s, background .1s; }
+.btn-mc:hover:not(:disabled) { border-color: #58a6ff; background: rgba(88,166,255,.07); }
+.btn-mc .lt { font-weight: 700; color: #8b949e; margin-right: 8px; }
+.btn-mc.mc-ok { border-color: #3fb950; background: rgba(63,185,80,.12); }
+.btn-mc.mc-ok .lt { color: #3fb950; }
+.btn-mc.mc-nok { border-color: #f85149; background: rgba(248,81,73,.12); }
+.btn-mc.mc-nok .lt { color: #f85149; }
+.feedback { display: none; margin-top: 18px; padding-top: 16px; border-top: 1px solid #30363d; }
+.fb-res { font-size: 1.05rem; font-weight: 700; margin-bottom: 14px; }
+.fb-res.ok { color: #3fb950; }
+.fb-res.nok { color: #f85149; }
+.fb-sec { margin-bottom: 12px; }
+.fb-sec:last-child { margin-bottom: 0; }
+.fb-lbl { font-size: .72rem; text-transform: uppercase; letter-spacing: .5px; color: #8b949e; margin-bottom: 5px; font-weight: 700; }
+.fb-txt { font-size: .9rem; line-height: 1.6; color: #c9d1d9; }
+.fb-peg { border-left: 3px solid #f85149; background: rgba(248,81,73,.06); border-radius: 0 6px 6px 0; padding: 10px 12px; }
+.fb-dic { border-left: 3px solid #58a6ff; background: rgba(88,166,255,.06); border-radius: 0 6px 6px 0; padding: 10px 12px; }
+#btn-prox { display: none; width: 100%; background: #1f6feb; color: #fff; border: none; border-radius: 8px; padding: 14px; font-size: .95rem; font-weight: 700; cursor: pointer; }
+#btn-prox:hover { background: #388bfd; }
+#result { display: none; width: 100%; max-width: 640px; }
+.rh { text-align: center; padding: 24px 0 16px; }
+.rh h2 { font-size: 1.45rem; margin-bottom: 8px; }
+.rscore { font-size: 3rem; font-weight: 700; color: #58a6ff; }
+.rlabel { color: #8b949e; margin-top: 6px; font-size: .9rem; }
+.rv-tit { font-size: .75rem; text-transform: uppercase; letter-spacing: .5px; color: #8b949e; margin: 16px 0 10px; }
+.rv-item { background: #161b22; border-left: 3px solid #f85149; border-radius: 0 8px 8px 0; padding: 14px 16px; margin-bottom: 10px; }
+.rv-q { font-size: .9rem; line-height: 1.55; margin-bottom: 8px; }
+.rv-bdg { display: flex; gap: 6px; margin-bottom: 8px; flex-wrap: wrap; }
+.rv-ans { font-size: .82rem; margin-bottom: 3px; }
+.rv-ans.nok { color: #f85149; }
+.rv-ans.ok { color: #3fb950; }
+.rv-exp { font-size: .82rem; color: #8b949e; line-height: 1.5; margin-top: 8px; padding-top: 8px; border-top: 1px solid #21262d; }
+.rv-peg { font-size: .8rem; color: #f85149; margin-top: 5px; }
+.btn-retry { background: #1f6feb; color: #fff; border: none; border-radius: 8px; padding: 12px 28px; font-size: .95rem; cursor: pointer; margin: 16px auto; display: block; }
+.btn-retry:hover { background: #388bfd; }
+@media (max-width: 500px) {
+  .mode-row { flex-direction: column; }
+  .ce-btns { gap: 8px; }
+}
+</style>
+</head>
+<body>
+
+<h1>Atributos do Ato Administrativo</h1>
+<p class="sub">Direito Administrativo — 20 questões • Presunção, Autoexecutoriedade, Imperatividade e mais</p>
+
+<div id="setup">
+  <div class="fbox">
+    <div class="flbl">Categorias</div>
+    <div class="cbs" id="tag-cbs"></div>
+  </div>
+  <div class="fbox">
+    <div class="flbl">Dificuldade</div>
+    <div class="cbs">
+      <label><input type="checkbox" class="dcb" value="Fácil" checked> Fácil <small style="color:#8b949e">(14)</small></label>
+      <label><input type="checkbox" class="dcb" value="Médio" checked> Médio <small style="color:#8b949e">(6)</small></label>
+    </div>
+  </div>
+  <div class="fbox">
+    <div class="flbl">Modo</div>
+    <div class="mode-row">
+      <button class="mode-opt active" id="mE" onclick="setMode('estudo')">📖 Estudo<small style="display:block;opacity:.7">explicação após cada resposta</small></button>
+      <button class="mode-opt" id="mP" onclick="setMode('prova')">📋 Prova<small style="display:block;opacity:.7">resultado só no final</small></button>
+    </div>
+  </div>
+  <button class="btn-start" onclick="startGame()">▶ Iniciar Quiz</button>
+</div>
+
+<div id="game">
+  <div class="pbar-wrap"><div class="pbar" id="pbar" style="width:0%"></div></div>
+  <div class="score-row">
+    <span>Acertos: <span id="ac-val" style="color:#3fb950">0</span></span>
+    <span id="nbadge">1/20</span>
+  </div>
+  <div class="qcard" id="qcard">
+    <div class="badges">
+      <span class="bdg-dif facil" id="dif-bdg">Fácil</span>
+      <span class="bdg-tag" id="tag-bdg">Presunção</span>
+    </div>
+    <div class="qtxt" id="qtxt"></div>
+    <div class="ce-btns" id="ce-btns">
+      <button class="btn-ce certo" onclick="responder('C')">✓ CERTO<span class="kbd">tecla C</span></button>
+      <button class="btn-ce errado" onclick="responder('E')">✗ ERRADO<span class="kbd">tecla E</span></button>
+    </div>
+    <div class="mc-opts" id="mc-opts" style="display:none"></div>
+    <div class="feedback" id="feedback">
+      <div class="fb-res" id="fb-res"></div>
+      <div class="fb-sec">
+        <div class="fb-lbl">Explicação</div>
+        <div class="fb-txt" id="fb-exp"></div>
+      </div>
+      <div class="fb-sec fb-peg">
+        <div class="fb-lbl">⚠ Pegadinha da banca</div>
+        <div class="fb-txt" id="fb-peg-txt"></div>
+      </div>
+      <div class="fb-sec fb-dic">
+        <div class="fb-lbl">💡 Dica de memorização</div>
+        <div class="fb-txt" id="fb-dic-txt"></div>
+      </div>
+    </div>
+  </div>
+  <button id="btn-prox" onclick="proxima()">Próxima → <span style="font-size:.72rem;font-weight:400;opacity:.65">Enter / Espaço</span></button>
+</div>
+
+<div id="result">
+  <div class="rh">
+    <h2 id="r-msg"></h2>
+    <div class="rscore" id="r-score"></div>
+    <div class="rlabel" id="r-lbl"></div>
+  </div>
+  <div class="rv-tit">Questões erradas</div>
+  <div id="rv-list"></div>
+  <button class="btn-retry" onclick="retryAll()">↩ Jogar novamente</button>
+</div>
+
+<script>
+const QUESTOES = [
+  {id:1,tipo:'ce',q:"Presume-se que todos os atos da Administração Pública são verdadeiros e praticados com observância das normas legais pertinentes, de modo absoluto.",a:'E',dif:'Fácil',tag:'Presunção',exp:"Os atos administrativos possuem presunção de legitimidade e veracidade, mas essa presunção é RELATIVA (juris tantum), não absoluta. O particular pode contestar, apresentar defesa e provar ilegalidade ou erro nos fatos.",pegadinha:"A palavra 'absoluto' torna a questão errada. A banca Quadrix usa muito esse truque.",dica:"Presunção administrativa é forte, mas não é blindagem total."},
+  {id:2,tipo:'ce',q:"O princípio da presunção de legitimidade autoriza a Administração a executar imediatamente as suas decisões, sendo que eventual resistência só pode ser superada por meio do Poder Judiciário.",a:'E',dif:'Médio',tag:'Autoexecutoriedade',exp:"A presunção de legitimidade permite que o ato produza efeitos imediatos. Porém, a afirmação de que a resistência 'só pode ser superada pelo Judiciário' está errada. A Administração pode executar diretamente seus atos pela autoexecutoriedade quando houver previsão legal ou urgência.",pegadinha:"A banca mistura presunção de legitimidade com autoexecutoriedade e insere 'só pelo Judiciário' para confundir.",dica:"Se apareceu 'só com Judiciário', desconfie."},
+  {id:3,tipo:'ce',q:"A autoexecutoriedade é classificada como um atributo do ato administrativo, e não um de seus elementos, pois permite que a Administração execute diretamente as suas próprias decisões, sem a necessidade de prévia intervenção do Poder Judiciário.",a:'C',dif:'Fácil',tag:'Autoexecutoriedade',exp:"Correto. Autoexecutoriedade é ATRIBUTO (não elemento). Atributos: presunção de legitimidade, imperatividade, exigibilidade, autoexecutoriedade e tipicidade. Elementos: competência, finalidade, forma, motivo e objeto.",pegadinha:"Confundir atributo com elemento/requisito do ato administrativo.",dica:"Elementos formam o ato; atributos dão força ao ato."},
+  {id:4,tipo:'ce',q:"Presume-se legítimo todo ato administrativo editado pela Administração Pública, de forma absoluta, independentemente de apresentação de prova em contrário por seu destinatário.",a:'E',dif:'Fácil',tag:'Presunção',exp:"O ato é presumido legítimo, mas a presunção é RELATIVA. Admite prova em contrário. O destinatário pode apresentar defesa, recurso administrativo ou ação judicial para demonstrar ilegalidade.",pegadinha:"De novo a palavra 'absoluta'. A banca Quadrix adora esse golpe.",dica:"Legitimidade sim; absoluta não."},
+  {id:5,tipo:'ce',q:"Os atos administrativos são dotados de presunção de legitimidade e veracidade, atributo que inverte o ônus da prova, cabe ao interessado provar irregularidade, e permite a execução imediata, independentemente de decisão judicial prévia, salvo situações excepcionais de ilegalidade manifesta.",a:'C',dif:'Médio',tag:'Presunção',exp:"Correto. A presunção: (1) inverte o ônus da prova — quem alega irregularidade deve provar; (2) permite execução imediata sem autorização judicial; (3) não impede controle em caso de ilegalidade manifesta.",pegadinha:"A questão é longa e parece perigosa, mas está correta porque trata a presunção como relativa e admite exceções.",dica:"Quem acusa o ato de ilegal geralmente precisa provar."},
+  {id:6,tipo:'ce',q:"O auto de infração, por ser ato administrativo, possui presunção absoluta de veracidade, impedindo que o autuado apresente defesa com base na ausência de requisitos formais.",a:'E',dif:'Fácil',tag:'Presunção',exp:"O auto de infração tem presunção de veracidade, mas ela é RELATIVA. O autuado pode apresentar defesa, contestar fatos, apontar vícios formais e demonstrar ilegalidade. A Administração não pode impedir o contraditório e a ampla defesa.",pegadinha:"'Presunção absoluta' e 'impedindo defesa' são as duas expressões que entregam o erro.",dica:"Auto de infração presume, mas não cala a defesa."},
+  {id:7,tipo:'ce',q:"A autoexecutoriedade é a possibilidade que tem a Administração de, com os próprios meios, pôr em execução suas decisões, sem precisar recorrer previamente ao Poder Judiciário.",a:'C',dif:'Fácil',tag:'Autoexecutoriedade',exp:"Definição precisa de autoexecutoriedade: a Administração executa diretamente suas decisões sem autorização judicial prévia. Exemplos: interdição de estabelecimento, apreensão de mercadoria imprópria.",pegadinha:"A banca pode trocar 'sem recorrer previamente' por 'com autorização judicial', invertendo o sentido.",dica:"Autoexecutoriedade = Administração executa sozinha antes do juiz."},
+  {id:8,tipo:'mc',q:"Os atos administrativos gozam da presunção de legitimidade e veracidade. Assinale a afirmativa correta sobre esse atributo.",opts:["São considerados válidos até prova em contrário.","São absolutamente incontestáveis perante o Poder Judiciário.","Possuem eficácia apenas após autorização judicial.","Aplicam-se exclusivamente a atos discricionários."],a:0,dif:'Fácil',tag:'Presunção',exp:"A alternativa A está correta: os atos são válidos ATÉ PROVA EM CONTRÁRIO (presunção relativa). B está errada (não são incontestáveis). C está errada (eficácia é imediata). D está errada (aplica-se a todos os atos, vinculados e discricionários).",pegadinha:"A banca pode dizer que a presunção é exclusiva de atos discricionários, absoluta ou que depende de autorização judicial.",dica:"Legitimidade = lei. Veracidade = fatos. Ambas relativas e para todos os atos."},
+  {id:9,tipo:'mc',q:"Em relação aos atributos do ato administrativo, assinale a opção que apresenta corretamente a autoexecutoriedade.",opts:["Presunção de que o ato é conforme a lei e os fatos alegados pela Administração.","Possibilidade de impor obrigações a terceiros independentemente de sua concordância.","Uso de meios indiretos de coerção, como multa, para exigir o cumprimento do ato.","Possibilidade de executar seus próprios atos sem necessidade de intervenção judicial."],a:3,dif:'Fácil',tag:'Autoexecutoriedade',exp:"A alternativa D é a autoexecutoriedade. A A descreve presunção de legitimidade/veracidade. A B descreve imperatividade. A C descreve exigibilidade.",pegadinha:"A banca coloca as definições de todos os atributos para você identificar qual é qual. Estude os conceitos separadamente.",dica:"Imperatividade manda; autoexecutoriedade faz; exigibilidade pressiona; presunção valida."},
+  {id:10,tipo:'ce',q:"A presunção de veracidade e legitimidade do ato administrativo é absoluta, uma vez que a lei não concede margem de atuação para o agente público, sendo, portanto, incontestável perante o Poder Judiciário.",a:'E',dif:'Fácil',tag:'Presunção',exp:"A presunção não é absoluta e o ato não é incontestável. O Judiciário e a própria Administração podem rever o ato. Se houver ilegalidade, o ato pode ser anulado.",pegadinha:"'Absoluta' e 'incontestável' sempre entregam o erro nesse tema.",dica:"A Administração presume; o Judiciário controla."},
+  {id:11,tipo:'ce',q:"O atributo da exigibilidade significa que o ato administrativo tem o poder de impor obrigações aos particulares de forma unilateral, sem a necessidade de consentimento por parte destes.",a:'E',dif:'Médio',tag:'Imperatividade',exp:"O enunciado descreve a IMPERATIVIDADE, não a exigibilidade. Imperatividade impõe obrigações sem concordância. Exigibilidade usa meios INDIRETOS de coerção (como multa) para exigir cumprimento.",pegadinha:"A banca troca os nomes dos atributos. Exigibilidade e imperatividade são os mais confundidos.",dica:"Imperatividade impõe; exigibilidade pressiona com meios indiretos."},
+  {id:12,tipo:'ce',q:"Os atos administrativos simples não gozam dos atributos que caracterizam os atos administrativos em geral, pois produzem apenas efeitos meramente declaratórios. Já os atos compostos geram efeitos concretos, razão pela qual tais atributos são indispensáveis.",a:'E',dif:'Médio',tag:'Atributos',exp:"Errado. Os atributos não dependem de o ato ser simples ou composto. A classificação simples/composto/complexo trata da FORMAÇÃO DA VONTADE administrativa, não da existência dos atributos.",pegadinha:"A banca mistura classificação dos atos (formação da vontade) com atributos (força jurídica).",dica:"Simples/composto fala de formação; atributo fala de força jurídica."},
+  {id:13,tipo:'ce',q:"A imperatividade é o atributo que confere aos atos administrativos a possibilidade de se imporem a terceiros, independentemente da sua concordância.",a:'C',dif:'Fácil',tag:'Imperatividade',exp:"Correto. Imperatividade permite que o ato crie obrigações para terceiros sem concordância deles, com fundamento na supremacia do interesse público. Exemplo: multa administrativa, ordem de interdição.",pegadinha:"A banca pode acrescentar 'desde que o particular concorde'. Se aparecer isso, a afirmativa fica errada.",dica:"Imperatividade vem de 'impor'. Sem concordância necessária."},
+  {id:14,tipo:'ce',q:"A tipicidade é o atributo que assegura a legitimidade e a veracidade do ato administrativo.",a:'E',dif:'Fácil',tag:'Tipicidade',exp:"Tipicidade exige que o ato corresponda a figuras previamente definidas em lei. Legitimidade e veracidade são ligadas à presunção de legitimidade e veracidade — outro atributo.",pegadinha:"A banca troca os conceitos dos atributos entre si.",dica:"Tipicidade = tipo previsto em lei. Nada a ver com legitimidade."},
+  {id:15,tipo:'ce',q:"O atributo da presunção de legitimidade de um ato administrativo significa que, até prova em contrário, ele é considerado válido e conforme a lei. No entanto, essa presunção não impede que o Poder Judiciário realize o controle de legalidade do ato, podendo inclusive anulá-lo.",a:'C',dif:'Fácil',tag:'Presunção',exp:"Correto. A presunção é relativa: o ato é válido até prova em contrário. Isso não impede o controle judicial. O Judiciário pode anular o ato se houver vício de competência, finalidade, forma, motivo ou objeto.",pegadinha:"A banca costuma dizer que a presunção impede contestação judicial. Isso é falso.",dica:"Presume agora, mas pode cair depois."},
+  {id:16,tipo:'mc',q:"Sobre a presunção de legitimidade e veracidade dos atos administrativos, assinale a afirmativa correta.",opts:["Apenas atos vinculados possuem presunção de legitimidade.","A presunção de legitimidade é absoluta e não admite contestação alguma.","Os atos são presumidos legais, legítimos e verdadeiros, mas a presunção admite prova em contrário.","A veracidade dos atos só pode ser contestada perante o Poder Judiciário."],a:2,dif:'Médio',tag:'Presunção',exp:"A alternativa C está correta. Todos os atos administrativos (vinculados e discricionários) têm a presunção; ela não é absoluta e pode ser contestada tanto na via administrativa quanto na judicial.",pegadinha:"A banca coloca 'apenas atos vinculados' e 'presunção absoluta' para confundir.",dica:"Legalidade/legitimidade = conformidade com a lei. Veracidade = fatos. Ambas relativas, para todos os atos."},
+  {id:17,tipo:'mc',q:"Um dos atributos dos atos administrativos refere-se à possibilidade de aplicação de punição e imposição de meios indiretos de coerção para coibir o particular a cumprir determinada medida. Qual é esse atributo?",opts:["Tipicidade","Imperatividade","Exigibilidade","Autoexecutoriedade"],a:2,dif:'Médio',tag:'Exigibilidade',exp:"Exigibilidade é o atributo que usa meios INDIRETOS de coerção (como multa) para pressionar o cumprimento. Autoexecutoriedade usa meios diretos. Imperatividade impõe a obrigação. Tipicidade diz que o ato deve estar previsto em lei.",pegadinha:"Confundir exigibilidade com autoexecutoriedade. Exigibilidade pressiona (indireto); autoexecutoriedade executa (direto).",dica:"Exigibilidade = 'cumpra ou levará multa'. Autoexecutoriedade = 'vou fazer por você, à força'."},
+  {id:18,tipo:'ce',q:"A autoexecutoriedade é um requisito do ato administrativo que permite à Administração Pública executar diretamente os seus próprios atos, utilizando meios próprios de coerção, sem a necessidade de submissão ao Poder Judiciário.",a:'E',dif:'Médio',tag:'Autoexecutoriedade',exp:"O conceito de execução direta sem autorização judicial está correto, mas autoexecutoriedade é ATRIBUTO, não requisito. Requisitos/elementos do ato são: competência, finalidade, forma, motivo e objeto.",pegadinha:"A banca usa uma definição quase certa, mas troca 'atributo' por 'requisito'.",dica:"Autoexecutoriedade é força do ato (atributo), não peça de sua formação (elemento/requisito)."},
+  {id:19,tipo:'mc',q:"Qual atributo do ato administrativo impõe a unilateralidade e a obrigatoriedade de cumprimento, independentemente da concordância do particular, com base na supremacia do interesse público?",opts:["Exigibilidade — permite o uso de meios indiretos de coerção, como a aplicação de multa.","Imperatividade — impõe obrigações a terceiros de modo unilateral, com base na supremacia do interesse público.","Autoexecutoriedade — executa diretamente o ato sem necessidade de autorização judicial prévia.","Presunção de legitimidade — considera o ato válido até que haja prova em contrário."],a:1,dif:'Fácil',tag:'Imperatividade',exp:"A resposta correta é B: Imperatividade. Ela impõe obrigações de forma unilateral sem depender da concordância do particular, com fundamento na supremacia do interesse público.",pegadinha:"A banca coloca as definições de todos os atributos e você deve identificar qual corresponde à descrição do enunciado.",dica:"Imperatividade = ato administrativo manda mesmo sem acordo."},
+  {id:20,tipo:'ce',q:"A presunção de legitimidade diz respeito à conformidade do ato com a lei e, em decorrência desse atributo, presumem-se, independentemente de prova em contrário, que os atos administrativos foram emitidos com observância da lei.",a:'E',dif:'Médio',tag:'Presunção',exp:"A primeira parte está correta: presunção de legitimidade = conformidade com a lei. O erro está em 'independentemente de prova em contrário'. A presunção ADMITE prova em contrário. O correto seria: presumem-se legais ATÉ prova em contrário.",pegadinha:"A questão começa certa e erra só no final. A banca Quadrix usa essa técnica para pegar quem não lê até o fim.",dica:"Até prova em contrário = CERTO. Independentemente de prova em contrário = ERRADO."}
+];
+
+const TAGS = [...new Set(QUESTOES.map(q=>q.tag))].sort();
+let deck=[], idx=0, acertos=0, wrongLog=[], mode='estudo', esperando=false;
+
+(function(){
+  const c=document.getElementById('tag-cbs');
+  TAGS.forEach(t=>{
+    const cnt=QUESTOES.filter(q=>q.tag===t).length;
+    const l=document.createElement('label');
+    l.innerHTML=`<input type="checkbox" class="tcb" value="${t}" checked> ${t} <small style="color:#8b949e">(${cnt})</small>`;
+    c.appendChild(l);
+  });
+})();
+
+function setMode(m){
+  mode=m;
+  document.getElementById('mE').classList.toggle('active',m==='estudo');
+  document.getElementById('mP').classList.toggle('active',m==='prova');
+}
+
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+function startGame(){
+  const selTags=[...document.querySelectorAll('.tcb:checked')].map(i=>i.value);
+  const selDif=[...document.querySelectorAll('.dcb:checked')].map(i=>i.value);
+  deck=shuffle(QUESTOES.filter(q=>selTags.includes(q.tag)&&selDif.includes(q.dif)));
+  if(!deck.length){alert('Selecione ao menos uma categoria!');return;}
+  idx=0;acertos=0;wrongLog=[];esperando=false;
+  document.getElementById('setup').style.display='none';
+  document.getElementById('game').style.display='block';
+  document.getElementById('result').style.display='none';
+  document.addEventListener('keydown',onKey);
+  nextQ();
+}
+
+function onKey(e){
+  if(esperando){
+    if(mode==='estudo'&&(e.key==='Enter'||e.key===' ')) proxima();
+    return;
+  }
+  const q=deck[idx]; if(!q) return;
+  if(q.tipo==='ce'){
+    if(e.key==='c'||e.key==='C') responder('C');
+    if(e.key==='e'||e.key==='E') responder('E');
+  } else {
+    if(e.key==='a'||e.key==='A') responder(0);
+    if(e.key==='b'||e.key==='B') responder(1);
+    if(e.key==='c'||e.key==='C') responder(2);
+    if(e.key==='d'||e.key==='D') responder(3);
+  }
+}
+
+function nextQ(){
+  if(idx>=deck.length){showResult();return;}
+  esperando=false;
+  const q=deck[idx];
+  document.getElementById('pbar').style.width=`${idx/deck.length*100}%`;
+  document.getElementById('nbadge').textContent=`${idx+1} / ${deck.length}`;
+  document.getElementById('ac-val').textContent=acertos;
+  document.getElementById('dif-bdg').textContent=q.dif;
+  document.getElementById('dif-bdg').className='bdg-dif '+(q.dif==='Fácil'?'facil':'medio');
+  document.getElementById('tag-bdg').textContent=q.tag;
+  document.getElementById('qtxt').textContent=q.q;
+  document.getElementById('qcard').className='qcard';
+  document.getElementById('feedback').style.display='none';
+  document.getElementById('btn-prox').style.display='none';
+  const ceBtns=document.getElementById('ce-btns');
+  const mcOpts=document.getElementById('mc-opts');
+  if(q.tipo==='ce'){
+    ceBtns.style.display='flex'; mcOpts.style.display='none';
+    ceBtns.querySelectorAll('button').forEach(b=>{b.disabled=false;b.style.opacity='1';b.style.background='transparent';});
+  } else {
+    ceBtns.style.display='none'; mcOpts.style.display='flex';
+    const L=['A','B','C','D'];
+    mcOpts.innerHTML=q.opts.map((o,i)=>`<button class="btn-mc" onclick="responder(${i})"><span class="lt">${L[i]})</span>${o}</button>`).join('');
+  }
+}
+
+function responder(val){
+  if(esperando) return;
+  esperando=true;
+  const q=deck[idx];
+  let ok;
+  if(q.tipo==='ce'){
+    ok=(val===q.a);
+    document.querySelectorAll('.btn-ce').forEach(btn=>{
+      btn.disabled=true;
+      const bv=btn.classList.contains('certo')?'C':'E';
+      if(bv===q.a) btn.style.background='rgba(63,185,80,.2)';
+      else btn.style.opacity='.3';
+    });
+  } else {
+    ok=(val===q.a);
+    document.querySelectorAll('.btn-mc').forEach((btn,i)=>{
+      btn.disabled=true;
+      if(i===q.a) btn.classList.add('mc-ok');
+      else if(i===val&&!ok) btn.classList.add('mc-nok');
+      else btn.style.opacity='.4';
+    });
+  }
+  if(ok) acertos++; else wrongLog.push({q,val});
+  document.getElementById('qcard').classList.add(ok?'ok':'nok');
+  if(mode==='estudo') showFb(ok,q);
+  else setTimeout(()=>{idx++;nextQ();},700);
+}
+
+function showFb(ok,q){
+  document.getElementById('fb-res').textContent=ok?'✓ Correto!':'✗ Errado!';
+  document.getElementById('fb-res').className='fb-res '+(ok?'ok':'nok');
+  document.getElementById('fb-exp').textContent=q.exp;
+  document.getElementById('fb-peg-txt').textContent=q.pegadinha;
+  document.getElementById('fb-dic-txt').textContent=q.dica;
+  document.getElementById('feedback').style.display='block';
+  document.getElementById('btn-prox').style.display='block';
+}
+
+function proxima(){idx++;nextQ();}
+
+function showResult(){
+  document.removeEventListener('keydown',onKey);
+  document.getElementById('game').style.display='none';
+  const res=document.getElementById('result');
+  res.style.display='block';
+  const total=deck.length, pct=Math.round(acertos/total*100);
+  document.getElementById('r-msg').textContent=pct>=85?'Excelente! Dominou o conteúdo!':pct>=65?'Bom desempenho! Revise os erros.':'Continue estudando! Releia as explicações.';
+  document.getElementById('r-score').textContent=`${acertos}/${total}`;
+  document.getElementById('r-lbl').textContent=`${pct}% de acerto • ${wrongLog.length} erro${wrongLog.length!==1?'s':''}`;
+  const rl=document.getElementById('rv-list');
+  rl.innerHTML='';
+  if(!wrongLog.length){rl.innerHTML='<p style="color:#3fb950;text-align:center;padding:20px;font-size:1.05rem">Perfeito! Nenhum erro! 🎯</p>';return;}
+  const L=['A','B','C','D'];
+  wrongLog.forEach(({q,val})=>{
+    let chosen='',correct='';
+    if(q.tipo==='ce'){chosen=val==='C'?'CERTO':'ERRADO';correct=q.a==='C'?'CERTO':'ERRADO';}
+    else{chosen=val>=0?`${L[val]}) ${q.opts[val]}`:'—';correct=`${L[q.a]}) ${q.opts[q.a]}`;}
+    const d=document.createElement('div');
+    d.className='rv-item';
+    d.innerHTML=`<div class="rv-q">${q.q}</div><div class="rv-bdg"><span class="bdg-dif ${q.dif==='Fácil'?'facil':'medio'}">${q.dif}</span><span class="bdg-tag">${q.tag}</span></div><div class="rv-ans nok">✗ Você: ${chosen}</div><div class="rv-ans ok">✓ Correto: ${correct}</div><div class="rv-exp">${q.exp}</div><div class="rv-peg">⚠ ${q.pegadinha}</div>`;
+    rl.appendChild(d);
+  });
+}
+
+function retryAll(){
+  document.getElementById('result').style.display='none';
+  document.getElementById('setup').style.display='block';
+}
+</script>
+</body>
+</html>
